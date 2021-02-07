@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group>
+        <item
+            android:id="@+id/nav_sync"
+            android:icon="@drawable/ico_sync_data"
+            android:title="Sincronizar datos" />
+        <item
+            android:id="@+id/nav_authorize"
+            android:icon="@drawable/ico_authorize"
+            android:title="Autorizar rutas" />
+        <item
+            android:id="@+id/nav_account"
+            android:icon="@drawable/ico_profile"
+            android:title="Mi cuenta" />
+
+        <item
+            android:id="@+id/nav_alarms"
+            android:icon="@drawable/ico_alarm"
+            android:title="Alarmas" />
+        <item
+            android:id="@+id/nav_routes"
+            android:icon="@drawable/ico_new_visit"
+            android:title="Rutas" />
+        <!--<item
+            android:id="@+id/nav_visits"
+            android:icon="@drawable/ico_visits"
+            android:title="Visitas Realizadas" />-->
+        <item
+            android:id="@+id/nav_new_client"
+            android:icon="@drawable/ico_profile"
+            android:title="Nuevo cliente" />
+        <item
+         android:id="@+id/nav_configuration"
+         android:icon="@drawable/ico_settings"
+         android:title="Configuraciones" />
+        <item
+            android:id="@+id/nav_change_connection"
+            android:icon="@drawable/ico_connection"
+            android:title="Conf. Conexión" />
+    </group>
+
+    <group android:id="@+id/group_app">
+        <item android:title="Aplicación">
+            <menu>
+                <!--<item
+                    android:id="@+id/nav_settings_app"
+                    android:icon="@drawable/ico_settings_app"
+                    android:title="Ajustes" />-->
+                <item
+                    android:id="@+id/nav_about"
+                    android:icon="@drawable/ico_about_app"
+                    android:title="Acerca de la App" />
+            </menu>
+        </item>
+    </group>
+
+</menu>

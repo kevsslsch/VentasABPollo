@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.MainActivity"
+    tools:showIn="@layout/app_bar_main">
+
+    <Spinner
+        android:id="@+id/spinnerDays"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="20dp" />
+
+    <RelativeLayout
+        android:id="@+id/layoutList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/spinnerDays"
+        android:visibility="gone">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerLists"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutNotData"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/spinnerDays"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="#FFFFFF"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/imgNoData"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            app:srcCompat="@drawable/icobig_search" />
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgNoData"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:fontFamily="@font/montserrat"
+            android:gravity="center_horizontal"
+            android:text="No hay datos"
+            android:textColor="@android:color/black"
+            android:textSize="40sp"
+            android:typeface="normal" />
+
+        <TextView
+            android:id="@+id/txtSubTitle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/txtTitle"
+            android:layout_centerInParent="false"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:fontFamily="@font/montserrat"
+            android:gravity="center_horizontal"
+            android:padding="15dp"
+            android:text="Por favor, sincroniza los datos para ver algo aquí."
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layoutStartRoute"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/spinnerDays"
+        android:layout_centerInParent="false"
+        android:layout_centerHorizontal="false"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="15dp"
+        android:background="#FFFFFF"
+        android:gravity="center|center_horizontal"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imgStartDay"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/icobig_route" />
+
+        <TextView
+            android:id="@+id/txtSubTitleStartDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtTitleStartDay"
+            android:layout_centerInParent="false"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:fontFamily="@font/montserrat"
+            android:gravity="center_horizontal"
+            android:padding="15dp"
+            android:text="Para empezar a realizar visitas, haz clic en el botón de a continuación y confirma la Ruta."
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/txtTitleStartDay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imgStartDay"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:fontFamily="@font/montserrat"
+            android:gravity="center_horizontal"
+            android:text="Iniciar Ruta"
+            android:textColor="@android:color/black"
+            android:textSize="25sp"
+            android:typeface="normal" />
+
+        <com.skyfishjy.library.RippleBackground
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_below="@id/txtSubTitleStartDay"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentBottom="false"
+            app:rb_color="#0099CC"
+            app:rb_duration="3000"
+            app:rb_radius="10dp"
+            app:rb_rippleAmount="4"
+            app:rb_scale="5">
+
+            <ImageView
+                android:id="@+id/btnStartDay"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_alignParentBottom="false"
+                android:layout_centerInParent="true"
+                android:src="@drawable/icobig_start" />
+
+        </com.skyfishjy.library.RippleBackground>
+
+    </RelativeLayout>
+</RelativeLayout>
