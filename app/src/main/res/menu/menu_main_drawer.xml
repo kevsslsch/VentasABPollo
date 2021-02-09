@@ -8,19 +8,19 @@
             android:id="@+id/nav_sync"
             android:icon="@drawable/ico_sync_data"
             android:title="Sincronizar datos" />
-        <item
+        <!--<item
             android:id="@+id/nav_authorize"
             android:icon="@drawable/ico_authorize"
-            android:title="Autorizar rutas" />
+            android:title="Autorizar rutas" />-->
         <item
             android:id="@+id/nav_account"
             android:icon="@drawable/ico_profile"
             android:title="Mi cuenta" />
 
-        <item
+        <!--<item
             android:id="@+id/nav_alarms"
             android:icon="@drawable/ico_alarm"
-            android:title="Alarmas" />
+            android:title="Alarmas" />-->
         <item
             android:id="@+id/nav_routes"
             android:icon="@drawable/ico_new_visit"
@@ -33,10 +33,11 @@
             android:id="@+id/nav_new_client"
             android:icon="@drawable/ico_profile"
             android:title="Nuevo cliente" />
-        <item
+        <!--<item
          android:id="@+id/nav_configuration"
          android:icon="@drawable/ico_settings"
-         android:title="Configuraciones" />
+         android:title="Configuraciones" />-->
+
         <item
             android:id="@+id/nav_change_connection"
             android:icon="@drawable/ico_connection"

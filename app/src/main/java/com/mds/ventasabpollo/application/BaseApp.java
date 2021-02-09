@@ -1273,7 +1273,7 @@ public class BaseApp extends Application {
                             exportRealmPATH.mkdirs();
                         }
 
-                        String exportRealmFileName = "nudito-data-" + getCurrentDateFlat() + ".realm";
+                        String exportRealmFileName = "abpollo-data-" + getCurrentDateFlat() + ".realm";
 
                         Log.d("Realm", "Realm DB Path = " + realm.getPath());
 
