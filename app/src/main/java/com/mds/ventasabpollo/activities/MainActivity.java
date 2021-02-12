@@ -123,9 +123,11 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         recyclerLists = findViewById(R.id.recyclerLists);
+
         layoutList = findViewById(R.id.layoutList);
         layoutNotData = findViewById(R.id.layoutNotData);
         layoutStartRoute = findViewById(R.id.layoutStartRoute);
+
         btnStartDay = findViewById(R.id.btnStartDay);
         spinnerDays = findViewById(R.id.spinnerDays);
 
@@ -212,7 +214,6 @@ public class MainActivity extends AppCompatActivity
         spClass.intSetSP("idRoute", 42);
         /**/
 
-        //baseApp.showLog(functionsapp.generateSplitChangesInventory());
     }
 
     private class syncDataTask extends AsyncTask<Void, String, Void> {

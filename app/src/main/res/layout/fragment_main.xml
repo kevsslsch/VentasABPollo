@@ -88,6 +88,7 @@
             android:padding="15dp"
             android:text="Por favor, sincroniza los datos para ver algo aquí."
             android:textSize="20sp" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -175,4 +176,5 @@
         </com.skyfishjy.library.RippleBackground>
 
     </RelativeLayout>
+
 </RelativeLayout>
