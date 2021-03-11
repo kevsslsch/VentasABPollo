@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:id="@+id/layoutClient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtClientName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Diana Mendoza Ascencio"
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/black"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/txtBussinessName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Vazmen La Palanca"
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/txtDirection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Av..."
+                android:textSize="14sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/txtPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="614 165 1207"
+                android:textSize="14sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/txtViewVisited"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cliente ya visitado en la Ruta"
+                android:textColor="#F44336"
+                android:textStyle="bold|italic"
+                android:verticalScrollbarPosition="defaultPosition"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/txtViewWithoutOrder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Cliente nuevo sin orden asignado."
+                android:textColor="#FF9800"
+                android:textStyle="bold|italic"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/txtViewLists"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="..."
+                android:textSize="14sp"
+                android:textStyle="bold|italic"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="1.7"
+            android:gravity="center|right|center_horizontal"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/btnUp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:background="@drawable/custom_btn_info"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ico_up" />
+
+            <ImageButton
+                android:id="@+id/btnDown"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="10"
+                android:background="@drawable/custom_btn_info"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ico_down" />
+
+            <Button
+                android:id="@+id/btnVisit"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="10"
+                android:background="@drawable/custom_btn_info"
+                android:text="Visitar"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/btnAverages"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="10"
+                android:background="@drawable/custom_btn_info"
+                android:text="Promedios"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/btnMap"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="10"
+                android:background="@drawable/custom_btn_info"
+                android:text="Ver Mapa"
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

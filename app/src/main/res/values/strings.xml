@@ -4,6 +4,8 @@
     <string name="navigation_drawer_open">Abrir menú deslizable</string>
     <string name="navigation_drawer_close">Cerrar menú deslizable</string>
 
+    <string name="margin_map">100</string>
+
     <string name="text_date_future">en el futuro</string>
     <string name="text_date_rightnow">hace unos momentos</string>
     <string name="text_date_xseconds">hace %1$s segundos</string>

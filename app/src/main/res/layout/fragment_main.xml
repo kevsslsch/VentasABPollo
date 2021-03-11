@@ -21,6 +21,7 @@
         android:id="@+id/layoutList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/layoutBottom"
         android:layout_below="@id/spinnerDays"
         android:visibility="gone">
 
@@ -35,6 +36,7 @@
         android:id="@+id/layoutNotData"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/layoutBottom"
         android:layout_below="@id/spinnerDays"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
@@ -95,6 +97,7 @@
         android:id="@+id/layoutStartRoute"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/layoutBottom"
         android:layout_below="@id/spinnerDays"
         android:layout_centerInParent="false"
         android:layout_centerHorizontal="false"
@@ -176,5 +179,41 @@
         </com.skyfishjy.library.RippleBackground>
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnStartRoute"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="0"
+            android:background="@drawable/custom_btn_info"
+            android:text="Iniciar Ruta"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/btnFinishRoute"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="0"
+            android:background="@drawable/custom_btn_info"
+            android:text="Finalizar Ruta"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </RelativeLayout>

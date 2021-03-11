@@ -39,15 +39,15 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
 
     static final class ClientsListsColumnInfo extends ColumnInfo {
         long maxColumnIndexValue;
-        long clienteIndex;
         long listaIndex;
+        long clienteIndex;
         long ordenIndex;
 
         ClientsListsColumnInfo(OsSchemaInfo schemaInfo) {
             super(3);
             OsObjectSchemaInfo objectSchemaInfo = schemaInfo.getObjectSchemaInfo("ClientsLists");
-            this.clienteIndex = addColumnDetails("cliente", "cliente", objectSchemaInfo);
             this.listaIndex = addColumnDetails("lista", "lista", objectSchemaInfo);
+            this.clienteIndex = addColumnDetails("cliente", "cliente", objectSchemaInfo);
             this.ordenIndex = addColumnDetails("orden", "orden", objectSchemaInfo);
             this.maxColumnIndexValue = objectSchemaInfo.getMaxColumnIndex();
         }
@@ -66,8 +66,8 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
         protected final void copy(ColumnInfo rawSrc, ColumnInfo rawDst) {
             final ClientsListsColumnInfo src = (ClientsListsColumnInfo) rawSrc;
             final ClientsListsColumnInfo dst = (ClientsListsColumnInfo) rawDst;
-            dst.clienteIndex = src.clienteIndex;
             dst.listaIndex = src.listaIndex;
+            dst.clienteIndex = src.clienteIndex;
             dst.ordenIndex = src.ordenIndex;
             dst.maxColumnIndexValue = src.maxColumnIndexValue;
         }
@@ -98,28 +98,6 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
 
     @Override
     @SuppressWarnings("cast")
-    public int realmGet$cliente() {
-        proxyState.getRealm$realm().checkIfValid();
-        return (int) proxyState.getRow$realm().getLong(columnInfo.clienteIndex);
-    }
-
-    @Override
-    public void realmSet$cliente(int value) {
-        if (proxyState.isUnderConstruction()) {
-            if (!proxyState.getAcceptDefaultValue$realm()) {
-                return;
-            }
-            final Row row = proxyState.getRow$realm();
-            row.getTable().setLong(columnInfo.clienteIndex, row.getIndex(), value, true);
-            return;
-        }
-
-        proxyState.getRealm$realm().checkIfValid();
-        proxyState.getRow$realm().setLong(columnInfo.clienteIndex, value);
-    }
-
-    @Override
-    @SuppressWarnings("cast")
     public int realmGet$lista() {
         proxyState.getRealm$realm().checkIfValid();
         return (int) proxyState.getRow$realm().getLong(columnInfo.listaIndex);
@@ -138,6 +116,28 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
 
         proxyState.getRealm$realm().checkIfValid();
         proxyState.getRow$realm().setLong(columnInfo.listaIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public int realmGet$cliente() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (int) proxyState.getRow$realm().getLong(columnInfo.clienteIndex);
+    }
+
+    @Override
+    public void realmSet$cliente(int value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setLong(columnInfo.clienteIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setLong(columnInfo.clienteIndex, value);
     }
 
     @Override
@@ -164,8 +164,8 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
 
     private static OsObjectSchemaInfo createExpectedObjectSchemaInfo() {
         OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("ClientsLists", 3, 0);
-        builder.addPersistedProperty("cliente", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("lista", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("cliente", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("orden", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         return builder.build();
     }
@@ -193,18 +193,18 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
         com.mds.ventasabpollo.models.ClientsLists obj = realm.createObjectInternal(com.mds.ventasabpollo.models.ClientsLists.class, true, excludeFields);
 
         final com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface objProxy = (com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) obj;
-        if (json.has("cliente")) {
-            if (json.isNull("cliente")) {
-                throw new IllegalArgumentException("Trying to set non-nullable field 'cliente' to null.");
-            } else {
-                objProxy.realmSet$cliente((int) json.getInt("cliente"));
-            }
-        }
         if (json.has("lista")) {
             if (json.isNull("lista")) {
                 throw new IllegalArgumentException("Trying to set non-nullable field 'lista' to null.");
             } else {
                 objProxy.realmSet$lista((int) json.getInt("lista"));
+            }
+        }
+        if (json.has("cliente")) {
+            if (json.isNull("cliente")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'cliente' to null.");
+            } else {
+                objProxy.realmSet$cliente((int) json.getInt("cliente"));
             }
         }
         if (json.has("orden")) {
@@ -227,19 +227,19 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
         while (reader.hasNext()) {
             String name = reader.nextName();
             if (false) {
-            } else if (name.equals("cliente")) {
-                if (reader.peek() != JsonToken.NULL) {
-                    objProxy.realmSet$cliente((int) reader.nextInt());
-                } else {
-                    reader.skipValue();
-                    throw new IllegalArgumentException("Trying to set non-nullable field 'cliente' to null.");
-                }
             } else if (name.equals("lista")) {
                 if (reader.peek() != JsonToken.NULL) {
                     objProxy.realmSet$lista((int) reader.nextInt());
                 } else {
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'lista' to null.");
+                }
+            } else if (name.equals("cliente")) {
+                if (reader.peek() != JsonToken.NULL) {
+                    objProxy.realmSet$cliente((int) reader.nextInt());
+                } else {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'cliente' to null.");
                 }
             } else if (name.equals("orden")) {
                 if (reader.peek() != JsonToken.NULL) {
@@ -296,8 +296,8 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
         OsObjectBuilder builder = new OsObjectBuilder(table, columnInfo.maxColumnIndexValue, flags);
 
         // Add all non-"object reference" fields
-        builder.addInteger(columnInfo.clienteIndex, realmObjectSource.realmGet$cliente());
         builder.addInteger(columnInfo.listaIndex, realmObjectSource.realmGet$lista());
+        builder.addInteger(columnInfo.clienteIndex, realmObjectSource.realmGet$cliente());
         builder.addInteger(columnInfo.ordenIndex, realmObjectSource.realmGet$orden());
 
         // Create the underlying object and cache it before setting any object/objectlist references
@@ -318,8 +318,8 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
         ClientsListsColumnInfo columnInfo = (ClientsListsColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.ClientsLists.class);
         long rowIndex = OsObject.createRow(table);
         cache.put(object, rowIndex);
-        Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$cliente(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.listaIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$lista(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$cliente(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.ordenIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$orden(), false);
         return rowIndex;
     }
@@ -340,8 +340,8 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
             }
             long rowIndex = OsObject.createRow(table);
             cache.put(object, rowIndex);
-            Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$cliente(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.listaIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$lista(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$cliente(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.ordenIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$orden(), false);
         }
     }
@@ -355,8 +355,8 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
         ClientsListsColumnInfo columnInfo = (ClientsListsColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.ClientsLists.class);
         long rowIndex = OsObject.createRow(table);
         cache.put(object, rowIndex);
-        Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$cliente(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.listaIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$lista(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$cliente(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.ordenIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$orden(), false);
         return rowIndex;
     }
@@ -377,8 +377,8 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
             }
             long rowIndex = OsObject.createRow(table);
             cache.put(object, rowIndex);
-            Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$cliente(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.listaIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$lista(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$cliente(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.ordenIndex, rowIndex, ((com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) object).realmGet$orden(), false);
         }
     }
@@ -402,8 +402,8 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
         }
         com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface unmanagedCopy = (com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) unmanagedObject;
         com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface realmSource = (com_mds_ventasabpollo_models_ClientsListsRealmProxyInterface) realmObject;
-        unmanagedCopy.realmSet$cliente(realmSource.realmGet$cliente());
         unmanagedCopy.realmSet$lista(realmSource.realmGet$lista());
+        unmanagedCopy.realmSet$cliente(realmSource.realmGet$cliente());
         unmanagedCopy.realmSet$orden(realmSource.realmGet$orden());
 
         return unmanagedObject;
@@ -416,12 +416,12 @@ public class com_mds_ventasabpollo_models_ClientsListsRealmProxy extends com.mds
             return "Invalid object";
         }
         StringBuilder stringBuilder = new StringBuilder("ClientsLists = proxy[");
-        stringBuilder.append("{cliente:");
-        stringBuilder.append(realmGet$cliente());
-        stringBuilder.append("}");
-        stringBuilder.append(",");
         stringBuilder.append("{lista:");
         stringBuilder.append(realmGet$lista());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{cliente:");
+        stringBuilder.append(realmGet$cliente());
         stringBuilder.append("}");
         stringBuilder.append(",");
         stringBuilder.append("{orden:");

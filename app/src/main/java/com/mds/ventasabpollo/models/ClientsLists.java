@@ -4,8 +4,8 @@ import io.realm.RealmObject;
 
 public class ClientsLists extends RealmObject {
 
-    private int cliente;
     private int lista;
+    private int cliente;
     private int orden;
 
     public ClientsLists() {

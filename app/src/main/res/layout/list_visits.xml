@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:id="@+id/layoutList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:layout_weight="10"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Lunes"
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/txtClientName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Diana Mendoza Ascencio"
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/black"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/txtBussinessName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Vazmen La Palanca"
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/black"
+                android:textSize="14sp"
+                android:textStyle="italic" />
+
+            <TextView
+                android:id="@+id/txtDateRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Status: Terminada"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtClasification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Clasificación: Visitada"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/txtDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Duración: 15 minutos"
+                android:textSize="14sp"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_weight="19"
+            android:gravity="center|right|center_horizontal"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnViewDetails"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="0"
+                android:background="@drawable/custom_btn_info"
+                android:text="Ver detalles"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"/>
+
+            <Button
+                android:id="@+id/btnTicket"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="0"
+                android:background="@drawable/custom_btn_info"
+                android:text="Imprimir ticket"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white" />
+
+            <Button
+                android:id="@+id/btnDelete"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginBottom="5dp"
+                android:layout_weight="0"
+                android:background="@drawable/custom_btn_info"
+                android:text="Eliminar"
+                android:textColor="@android:color/white"
+                android:textAllCaps="false"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

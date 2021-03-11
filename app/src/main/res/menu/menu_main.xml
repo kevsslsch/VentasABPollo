@@ -6,6 +6,13 @@
     <item
         android:id="@+id/menu_option_finish"
         android:orderInCategory="100"
+        android:title="Iniciar Ruta"
+        android:icon="@drawable/ico_off"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/menu_option_finish"
+        android:orderInCategory="100"
         android:title="Finalizar Ruta"
         android:icon="@drawable/ico_off"
         app:showAsAction="always" />

@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -38,6 +39,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.mds.ventasabpollo.R;
+import com.mds.ventasabpollo.adapters.AdapterLists;
 import com.mds.ventasabpollo.application.BaseApp;
 import com.mds.ventasabpollo.application.ConnectionClass;
 import com.mds.ventasabpollo.application.FunctionsApp;
@@ -47,6 +49,7 @@ import com.mds.ventasabpollo.classes.ShakeDetector;
 import com.mds.ventasabpollo.models.Articles;
 import com.mds.ventasabpollo.models.Clients;
 import com.mds.ventasabpollo.models.ClientsLists;
+import com.mds.ventasabpollo.models.Departures;
 import com.mds.ventasabpollo.models.Lists;
 import com.mds.ventasabpollo.models.MapRoutes;
 import com.mds.ventasabpollo.models.VisitsClasifications;
@@ -71,11 +74,6 @@ public class MainActivity extends AppCompatActivity
     SPClass spClass = new SPClass(this);
 
     private Realm realm;
-    /*private RealmResults<Lists> listLists;
-    private RealmResults<Lists> listLists2;
-
-    ArrayList<Departures> departuresList = new ArrayList<>();
-*/
 
     int nUser, idRoute, totaLists;
     String messagesSync = "";
@@ -83,17 +81,19 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog dialog;
     RecyclerView recyclerLists;
     RelativeLayout layoutList, layoutStartRoute, layoutNotData;
-    TextView btnGoConfigurationServer;
     ImageView btnStartDay;
+    Button btnStartRoute, btnFinishRoute;
     Spinner spinnerDays;
 
-    Handler handler;
-
-    String stringSplitVisits, stringSplitSales, stringSplitChanges, stringSplitDevolutions, stringSplitPayments, stringSplitSeparateds, stringSplitClients, stringSplitDomiciles, stringSplitReturns, stringSplitChangesInventories, stringSplitPendingPayments, stringSplitLogs;
     int nDeparture;
-    boolean updateGlobalList, goToFinalReport = false;
+    boolean updateGlobalList;
 
     ProgressDialog barSyncData;
+
+    private RealmResults<Lists> listLists;
+    private RealmResults<Lists> listLists2;
+
+    Handler handler;
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -128,6 +128,9 @@ public class MainActivity extends AppCompatActivity
         layoutNotData = findViewById(R.id.layoutNotData);
         layoutStartRoute = findViewById(R.id.layoutStartRoute);
 
+        btnStartRoute = findViewById(R.id.btnStartRoute);
+        btnFinishRoute = findViewById(R.id.btnFinishRoute);
+
         btnStartDay = findViewById(R.id.btnStartDay);
         spinnerDays = findViewById(R.id.spinnerDays);
 
@@ -144,10 +147,7 @@ public class MainActivity extends AppCompatActivity
             //backgroundProcess("markDepartureLikeAccepted", "bar", "");
         }
 
-        btnStartDay.setOnClickListener(v-> {
-            //showMenuBottomStartRoute();
-
-            //backgroundProcess("checkDeparture", "bar", "Consultando salidas...");
+        btnStartRoute.setOnClickListener(v-> {
 
             Vibrator vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -156,14 +156,18 @@ public class MainActivity extends AppCompatActivity
                 //deprecated in API 26
                 vib.vibrate(50);
             }
+
+
+            backgroundProcess("checkDeparture", "bar", "Consultando salidas...");
+
         });
 
+        functionsapp.inVisitVerify();
         checkAlertConnection();
-
-        //functionsapp.inVisitVerify();
-        /*getLists(baseApp.getNumberDay());
-        hideItemAuthorize();
         populateSpinnerDays();
+        getLists(baseApp.getNumberDay());
+
+        /*hideItemAuthorize();
         verifyAlarms();*/
 
         final RippleBackground rippleBackground = findViewById(R.id.content);
@@ -172,7 +176,7 @@ public class MainActivity extends AppCompatActivity
         spinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-                //getLists(position+1);
+                getLists(position+1);
 
             } // to close the onItemSelected
             public void onNothingSelected(AdapterView<?> parent)
@@ -184,17 +188,11 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, ShakeService.class);
         startService(intent);
 
-        // ShakeDetector initialization
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager
                 .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mShakeDetector = new ShakeDetector();
         mShakeDetector.setOnShakeListener(count -> {
-            /*
-             * The following method, "handleShakeEvent(count):" is a stub //
-             * method you would use to setup whatever you want done once the
-             * device has been shook.
-             */
 
             Vibrator vib = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -204,7 +202,7 @@ public class MainActivity extends AppCompatActivity
                 vib.vibrate(250);
             }
 
-            //functionsapp.goInventoryActivity();
+            functionsapp.goInventoryActivity();
         });
 
         /* Fingir estar en una Ruta para cuando hay errores */
@@ -319,9 +317,98 @@ public class MainActivity extends AppCompatActivity
                         .setPositiveButton("Ok", (dialog, id) -> dialog.cancel())
                         .show();
             }
-        }
 
-        //getLists(baseApp.getNumberDay());
+            getLists(baseApp.getNumberDay());
+        }
+    }
+
+    public void populateSpinnerDays(){
+        try {
+
+            String[] listClasifications = {"Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"};
+            List<String> listClasificationsArray = new ArrayList<>();
+
+            for (int i = 0; i < listClasifications.length; i++) {
+                listClasificationsArray.add(listClasifications[i]);
+            }
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                    this, android.R.layout.simple_spinner_item, listClasificationsArray);
+
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerDays.setAdapter(adapter);
+            spinnerDays.setEnabled(true);
+
+            spinnerDays.setSelection((baseApp.getNumberDay()-1));
+        }catch (Exception ex){
+            baseApp.showAlert("Error", "No se pudieron cargar las opciones de los días por este error: " + ex);
+        }
+    }
+
+    public void getLists(int day){
+
+        try {
+            realm = Realm.getDefaultInstance();
+            listLists2 = realm.where(Lists.class).equalTo("user_id", nUser).findAll();
+            listLists = realm.where(Lists.class).equalTo("dia_semana", day).equalTo("dia_semana", day).or().equalTo("dia_semana", 0).equalTo("user_id", nUser).sort("dia_semana", Sort.DESCENDING).findAll();
+            totaLists = listLists.size();
+
+            if (listLists.size() > 0) {
+                layoutList.setVisibility(View.VISIBLE);
+                layoutNotData.setVisibility(View.GONE);
+                layoutStartRoute.setVisibility(View.GONE);
+                spinnerDays.setVisibility(View.VISIBLE);
+
+                AdapterLists adapterLists = new AdapterLists(this, listLists);
+
+                recyclerLists.setItemAnimator(new DefaultItemAnimator());
+                recyclerLists.setAdapter(adapterLists);
+            } else {
+                layoutList.setVisibility(View.GONE);
+                layoutStartRoute.setVisibility(View.GONE);
+                layoutNotData.setVisibility(View.VISIBLE);
+
+                spinnerDays.setVisibility(View.VISIBLE);
+            }
+
+            /*
+            if(spClass.boolGetSP("inRoute")) {
+                if (listLists.size() > 0) {
+                    layoutList.setVisibility(View.VISIBLE);
+                    layoutNotData.setVisibility(View.GONE);
+                    layoutStartRoute.setVisibility(View.GONE);
+                    spinnerDays.setVisibility(View.VISIBLE);
+
+                    AdapterLists adapterLists = new AdapterLists(this, listLists);
+
+                    recyclerLists.setItemAnimator(new DefaultItemAnimator());
+                    recyclerLists.setAdapter(adapterLists);
+                } else {
+                    layoutList.setVisibility(View.GONE);
+                    layoutStartRoute.setVisibility(View.GONE);
+                    layoutNotData.setVisibility(View.VISIBLE);
+
+                    spinnerDays.setVisibility(View.VISIBLE);
+                }
+            }else{
+                if (listLists2.size() > 0) {
+                    layoutStartRoute.setVisibility(View.VISIBLE);
+                    layoutList.setVisibility(View.GONE);
+                    layoutNotData.setVisibility(View.GONE);
+
+                }else {
+                    layoutList.setVisibility(View.GONE);
+                    layoutStartRoute.setVisibility(View.GONE);
+                    layoutNotData.setVisibility(View.VISIBLE);
+                }
+
+                spinnerDays.setVisibility(View.GONE);
+            }*/
+
+        } catch (Exception ex) {
+            baseApp.showAlert("Error", "Ocurrió un error al mostrar las listas, reporta el siguiente error al departamento de Sistemas" +  ex);
+            Log.e("ERR:", "" + ex);
+        }
     }
 
     public void showMenuBottomSyncData(){
@@ -802,9 +889,285 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    public void checkDeparture(){
+
+        try{
+
+            RealmResults<Personal> personal = realm.where(Personal.class).findAll();
+            boolean isResultSet;
+            int countResults = 0, resultCount = 0, nDeparture = 0;
+            String nameAuthorized = null;
+            Departures departures;
+            DetailsDepartures detailsDepartures;
+
+            try {
+                ConnectionClass connectionClass = new ConnectionClass(getApplicationContext());
+
+                if (connectionClass.ConnectionMDS() != null) {
+                    PreparedStatement loComando = baseApp.execute_SP("EXECUTE Nudito.dbo.Consulta_Salidas_Vendedor ?, ?");
+
+                    try {
+                        loComando.setInt(1, nUser);
+                        loComando.setInt(2, 1);
+
+                        isResultSet = loComando.execute();
+
+                        if (departuresList != null) {
+                            departuresList.clear();
+                        }
+
+                        realm.beginTransaction();
+                        realm.delete(DetailsDepartures.class);
+                        realm.commitTransaction();
+
+                        while (true) {
+                            if (isResultSet) {
+
+                                if (countResults == 0) {
+                                    ResultSet Datos = loComando.getResultSet();
+
+                                    while (Datos.next()) {
+                                        resultCount = Datos.getInt("total");
+
+                                        if (resultCount == 0) {
+                                            baseApp.showToast("No se encontraron Salidas Autorizadas asignadas para tu usuario.");
+                                        }
+                                    }
+
+                                    Datos.close();
+                                }
+
+                                if (countResults == 1) {
+
+                                    ResultSet Datos1 = loComando.getResultSet();
+
+                                    while (Datos1.next()) {
+
+                                        departures = new Departures();
+                                        departures.setSalida(Datos1.getInt("salida"));
+                                        departures.setVendedor(Datos1.getString("vendedor"));
+                                        departures.setRegistrado_por(Datos1.getString("registrado_por"));
+                                        departures.setAutorizado_por(Datos1.getString("autorizado_por"));
+                                        departures.setFecha_registro(Datos1.getString("fecha_registro"));
+                                        departures.setEstado_actual(Datos1.getString("estado_actual"));
+                                        departures.setLista(Datos1.getInt("lista"));
+                                        departures.setNombre_lista(Datos1.getString("nombre_lista"));
+
+                                        departuresList.add(departures);
+
+                                        nDeparture     = Datos1.getInt("salida");
+                                        nameAuthorized = Datos1.getString("autorizado_por");
+                                    }
+
+                                    Datos1.close();
+                                }
+
+                                if (countResults == 2) {
+
+                                    ResultSet Datos2 = loComando.getResultSet();
+                                    while (Datos2.next()) {
+
+                                        realm.beginTransaction();
+                                        detailsDepartures = new DetailsDepartures(
+                                                Datos2.getInt("salida"),
+                                                Datos2.getInt("clave_articulo"),
+                                                Datos2.getString("nombre_articulo"),
+                                                Datos2.getInt("cantidad"));
+
+                                        realm.copyToRealm(detailsDepartures);
+                                        realm.commitTransaction();
+                                    }
+
+                                    Datos2.close();
+                                }
+                            } else {
+                                if (loComando.getUpdateCount() == -1) {
+                                    break;
+                                }
+
+                                baseApp.showLog("Result {} is just a count: {}" + countResults + ", " + loComando.getUpdateCount());
+                            }
+
+                            countResults++;
+                            isResultSet = loComando.getMoreResults();
+                        }
+
+                        if(resultCount > 0){
+                            for (Departures departure : departuresList) {
+
+                                RealmResults<Articles> articles = realm.where(Articles.class).findAll();
+                                for (Articles article : articles) {
+
+                                    RealmResults<DetailsDepartures> details = realm.where(DetailsDepartures.class).equalTo("salida", departure.getSalida()).equalTo("clave_articulo", article.getClave_articulo()).findAll();
+                                    if (details.size() == 0) {
+                                        realm.beginTransaction();
+                                        detailsDepartures = new DetailsDepartures(
+                                                departure.getSalida(),
+                                                article.getClave_articulo(),
+                                                article.getNombre_articulo(),
+                                                0);
+
+                                        realm.copyToRealm(detailsDepartures);
+                                        realm.commitTransaction();
+
+                                        baseApp.showLog("Detalle agregado");
+                                    }
+                                }
+                            }
+
+                            functionsapp.goDetailsDepartureActivity(nDeparture, nameAuthorized);
+                        }
+
+                    } catch (Exception ex) {
+                        baseApp.showToast("Error al buscar las Salidas de un Vendedor");
+                        baseApp.showAlert("Error", "Reporta el error: " + ex);
+                    }
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                baseApp.showToast("Ocurrió el error inesperado" + e);
+            }
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error: " + ex);
+        }
+    }
+
+
+    public void markDepartureLikeAccepted(int nDeparture){
+
+        try {
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE Nudito.dbo.CE_Salida_Ventas ?, ?");
+            if (loComando == null) {
+                baseApp.showLog("Error al Crear SP CE_Salida_Ventas");
+
+            } else {
+                try {
+
+                    loComando.setInt(1, nDeparture);
+                    loComando.setString(2, "Aceptada");
+
+                    ResultSet Datos = loComando.executeQuery();
+
+                    while (Datos.next()) {
+
+                        if (Datos.getInt("exito") == 1) {
+                            baseApp.showToast("Salida marcada como Aceptada con éxito");
+                        }
+                    }
+                } catch (Exception ex) {
+                    baseApp.showLog("Error en SP CE_Salida_Ventas, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
+                }
+            }
+
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió el error: " + ex);
+        }
+    }
+
+    public void markDepartureLikeFinished(){
+
+        try {
+            int nDeparture;
+
+            RealmResults<Routes> routes = realm.where(Routes.class).equalTo("ruta", idRoute).findAll();
+            nDeparture = routes.get(0).getSalida();
+
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE Nudito.dbo.CE_Salida_Ventas ?, ?");
+            if (loComando == null) {
+                baseApp.showLog("Error al Crear SP CE_Salida_Ventas");
+
+            } else {
+                try {
+
+                    loComando.setInt(1, nDeparture);
+                    loComando.setString(2, "Terminada");
+
+                    ResultSet Datos = loComando.executeQuery();
+
+                    while (Datos.next()) {
+
+                        if (Datos.getInt("exito") == 1) {
+                            goToFinalReport = true;
+
+                            functionsapp.finishRoute(idRoute, 0, "");
+                            uploadData();
+                        }
+                    }
+                } catch (Exception ex) {
+                    baseApp.showLog("Error en SP CE_Salida_Ventas, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
+                }
+            }
+
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió el error: " + ex);
+        }
+    }
+
+    public void backgroundProcess(String process, String typeLoad, String title){
+
+        switch (typeLoad){
+            case "bar":
+                dialog.setTitle(title);
+                dialog.setMessage("Espera unos momentos...");
+                dialog.setCancelable(false);
+                dialog.show();
+                break;
+            default:
+                return;
+        }
+
+        handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(() -> {
+
+            try {
+
+                if(baseApp.verifyServerConnection()) {
+                    if (baseApp.isOnline(MainActivity.this)) {
+
+                        switch (process){
+                            case "checkDeparture":
+                                checkDeparture();
+                                break;
+                            case "markDepartureLikeAccepted":
+                                markDepartureLikeAccepted(nDeparture);
+                                break;
+                            case "markDepartureLikeFinished":
+                                markDepartureLikeFinished();
+                                break;
+                            default:
+                                return;
+                        }
+
+                    } else {
+
+                        if(process.equals("checkConnnection")){
+                            baseApp.showToast("Conéctate a Internet o revisa la conexión al Servidor");
+                            finish();
+                        }else{
+                            baseApp.showAlertDialog("error", "Error", "Prende tu señal de datos o conéctate a una red WIFI para poder descargar los datos", true);
+                        }
+                    }
+                }else{
+                    if(process.equals("checkConnnection")){
+                        baseApp.showToast("Conéctate a Internet o revisa la conexión al Servidor");
+                        finish();
+                    }else{
+                        baseApp.showAlertDialog("error", "Error", "No hay conexión al Servidor, reconfigura los datos de conexión e inténtalo de nuevo.", true);
+                    }
+                }
+
+            } catch (Exception ex) {
+                baseApp.showLog("Ocurrió un error, reporta el siguiente error al Dpto de Sistemas: " + ex);
+            }
+
+            dialog.dismiss();
+        }, 1000);
+    }
+
     public void onResume() {
         super.onResume();
-        //getLists(baseApp.getNumberDay());
+        getLists(baseApp.getNumberDay());
         //verifyAlarms();
         checkAlertConnection();
         invalidateOptionsMenu();
