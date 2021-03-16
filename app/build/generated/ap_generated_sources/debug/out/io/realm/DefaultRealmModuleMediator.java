@@ -26,10 +26,11 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
 
     private static final Set<Class<? extends RealmModel>> MODEL_CLASSES;
     static {
-        Set<Class<? extends RealmModel>> modelClasses = new HashSet<Class<? extends RealmModel>>(19);
+        Set<Class<? extends RealmModel>> modelClasses = new HashSet<Class<? extends RealmModel>>(21);
         modelClasses.add(com.mds.ventasabpollo.models.MapRoutes.class);
         modelClasses.add(com.mds.ventasabpollo.models.DetailsOrders.class);
         modelClasses.add(com.mds.ventasabpollo.models.ClientsLists.class);
+        modelClasses.add(com.mds.ventasabpollo.models.Users.class);
         modelClasses.add(com.mds.ventasabpollo.models.TopArticles.class);
         modelClasses.add(com.mds.ventasabpollo.models.Routes.class);
         modelClasses.add(com.mds.ventasabpollo.models.Articles.class);
@@ -46,15 +47,17 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         modelClasses.add(com.mds.ventasabpollo.models.Inventories.class);
         modelClasses.add(com.mds.ventasabpollo.models.VisitsClients.class);
         modelClasses.add(com.mds.ventasabpollo.models.Clients.class);
+        modelClasses.add(com.mds.ventasabpollo.models.DetailsDepartures.class);
         MODEL_CLASSES = Collections.unmodifiableSet(modelClasses);
     }
 
     @Override
     public Map<Class<? extends RealmModel>, OsObjectSchemaInfo> getExpectedObjectSchemaInfoMap() {
-        Map<Class<? extends RealmModel>, OsObjectSchemaInfo> infoMap = new HashMap<Class<? extends RealmModel>, OsObjectSchemaInfo>(19);
+        Map<Class<? extends RealmModel>, OsObjectSchemaInfo> infoMap = new HashMap<Class<? extends RealmModel>, OsObjectSchemaInfo>(21);
         infoMap.put(com.mds.ventasabpollo.models.MapRoutes.class, io.realm.com_mds_ventasabpollo_models_MapRoutesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.DetailsOrders.class, io.realm.com_mds_ventasabpollo_models_DetailsOrdersRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.ClientsLists.class, io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.getExpectedObjectSchemaInfo());
+        infoMap.put(com.mds.ventasabpollo.models.Users.class, io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.TopArticles.class, io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.Routes.class, io.realm.com_mds_ventasabpollo_models_RoutesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.Articles.class, io.realm.com_mds_ventasabpollo_models_ArticlesRealmProxy.getExpectedObjectSchemaInfo());
@@ -71,6 +74,7 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         infoMap.put(com.mds.ventasabpollo.models.Inventories.class, io.realm.com_mds_ventasabpollo_models_InventoriesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.VisitsClients.class, io.realm.com_mds_ventasabpollo_models_VisitsClientsRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.Clients.class, io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.getExpectedObjectSchemaInfo());
+        infoMap.put(com.mds.ventasabpollo.models.DetailsDepartures.class, io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.getExpectedObjectSchemaInfo());
         return infoMap;
     }
 
@@ -86,6 +90,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
             return io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.createColumnInfo(schemaInfo);
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+            return io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.createColumnInfo(schemaInfo);
         }
         if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
             return io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.createColumnInfo(schemaInfo);
@@ -135,6 +142,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
             return io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.createColumnInfo(schemaInfo);
         }
+        if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+            return io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.createColumnInfo(schemaInfo);
+        }
         throw getMissingProxyClassException(clazz);
     }
 
@@ -150,6 +160,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
             return "ClientsLists";
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+            return "Users";
         }
         if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
             return "TopArticles";
@@ -199,6 +212,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
             return "Clients";
         }
+        if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+            return "DetailsDepartures";
+        }
         throw getMissingProxyClassException(clazz);
     }
 
@@ -217,6 +233,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             }
             if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
                 return clazz.cast(new io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy());
+            }
+            if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+                return clazz.cast(new io.realm.com_mds_ventasabpollo_models_UsersRealmProxy());
             }
             if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
                 return clazz.cast(new io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy());
@@ -266,6 +285,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
                 return clazz.cast(new io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy());
             }
+            if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+                return clazz.cast(new io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy());
+            }
             throw getMissingProxyClassException(clazz);
         } finally {
             objectContext.clear();
@@ -294,6 +316,10 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
             com_mds_ventasabpollo_models_ClientsListsRealmProxy.ClientsListsColumnInfo columnInfo = (com_mds_ventasabpollo_models_ClientsListsRealmProxy.ClientsListsColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.ClientsLists.class);
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.copyOrUpdate(realm, columnInfo, (com.mds.ventasabpollo.models.ClientsLists) obj, update, cache, flags));
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+            com_mds_ventasabpollo_models_UsersRealmProxy.UsersColumnInfo columnInfo = (com_mds_ventasabpollo_models_UsersRealmProxy.UsersColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.Users.class);
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.copyOrUpdate(realm, columnInfo, (com.mds.ventasabpollo.models.Users) obj, update, cache, flags));
         }
         if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
             com_mds_ventasabpollo_models_TopArticlesRealmProxy.TopArticlesColumnInfo columnInfo = (com_mds_ventasabpollo_models_TopArticlesRealmProxy.TopArticlesColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.TopArticles.class);
@@ -359,6 +385,10 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             com_mds_ventasabpollo_models_ClientsRealmProxy.ClientsColumnInfo columnInfo = (com_mds_ventasabpollo_models_ClientsRealmProxy.ClientsColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.Clients.class);
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.copyOrUpdate(realm, columnInfo, (com.mds.ventasabpollo.models.Clients) obj, update, cache, flags));
         }
+        if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+            com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.DetailsDeparturesColumnInfo columnInfo = (com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.DetailsDeparturesColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.DetailsDepartures.class);
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.copyOrUpdate(realm, columnInfo, (com.mds.ventasabpollo.models.DetailsDepartures) obj, update, cache, flags));
+        }
         throw getMissingProxyClassException(clazz);
     }
 
@@ -374,6 +404,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             io.realm.com_mds_ventasabpollo_models_DetailsOrdersRealmProxy.insert(realm, (com.mds.ventasabpollo.models.DetailsOrders) object, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
             io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.insert(realm, (com.mds.ventasabpollo.models.ClientsLists) object, cache);
+        } else if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+            io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.insert(realm, (com.mds.ventasabpollo.models.Users) object, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
             io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.TopArticles) object, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Routes.class)) {
@@ -406,6 +438,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             io.realm.com_mds_ventasabpollo_models_VisitsClientsRealmProxy.insert(realm, (com.mds.ventasabpollo.models.VisitsClients) object, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
             io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.insert(realm, (com.mds.ventasabpollo.models.Clients) object, cache);
+        } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+            io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.DetailsDepartures) object, cache);
         } else {
             throw getMissingProxyClassException(clazz);
         }
@@ -429,6 +463,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                 io.realm.com_mds_ventasabpollo_models_DetailsOrdersRealmProxy.insert(realm, (com.mds.ventasabpollo.models.DetailsOrders) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
                 io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.insert(realm, (com.mds.ventasabpollo.models.ClientsLists) object, cache);
+            } else if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+                io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.insert(realm, (com.mds.ventasabpollo.models.Users) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
                 io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.TopArticles) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Routes.class)) {
@@ -461,6 +497,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                 io.realm.com_mds_ventasabpollo_models_VisitsClientsRealmProxy.insert(realm, (com.mds.ventasabpollo.models.VisitsClients) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
                 io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.insert(realm, (com.mds.ventasabpollo.models.Clients) object, cache);
+            } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+                io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.DetailsDepartures) object, cache);
             } else {
                 throw getMissingProxyClassException(clazz);
             }
@@ -471,6 +509,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                     io.realm.com_mds_ventasabpollo_models_DetailsOrdersRealmProxy.insert(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
                     io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.insert(realm, iterator, cache);
+                } else if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+                    io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.insert(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
                     io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insert(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Routes.class)) {
@@ -503,6 +543,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                     io.realm.com_mds_ventasabpollo_models_VisitsClientsRealmProxy.insert(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
                     io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.insert(realm, iterator, cache);
+                } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+                    io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.insert(realm, iterator, cache);
                 } else {
                     throw getMissingProxyClassException(clazz);
                 }
@@ -522,6 +564,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             io.realm.com_mds_ventasabpollo_models_DetailsOrdersRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.DetailsOrders) obj, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
             io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.ClientsLists) obj, cache);
+        } else if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+            io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.Users) obj, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
             io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.TopArticles) obj, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Routes.class)) {
@@ -554,6 +598,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             io.realm.com_mds_ventasabpollo_models_VisitsClientsRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.VisitsClients) obj, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
             io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.Clients) obj, cache);
+        } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+            io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.DetailsDepartures) obj, cache);
         } else {
             throw getMissingProxyClassException(clazz);
         }
@@ -577,6 +623,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                 io.realm.com_mds_ventasabpollo_models_DetailsOrdersRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.DetailsOrders) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
                 io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.ClientsLists) object, cache);
+            } else if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+                io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.Users) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
                 io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.TopArticles) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Routes.class)) {
@@ -609,6 +657,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                 io.realm.com_mds_ventasabpollo_models_VisitsClientsRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.VisitsClients) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
                 io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.Clients) object, cache);
+            } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+                io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.DetailsDepartures) object, cache);
             } else {
                 throw getMissingProxyClassException(clazz);
             }
@@ -619,6 +669,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                     io.realm.com_mds_ventasabpollo_models_DetailsOrdersRealmProxy.insertOrUpdate(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
                     io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.insertOrUpdate(realm, iterator, cache);
+                } else if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+                    io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.insertOrUpdate(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
                     io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insertOrUpdate(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Routes.class)) {
@@ -651,6 +703,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                     io.realm.com_mds_ventasabpollo_models_VisitsClientsRealmProxy.insertOrUpdate(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
                     io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.insertOrUpdate(realm, iterator, cache);
+                } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+                    io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.insertOrUpdate(realm, iterator, cache);
                 } else {
                     throw getMissingProxyClassException(clazz);
                 }
@@ -671,6 +725,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.createOrUpdateUsingJsonObject(realm, json, update));
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.createOrUpdateUsingJsonObject(realm, json, update));
         }
         if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.createOrUpdateUsingJsonObject(realm, json, update));
@@ -720,6 +777,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.createOrUpdateUsingJsonObject(realm, json, update));
         }
+        if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.createOrUpdateUsingJsonObject(realm, json, update));
+        }
         throw getMissingProxyClassException(clazz);
     }
 
@@ -736,6 +796,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.createUsingJsonStream(realm, reader));
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.createUsingJsonStream(realm, reader));
         }
         if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.createUsingJsonStream(realm, reader));
@@ -785,6 +848,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.createUsingJsonStream(realm, reader));
         }
+        if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.createUsingJsonStream(realm, reader));
+        }
         throw getMissingProxyClassException(clazz);
     }
 
@@ -802,6 +868,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.ClientsLists.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.createDetachedCopy((com.mds.ventasabpollo.models.ClientsLists) realmObject, 0, maxDepth, cache));
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.Users.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_UsersRealmProxy.createDetachedCopy((com.mds.ventasabpollo.models.Users) realmObject, 0, maxDepth, cache));
         }
         if (clazz.equals(com.mds.ventasabpollo.models.TopArticles.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.createDetachedCopy((com.mds.ventasabpollo.models.TopArticles) realmObject, 0, maxDepth, cache));
@@ -850,6 +919,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.createDetachedCopy((com.mds.ventasabpollo.models.Clients) realmObject, 0, maxDepth, cache));
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.DetailsDepartures.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy.createDetachedCopy((com.mds.ventasabpollo.models.DetailsDepartures) realmObject, 0, maxDepth, cache));
         }
         throw getMissingProxyClassException(clazz);
     }

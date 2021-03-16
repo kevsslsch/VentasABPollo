@@ -50,8 +50,11 @@ import com.mds.ventasabpollo.models.Articles;
 import com.mds.ventasabpollo.models.Clients;
 import com.mds.ventasabpollo.models.ClientsLists;
 import com.mds.ventasabpollo.models.Departures;
+import com.mds.ventasabpollo.models.DetailsDepartures;
 import com.mds.ventasabpollo.models.Lists;
 import com.mds.ventasabpollo.models.MapRoutes;
+import com.mds.ventasabpollo.models.Routes;
+import com.mds.ventasabpollo.models.Users;
 import com.mds.ventasabpollo.models.VisitsClasifications;
 import com.mds.ventasabpollo.services.ShakeService;
 import com.skyfishjy.library.RippleBackground;
@@ -77,6 +80,7 @@ public class MainActivity extends AppCompatActivity
 
     int nUser, idRoute, totaLists;
     String messagesSync = "";
+    String stringSplitVisits, stringSplitSales, stringSplitChanges, stringSplitDevolutions, stringSplitPayments, stringSplitSeparateds, stringSplitClients, stringSplitDomiciles, stringSplitReturns, stringSplitChangesInventories, stringSplitPendingPayments, stringSplitLogs;
 
     private ProgressDialog dialog;
     RecyclerView recyclerLists;
@@ -86,7 +90,7 @@ public class MainActivity extends AppCompatActivity
     Spinner spinnerDays;
 
     int nDeparture;
-    boolean updateGlobalList;
+    boolean updateGlobalList, goToFinalReport = false;;
 
     ProgressDialog barSyncData;
 
@@ -98,6 +102,8 @@ public class MainActivity extends AppCompatActivity
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
+
+    ArrayList<Departures> departuresList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +167,8 @@ public class MainActivity extends AppCompatActivity
             backgroundProcess("checkDeparture", "bar", "Consultando salidas...");
 
         });
+
+        btnFinishRoute.setOnClickListener(v-> showMenuBottonFinishRoute());
 
         functionsapp.inVisitVerify();
         checkAlertConnection();
@@ -439,6 +447,65 @@ public class MainActivity extends AppCompatActivity
         });
 
         btnNo.setOnClickListener(v-> menuBottomSheet.dismiss());
+    }
+
+    public void showMenuBottonFinishRoute(){
+        BottomSheetDialog menuBottomSheet;
+        TextView btnYes, btnNo, txtViewTitle;
+
+        menuBottomSheet = new BottomSheetDialog(this, R.style.BottomSheetDialogTheme);
+        menuBottomSheet.setContentView(R.layout.bottom_sheet_confirm);
+        menuBottomSheet.setCancelable(true);
+        menuBottomSheet.show();
+
+        txtViewTitle = menuBottomSheet.findViewById(R.id.txtViewInfo);
+        btnYes = menuBottomSheet.findViewById(R.id.btnYes);
+        btnNo = menuBottomSheet.findViewById(R.id.btnNo);
+
+        txtViewTitle.setText("¿Deseas terminar la ruta?");
+        btnYes.setOnClickListener(v-> {
+            //new IntentIntegrator(MainActivity.this).initiateScan();
+            if(canFinishRoute()){
+                backgroundProcess("markDepartureLikeFinished", "bar", "Terminando Ruta...");
+            }else{
+                baseApp.showAlert("Error", "Sincroniza todos los datos antes de terminar la ruta.");
+            }
+
+            menuBottomSheet.dismiss();
+        });
+        btnNo.setOnClickListener(v-> menuBottomSheet.dismiss());
+    }
+
+    public boolean canFinishRoute(){
+        try{
+
+            stringSplitVisits = functionsapp.generateSplitVisits();
+            stringSplitSales = functionsapp.generateSplitSales();
+            stringSplitChanges = functionsapp.generateSplitChanges();
+            stringSplitDevolutions = functionsapp.generateSplitDevolutions();
+            stringSplitPayments = functionsapp.generateSplitPayments();
+            stringSplitSeparateds = functionsapp.generateSplitSeparateds();
+            stringSplitReturns = functionsapp.generateSplitReturns();
+            stringSplitChangesInventories = functionsapp.generateSplitChangesInventory();
+
+            if(stringSplitVisits.isEmpty() &&
+                    stringSplitSales.isEmpty() &&
+                    stringSplitChanges.isEmpty() &&
+                    stringSplitDevolutions.isEmpty() &&
+                    stringSplitPayments.isEmpty() &&
+                    stringSplitSeparateds.isEmpty() &&
+                    stringSplitReturns.isEmpty() &&
+                    stringSplitChangesInventories.isEmpty()){
+                return true;
+            }else{
+                return false;
+            }
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error: " + ex);
+            ex.printStackTrace();
+
+            return false;
+        }
     }
 
     public void syncData() {
@@ -873,7 +940,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if(spClass.boolGetSP("inRoute") && spClass.boolGetSP("inventoryLoaded")){
-            getMenuInflater().inflate(R.menu.menu_main, menu);
+            //getMenuInflater().inflate(R.menu.menu_main, menu);
         }
 
         return true;
@@ -893,7 +960,7 @@ public class MainActivity extends AppCompatActivity
 
         try{
 
-            RealmResults<Personal> personal = realm.where(Personal.class).findAll();
+            RealmResults<Users> personal = realm.where(Users.class).findAll();
             boolean isResultSet;
             int countResults = 0, resultCount = 0, nDeparture = 0;
             String nameAuthorized = null;
@@ -904,7 +971,7 @@ public class MainActivity extends AppCompatActivity
                 ConnectionClass connectionClass = new ConnectionClass(getApplicationContext());
 
                 if (connectionClass.ConnectionMDS() != null) {
-                    PreparedStatement loComando = baseApp.execute_SP("EXECUTE Nudito.dbo.Consulta_Salidas_Vendedor ?, ?");
+                    PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Consulta_Salidas_Vendedor ?, ?");
 
                     try {
                         loComando.setInt(1, nUser);
@@ -1037,7 +1104,7 @@ public class MainActivity extends AppCompatActivity
     public void markDepartureLikeAccepted(int nDeparture){
 
         try {
-            PreparedStatement loComando = baseApp.execute_SP("EXECUTE Nudito.dbo.CE_Salida_Ventas ?, ?");
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.CE_Salida_Ventas ?, ?");
             if (loComando == null) {
                 baseApp.showLog("Error al Crear SP CE_Salida_Ventas");
 
@@ -1073,7 +1140,7 @@ public class MainActivity extends AppCompatActivity
             RealmResults<Routes> routes = realm.where(Routes.class).equalTo("ruta", idRoute).findAll();
             nDeparture = routes.get(0).getSalida();
 
-            PreparedStatement loComando = baseApp.execute_SP("EXECUTE Nudito.dbo.CE_Salida_Ventas ?, ?");
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.CE_Salida_Ventas ?, ?");
             if (loComando == null) {
                 baseApp.showLog("Error al Crear SP CE_Salida_Ventas");
 
@@ -1101,6 +1168,30 @@ public class MainActivity extends AppCompatActivity
 
         }catch (Exception ex){
             baseApp.showToast("Ocurrió el error: " + ex);
+        }
+    }
+
+    public void uploadData(){
+        functionsapp.uploadData();
+
+        if(goToFinalReport){
+            goToFinalReport = false;
+
+            functionsapp.goFinalReportRouteActivity(spClass.intGetSP("idRouteTemp"));
+        }
+    }
+
+    public void buttonsRoute(){
+        try{
+            if(spClass.boolGetSP("inRoute")){
+                btnFinishRoute.setVisibility(View.VISIBLE);
+                btnStartRoute.setVisibility(View.GONE);
+            }else{
+                btnFinishRoute.setVisibility(View.GONE);
+                btnStartRoute.setVisibility(View.VISIBLE);
+            }
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error");
         }
     }
 
@@ -1171,6 +1262,7 @@ public class MainActivity extends AppCompatActivity
         //verifyAlarms();
         checkAlertConnection();
         invalidateOptionsMenu();
+        buttonsRoute();
 
         mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
     }

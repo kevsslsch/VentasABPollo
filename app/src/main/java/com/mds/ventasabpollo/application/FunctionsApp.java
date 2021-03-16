@@ -19,7 +19,9 @@ import com.mds.ventasabpollo.activities.ChangeConnectionActivity;
 import com.mds.ventasabpollo.activities.ChangeInventoryActivity;
 import com.mds.ventasabpollo.activities.ChangeUbicationClientActivity;
 import com.mds.ventasabpollo.activities.ConfigurationActivity;
+import com.mds.ventasabpollo.activities.DetailsDepartureActivity;
 import com.mds.ventasabpollo.activities.DetailsSalesActivity;
+import com.mds.ventasabpollo.activities.FinalReportActivity;
 import com.mds.ventasabpollo.activities.InventoryActivity;
 import com.mds.ventasabpollo.activities.ListClientsActivity;
 import com.mds.ventasabpollo.activities.LoginActivity;
@@ -33,6 +35,7 @@ import com.mds.ventasabpollo.activities.SalesActivity;
 import com.mds.ventasabpollo.models.Articles;
 import com.mds.ventasabpollo.models.ChangesInventories;
 import com.mds.ventasabpollo.models.Clients;
+import com.mds.ventasabpollo.models.DetailsDepartures;
 import com.mds.ventasabpollo.models.DetailsSales;
 import com.mds.ventasabpollo.models.Images;
 import com.mds.ventasabpollo.models.Inventories;
@@ -134,7 +137,7 @@ public class FunctionsApp extends Application {
         Intent iListClientsActivity = new Intent(context, ListClientsActivity.class);
         iListClientsActivity.putExtra("nList", list);
 
-        if(clearActivity){
+        if (clearActivity) {
             iListClientsActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
 
@@ -226,6 +229,22 @@ public class FunctionsApp extends Application {
         context.startActivity(iArticlesActivity);
         ((Activity) (context)).overridePendingTransition(0, 0);
         //((Activity) (context)).finish();
+    }
+
+    public void goDetailsDepartureActivity(int nDeparture, String sNameAuthorized) {
+        Intent iDetailsDepartureActivity = new Intent(context, DetailsDepartureActivity.class);
+        iDetailsDepartureActivity.putExtra("nDeparture", nDeparture);
+        iDetailsDepartureActivity.putExtra("sNameAuthorized", sNameAuthorized);
+        context.startActivity(iDetailsDepartureActivity);
+        //((Activity) (context)).finish();
+    }
+
+    public void goFinalReportRouteActivity(int route) {
+        Intent iFinalReportActivity = new Intent(context, FinalReportActivity.class);
+        iFinalReportActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        iFinalReportActivity.putExtra("idRoute", route);
+        context.startActivity(iFinalReportActivity);
+        ((Activity) (context)).overridePendingTransition(0, 0);
     }
 
     public int clasificationVisit(int client, int route) {
@@ -1082,9 +1101,11 @@ public class FunctionsApp extends Application {
                 for(VisitsClients visit: visits){
                     RealmResults<Routes> routes = null;
 
-                    if(visit.getRuta() != 0){
+                    /*if(visit.getRuta() != 0){
                         routes = realm.where(Routes.class).equalTo("ruta", visit.getRuta()).findAll();
-                    }
+                    }*/
+
+                    routes = realm.where(Routes.class).equalTo("ruta", visit.getRuta()).findAll();
 
                     stringSplit += visit.getId() + "|"; // folio interno
                     stringSplit += visit.getCliente() + "|"; // 2 cliente
@@ -1530,6 +1551,21 @@ public class FunctionsApp extends Application {
         return nextID;
     }
 
+    public int getNextIdRoute() {
+        realm = Realm.getDefaultInstance();
+
+        realm.executeTransaction(realm -> {
+            // increment index
+            Number num = realm.where(Routes.class).max("ruta");
+            if (num == null) {
+                nextID = 1;
+            } else {
+                nextID = num.intValue() + 1;
+            }
+        });
+        return nextID;
+    }
+
     public void initiateMovementsArticlesVisit(int route, int visit){
         BaseApp baseApp = new BaseApp(context);
         SPClass spClass = new SPClass(context);
@@ -1890,6 +1926,91 @@ public class FunctionsApp extends Application {
         } catch (Exception ex) {
             baseApp.showToast("Ocurrió el error: " + ex);
             return false;
+        }
+    }
+
+    public void startRoute(int departure, int authorized_by, String name_authorized_by){
+        SPClass spClass = new SPClass(context);
+        BaseApp baseApp = new BaseApp(context);
+
+        RealmResults<DetailsDepartures> listDetailsDepartures;
+        int idRoute, nUser;
+        Routes routes;
+        Inventories inventories;
+
+        try{
+            realm = Realm.getDefaultInstance();
+
+            idRoute = getNextIdRoute();
+            nUser = spClass.intGetSP("user");
+
+            realm.beginTransaction();
+            routes = new Routes(
+                    idRoute,
+                    departure,
+                    authorized_by,
+                    0,
+                    name_authorized_by,
+                    baseApp.getCurrentDateFormated(),
+                    "",
+                    false,
+                    nUser);
+            realm.copyToRealm(routes);
+
+            listDetailsDepartures = realm.where(DetailsDepartures.class).equalTo("salida", departure).findAll();
+
+            for(DetailsDepartures detailsDepartures: listDetailsDepartures){
+                inventories = new Inventories(
+                        idRoute,
+                        detailsDepartures.getClave_articulo(),
+                        detailsDepartures.getNombre_articulo(),
+                        detailsDepartures.getCantidad(),
+                        //detailsDepartures.getCantidad(),
+                        nUser);
+
+                realm.copyToRealm(inventories);
+            }
+
+            realm.commitTransaction();
+
+            spClass.boolSetSP("inRoute", true);
+            spClass.boolSetSP("inventoryLoaded", true);
+            spClass.intSetSP("idRoute", idRoute);
+
+            baseApp.showToast("Ruta iniciada con éxito.");
+            goMainActivity(departure);
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error al iniciar la Ruta.");
+        }
+    }
+
+    public void finishRoute(int route, int authorizer, String name_authorizer){
+        SPClass spClass = new SPClass(context);
+        BaseApp baseApp = new BaseApp(context);
+        int idRoute;
+
+        try {
+            realm = Realm.getDefaultInstance();
+
+            RealmResults<Routes> routes = realm.where(Routes.class).equalTo("ruta", route).findAll();
+
+            if(routes.size() > 0){
+                realm.beginTransaction();
+                routes.get(0).setAutorizado_fin(authorizer);
+                routes.get(0).setFecha_fin(baseApp.getCurrentDateFormated());
+                realm.commitTransaction();
+            }
+
+            idRoute = spClass.intGetSP("idRoute");
+            spClass.intSetSP("idRouteTemp", idRoute);
+
+            spClass.deleteSP("idRoute");
+            spClass.deleteSP("inRoute");
+            spClass.deleteSP("inventoryLoaded");
+
+            baseApp.showToast( "Ruta terminada con éxito");
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió el error : " + ex);
         }
     }
 }
