@@ -135,9 +135,9 @@
                 android:layout_weight="10"
                 android:background="@drawable/custom_btn_info"
                 android:text="Promedios"
-                android:textColor="@android:color/white"
                 android:textAllCaps="false"
-                android:visibility="visible" />
+                android:textColor="@android:color/white"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/btnMap"

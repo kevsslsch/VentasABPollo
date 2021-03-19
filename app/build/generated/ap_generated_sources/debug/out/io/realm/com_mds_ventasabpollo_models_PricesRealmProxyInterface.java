@@ -6,6 +6,8 @@ public interface com_mds_ventasabpollo_models_PricesRealmProxyInterface {
     public void realmSet$cliente(int value);
     public int realmGet$clave_articulo();
     public void realmSet$clave_articulo(int value);
+    public double realmGet$precio();
+    public void realmSet$precio(double value);
     public double realmGet$precio_contado();
     public void realmSet$precio_contado(double value);
     public double realmGet$precio_credito();

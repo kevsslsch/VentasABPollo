@@ -67,7 +67,10 @@ public class AdapterVisits extends RecyclerView.Adapter<AdapterVisits.VisitsView
 
         try{
             if(visitsList.get(position).getLista() != 0) {
-                lists = realm.where(Lists.class).equalTo("lista", visitsList.get(position).getLista()).equalTo("user_id", nUser).findAll();
+                lists = realm.where(Lists.class)
+                        .equalTo("lista", visitsList.get(position).getLista())
+                        .equalTo("user_id", nUser)
+                        .findAll();
                 holder.txtList.setText(lists.get(0).getNombre_lista());
             }
         }catch (Exception ex){

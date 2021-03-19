@@ -5,6 +5,7 @@ import io.realm.RealmObject;
 public class Prices extends RealmObject {
     private int cliente;
     private int clave_articulo;
+    private double precio;
     private double precio_contado;
     private double precio_credito;
     private int    tiene_iva;
@@ -42,6 +43,27 @@ public class Prices extends RealmObject {
         this.fecha_actualizacion = fecha_actualizacion;
         this.promedio_piezas = promedio_piezas;
         this.user_id = user_id;
+    }
+
+    public Prices(int cliente, int clave_articulo, double precio, int tiene_iva, double tasa_IVA, double tasa_IEPS, String tipo_IEPS, String fecha_actualizacion, int promedio_piezas, int user_id) {
+        this.cliente = cliente;
+        this.clave_articulo = clave_articulo;
+        this.precio = precio;
+        this.tiene_iva = tiene_iva;
+        this.tasa_IVA = tasa_IVA;
+        this.tasa_IEPS = tasa_IEPS;
+        this.tipo_IEPS = tipo_IEPS;
+        this.fecha_actualizacion = fecha_actualizacion;
+        this.promedio_piezas = promedio_piezas;
+        this.user_id = user_id;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
 
     public int getCliente() {

@@ -23,33 +23,49 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txtList"
+                android:id="@+id/txtRute"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Lunes"
+                android:text="Ruta:"
                 android:textAlignment="viewStart"
                 android:textColor="@android:color/black"
-                android:textSize="22sp"
-                android:visibility="visible" />
+                android:textSize="22sp" />
 
             <TextView
-                android:id="@+id/txtClientName"
+                android:id="@+id/txtUserAuthorizer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Diana Mendoza Ascencio"
+                android:text="Usuario que autorizo:"
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/txtDateStart"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fecha inicio:"
                 android:textAlignment="viewStart"
                 android:textColor="@android:color/black"
                 android:textSize="17sp" />
 
             <TextView
-                android:id="@+id/txtBussinessName"
+                android:id="@+id/txtDateEnd"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Vazmen La Palanca"
+                android:text="Fecha fin:"
                 android:textAlignment="viewStart"
                 android:textColor="@android:color/black"
-                android:textSize="14sp"
-                android:textStyle="italic" />
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/txtDeparture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Salida: 1"
+                android:textColor="@android:color/black"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/txtDateRegister"
@@ -58,22 +74,6 @@
                 android:text="Status: Terminada"
                 android:textColor="@android:color/black"
                 android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/txtClasification"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Clasificación: Visitada"
-                android:textColor="@android:color/black"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/txtDuration"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Duración: 15 minutos"
-                android:textSize="14sp"
-                android:textStyle="italic" />
 
         </LinearLayout>
 
@@ -86,38 +86,27 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/btnViewDetails"
+                android:id="@+id/btnViewVisits"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="0"
                 android:background="@drawable/custom_btn_info"
-                android:text="Ver detalles"
+                android:text="Ver Visitas"
                 android:textColor="@android:color/white"
                 android:textAllCaps="false"/>
 
             <Button
-                android:id="@+id/btnTicket"
+                android:id="@+id/btnViewReport"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginBottom="5dp"
                 android:layout_weight="0"
                 android:background="@drawable/custom_btn_info"
-                android:text="Imprimir ticket"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/btnDelete"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginBottom="5dp"
-                android:layout_weight="0"
-                android:background="@drawable/custom_btn_info"
-                android:text="Eliminar"
+                android:text="Ver Reporte"
                 android:textColor="@android:color/white"
                 android:textAllCaps="false"/>
+
         </LinearLayout>
 
     </LinearLayout>

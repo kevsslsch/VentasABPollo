@@ -46,7 +46,7 @@
         android:layout_marginBottom="15dp"
         android:background="#FFFFFF"
         android:gravity="center"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imgNoData"
@@ -109,7 +109,7 @@
         android:layout_marginBottom="15dp"
         android:background="#FFFFFF"
         android:gravity="center|center_horizontal"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/imgStartDay"
@@ -153,30 +153,6 @@
             android:textColor="@android:color/black"
             android:textSize="25sp"
             android:typeface="normal" />
-
-        <com.skyfishjy.library.RippleBackground
-            android:id="@+id/content"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_below="@id/txtSubTitleStartDay"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentBottom="false"
-            app:rb_color="#0099CC"
-            app:rb_duration="3000"
-            app:rb_radius="10dp"
-            app:rb_rippleAmount="4"
-            app:rb_scale="5">
-
-            <ImageView
-                android:id="@+id/btnStartDay"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:layout_alignParentBottom="false"
-                android:layout_centerInParent="true"
-                android:src="@drawable/icobig_start" />
-
-        </com.skyfishjy.library.RippleBackground>
 
     </RelativeLayout>
 

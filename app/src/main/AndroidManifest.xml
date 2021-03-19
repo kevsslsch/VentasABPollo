@@ -116,6 +116,17 @@
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait" />
 
+        <activity
+        android:name=".activities.FinalReportActivity"
+        android:configChanges="keyboardHidden|orientation"
+        android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.RoutesActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait" />
+
+
     </application>
 
 </manifest>

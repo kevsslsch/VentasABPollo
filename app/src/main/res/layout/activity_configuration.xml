@@ -58,7 +58,8 @@
             android:layout_marginRight="10dp"
             android:text="Impresora vinculada:"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnPiarUnpair"
@@ -72,6 +73,7 @@
             android:background="@drawable/custom_btn_info"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
+            android:visibility="gone"
             tools:text="Vincular impresora" />
 
         <LinearLayout

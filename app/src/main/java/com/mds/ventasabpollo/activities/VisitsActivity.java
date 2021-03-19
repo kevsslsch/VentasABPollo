@@ -133,9 +133,9 @@ public class VisitsActivity extends AppCompatActivity implements RealmChangeList
         int idVisit = 0;
 
         try {
-            PreparedStatement loComando = baseApp.execute_SP("EXECUTE Nudito.dbo.Cancela_Visita_Nudito ?, ?");
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Cancela_Visita ?, ?");
             if (loComando == null) {
-                baseApp.showLog("Error al Crear SP Cancela_Visita_Nudito");
+                baseApp.showLog("Error al Crear SP Cancela_Visita");
 
             } else {
                 try {
@@ -158,7 +158,7 @@ public class VisitsActivity extends AppCompatActivity implements RealmChangeList
                         }
                     }
                 } catch (Exception ex) {
-                    baseApp.showLog("Error en SP CE_Salida_Ventas, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
+                    baseApp.showLog("Error en SP Cancela_Visita, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
                 }
             }
 

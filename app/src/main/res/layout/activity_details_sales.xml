@@ -565,7 +565,7 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/fbtnFinishSale"
             android:clickable="false"
-            android:visibility="visible"
+            android:visibility="gone"
             app:srcCompat="@drawable/ico_next" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -41,6 +41,7 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
         long maxColumnIndexValue;
         long clienteIndex;
         long clave_articuloIndex;
+        long precioIndex;
         long precio_contadoIndex;
         long precio_creditoIndex;
         long tiene_ivaIndex;
@@ -52,10 +53,11 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
         long user_idIndex;
 
         PricesColumnInfo(OsSchemaInfo schemaInfo) {
-            super(11);
+            super(12);
             OsObjectSchemaInfo objectSchemaInfo = schemaInfo.getObjectSchemaInfo("Prices");
             this.clienteIndex = addColumnDetails("cliente", "cliente", objectSchemaInfo);
             this.clave_articuloIndex = addColumnDetails("clave_articulo", "clave_articulo", objectSchemaInfo);
+            this.precioIndex = addColumnDetails("precio", "precio", objectSchemaInfo);
             this.precio_contadoIndex = addColumnDetails("precio_contado", "precio_contado", objectSchemaInfo);
             this.precio_creditoIndex = addColumnDetails("precio_credito", "precio_credito", objectSchemaInfo);
             this.tiene_ivaIndex = addColumnDetails("tiene_iva", "tiene_iva", objectSchemaInfo);
@@ -84,6 +86,7 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
             final PricesColumnInfo dst = (PricesColumnInfo) rawDst;
             dst.clienteIndex = src.clienteIndex;
             dst.clave_articuloIndex = src.clave_articuloIndex;
+            dst.precioIndex = src.precioIndex;
             dst.precio_contadoIndex = src.precio_contadoIndex;
             dst.precio_creditoIndex = src.precio_creditoIndex;
             dst.tiene_ivaIndex = src.tiene_ivaIndex;
@@ -162,6 +165,28 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
 
         proxyState.getRealm$realm().checkIfValid();
         proxyState.getRow$realm().setLong(columnInfo.clave_articuloIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public double realmGet$precio() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (double) proxyState.getRow$realm().getDouble(columnInfo.precioIndex);
+    }
+
+    @Override
+    public void realmSet$precio(double value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setDouble(columnInfo.precioIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setDouble(columnInfo.precioIndex, value);
     }
 
     @Override
@@ -379,9 +404,10 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
     }
 
     private static OsObjectSchemaInfo createExpectedObjectSchemaInfo() {
-        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("Prices", 11, 0);
+        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("Prices", 12, 0);
         builder.addPersistedProperty("cliente", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("clave_articulo", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("precio", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("precio_contado", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("precio_credito", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("tiene_iva", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
@@ -429,6 +455,13 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
                 throw new IllegalArgumentException("Trying to set non-nullable field 'clave_articulo' to null.");
             } else {
                 objProxy.realmSet$clave_articulo((int) json.getInt("clave_articulo"));
+            }
+        }
+        if (json.has("precio")) {
+            if (json.isNull("precio")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'precio' to null.");
+            } else {
+                objProxy.realmSet$precio((double) json.getDouble("precio"));
             }
         }
         if (json.has("precio_contado")) {
@@ -520,6 +553,13 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
                 } else {
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'clave_articulo' to null.");
+                }
+            } else if (name.equals("precio")) {
+                if (reader.peek() != JsonToken.NULL) {
+                    objProxy.realmSet$precio((double) reader.nextDouble());
+                } else {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'precio' to null.");
                 }
             } else if (name.equals("precio_contado")) {
                 if (reader.peek() != JsonToken.NULL) {
@@ -634,6 +674,7 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
         // Add all non-"object reference" fields
         builder.addInteger(columnInfo.clienteIndex, realmObjectSource.realmGet$cliente());
         builder.addInteger(columnInfo.clave_articuloIndex, realmObjectSource.realmGet$clave_articulo());
+        builder.addDouble(columnInfo.precioIndex, realmObjectSource.realmGet$precio());
         builder.addDouble(columnInfo.precio_contadoIndex, realmObjectSource.realmGet$precio_contado());
         builder.addDouble(columnInfo.precio_creditoIndex, realmObjectSource.realmGet$precio_credito());
         builder.addInteger(columnInfo.tiene_ivaIndex, realmObjectSource.realmGet$tiene_iva());
@@ -664,6 +705,7 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
         cache.put(object, rowIndex);
         Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$cliente(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$clave_articulo(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.precioIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio(), false);
         Table.nativeSetDouble(tableNativePtr, columnInfo.precio_contadoIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio_contado(), false);
         Table.nativeSetDouble(tableNativePtr, columnInfo.precio_creditoIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio_credito(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.tiene_ivaIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$tiene_iva(), false);
@@ -700,6 +742,7 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
             cache.put(object, rowIndex);
             Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$cliente(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$clave_articulo(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.precioIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio(), false);
             Table.nativeSetDouble(tableNativePtr, columnInfo.precio_contadoIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio_contado(), false);
             Table.nativeSetDouble(tableNativePtr, columnInfo.precio_creditoIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio_credito(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.tiene_ivaIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$tiene_iva(), false);
@@ -729,6 +772,7 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
         cache.put(object, rowIndex);
         Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$cliente(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$clave_articulo(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.precioIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio(), false);
         Table.nativeSetDouble(tableNativePtr, columnInfo.precio_contadoIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio_contado(), false);
         Table.nativeSetDouble(tableNativePtr, columnInfo.precio_creditoIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio_credito(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.tiene_ivaIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$tiene_iva(), false);
@@ -769,6 +813,7 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
             cache.put(object, rowIndex);
             Table.nativeSetLong(tableNativePtr, columnInfo.clienteIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$cliente(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$clave_articulo(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.precioIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio(), false);
             Table.nativeSetDouble(tableNativePtr, columnInfo.precio_contadoIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio_contado(), false);
             Table.nativeSetDouble(tableNativePtr, columnInfo.precio_creditoIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$precio_credito(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.tiene_ivaIndex, rowIndex, ((com_mds_ventasabpollo_models_PricesRealmProxyInterface) object).realmGet$tiene_iva(), false);
@@ -812,6 +857,7 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
         com_mds_ventasabpollo_models_PricesRealmProxyInterface realmSource = (com_mds_ventasabpollo_models_PricesRealmProxyInterface) realmObject;
         unmanagedCopy.realmSet$cliente(realmSource.realmGet$cliente());
         unmanagedCopy.realmSet$clave_articulo(realmSource.realmGet$clave_articulo());
+        unmanagedCopy.realmSet$precio(realmSource.realmGet$precio());
         unmanagedCopy.realmSet$precio_contado(realmSource.realmGet$precio_contado());
         unmanagedCopy.realmSet$precio_credito(realmSource.realmGet$precio_credito());
         unmanagedCopy.realmSet$tiene_iva(realmSource.realmGet$tiene_iva());
@@ -838,6 +884,10 @@ public class com_mds_ventasabpollo_models_PricesRealmProxy extends com.mds.venta
         stringBuilder.append(",");
         stringBuilder.append("{clave_articulo:");
         stringBuilder.append(realmGet$clave_articulo());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{precio:");
+        stringBuilder.append(realmGet$precio());
         stringBuilder.append("}");
         stringBuilder.append(",");
         stringBuilder.append("{precio_contado:");

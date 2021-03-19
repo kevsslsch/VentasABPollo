@@ -31,7 +31,9 @@ import com.mds.ventasabpollo.activities.MapsRouteActivity;
 import com.mds.ventasabpollo.activities.OthersActivity;
 import com.mds.ventasabpollo.activities.PayOffActivity;
 import com.mds.ventasabpollo.activities.RestoreDBActivity;
+import com.mds.ventasabpollo.activities.RoutesActivity;
 import com.mds.ventasabpollo.activities.SalesActivity;
+import com.mds.ventasabpollo.activities.VisitsActivity;
 import com.mds.ventasabpollo.models.Articles;
 import com.mds.ventasabpollo.models.ChangesInventories;
 import com.mds.ventasabpollo.models.Clients;
@@ -245,6 +247,22 @@ public class FunctionsApp extends Application {
         iFinalReportActivity.putExtra("idRoute", route);
         context.startActivity(iFinalReportActivity);
         ((Activity) (context)).overridePendingTransition(0, 0);
+    }
+
+    public void goRoutesActivity() {
+        Intent iRoutesActivity = new Intent(context, RoutesActivity.class);
+        context.startActivity(iRoutesActivity);
+        //((Activity) (context)).finish();
+    }
+
+    public void goVisitsRouteActivity(int route) {
+        Intent iVisitsActivity = new Intent(context, VisitsActivity.class);
+        iVisitsActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        iVisitsActivity.putExtra("idRoute", route);
+        context.startActivity(iVisitsActivity);
+        ((Activity) (context)).overridePendingTransition(0, 0);
+
+        //((Activity) (context)).finish();
     }
 
     public int clasificationVisit(int client, int route) {
@@ -582,8 +600,13 @@ public class FunctionsApp extends Application {
                             }
                             break;
                         case "precio_contado":
-                            if(prices.get(0).getPrecio_contado() != 0.0) {
+                            /*if(prices.get(0).getPrecio_contado() != 0.0) {
                                 data = String.valueOf(prices.get(0).getPrecio_contado());
+                            }else{
+                                data = "0.00";
+                            }*/
+                            if(prices.get(0).getPrecio() != 0.0) {
+                                data = String.valueOf(prices.get(0).getPrecio());
                             }else{
                                 data = "0.00";
                             }
@@ -908,7 +931,7 @@ public class FunctionsApp extends Application {
             stringSplitReturns = "";
             stringSplitChangesInventories = "";
 
-            PreparedStatement loComando = baseApp.execute_SP("EXECUTE Nudito.dbo.Guarda_Datos_Android ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Guarda_Datos_Android ?, ?, ?, ?, ?, ?, ?");
             if (loComando == null) {
                 baseApp.showLog("Error al Crear SP Guarda_Datos_Android");
                 messagesSync += "\n\n Error al Crear SP Guarda_Datos_Android";
@@ -929,27 +952,27 @@ public class FunctionsApp extends Application {
                     loComando.setInt(1, nUser);
                     loComando.setString(2, stringSplitVisits);
                     loComando.setString(3, stringSplitSales);
-                    loComando.setString(4, stringSplitChanges);
-                    loComando.setString(5, stringSplitDevolutions);
-                    loComando.setString(6, stringSplitPayments);
-                    loComando.setString(7, stringSplitSeparateds);
-                    loComando.setString(8, stringSplitReturns);
-                    loComando.setString(9, stringSplitDomiciles);
-                    loComando.setString(10, stringSplitChangesInventories);
-                    loComando.setString(11, stringSplitPendingPayments);
+                    //loComando.setString(4, stringSplitChanges);
+                    //loComando.setString(5, stringSplitDevolutions);
+                    loComando.setString(4, stringSplitPayments);
+                    //loComando.setString(7, stringSplitSeparateds);
+                    loComando.setString(5, stringSplitReturns);
+                    loComando.setString(6, stringSplitDomiciles);
+                    //loComando.setString(10, stringSplitChangesInventories);
+                    loComando.setString(7, stringSplitPendingPayments);
                     //loComando.setString(12, stringSplitLogs);
 
                     baseApp.showLog("SQL PARAMETERS 1: " + nUser);
                     baseApp.showLog("SQL PARAMETERS 2: " + stringSplitVisits);
                     baseApp.showLog("SQL PARAMETERS 3: " + stringSplitSales);
-                    baseApp.showLog("SQL PARAMETERS 4: " + stringSplitChanges);
-                    baseApp.showLog("SQL PARAMETERS 5: " + stringSplitDevolutions);
-                    baseApp.showLog("SQL PARAMETERS 6: " + stringSplitPayments);
-                    baseApp.showLog("SQL PARAMETERS 7: " + stringSplitSeparateds);
-                    baseApp.showLog("SQL PARAMETERS 8: " + stringSplitReturns);
-                    baseApp.showLog("SQL PARAMETERS 9: " + stringSplitDomiciles);
-                    baseApp.showLog("SQL PARAMETERS 10: " + stringSplitChangesInventories);
-                    baseApp.showLog("SQL PARAMETERS 11: " + stringSplitPendingPayments);
+                    //baseApp.showLog("SQL PARAMETERS 4: " + stringSplitChanges);
+                    //baseApp.showLog("SQL PARAMETERS 5: " + stringSplitDevolutions);
+                    baseApp.showLog("SQL PARAMETERS 4: " + stringSplitPayments);
+                    //baseApp.showLog("SQL PARAMETERS 7: " + stringSplitSeparateds);
+                    baseApp.showLog("SQL PARAMETERS 5: " + stringSplitReturns);
+                    baseApp.showLog("SQL PARAMETERS 6: " + stringSplitDomiciles);
+                    //baseApp.showLog("SQL PARAMETERS 10: " + stringSplitChangesInventories);
+                    baseApp.showLog("SQL PARAMETERS 7: " + stringSplitPendingPayments);
                     //baseApp.showLog("SQL PARAMETERS 12: " + stringSplitLogs);
 
                     isResultSet = loComando.execute();
@@ -1152,8 +1175,8 @@ public class FunctionsApp extends Application {
                         stringSplit += detail.getPrecio() + "|"; // 5 precio
                         stringSplit += detail.getTasa_IVA() + "|"; // 6 tasa_impuesto
                         stringSplit += detail.getIVA() + "|"; // 7 impuesto*/
-                        stringSplit += "0" + "Ç"; // 8 es_credito
-
+                        stringSplit += "0" + "|"; // 8 es_credito
+                        stringSplit += "0" + "Ç"; // 9 es_remision
                         line++;
                     }
                 }
@@ -1697,7 +1720,7 @@ public class FunctionsApp extends Application {
             visitsPayments.deleteAllFromRealm();
             realm.commitTransaction();
 
-            PreparedStatement loComando = baseApp.execute_SP("EXECUTE Nudito.dbo.Consulta_Cliente_Android ?");
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Consulta_Cliente_Android ?");
 
             if (loComando == null) {
                 baseApp.showLog("Error al Crear SP Consulta_Cliente_Android");
@@ -1770,9 +1793,9 @@ public class FunctionsApp extends Application {
                     }
 
                 } catch (Exception ex) {
-                    //baseApp.showAlert("Error", "Error en SP Consulta_Datos_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
-                    baseApp.showLog("Error en SP Consulta_Datos_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
-                    messagesSync += "\n\n Error en SP Consulta_Datos_Andro id, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso";
+                    //baseApp.showAlert("Error", "Error en SP Consulta_Cliente_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
+                    baseApp.showLog("Error en SP Consulta_Cliente_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
+                    messagesSync += "\n\n Error en SP Consulta_Cliente_Android id, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso";
                 }
             }
         }catch (Exception ex){

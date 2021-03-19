@@ -229,7 +229,9 @@ public class SalesActivity extends AppCompatActivity {
 
     public void dataControllCredit(){
         try{
-            RealmResults<Clients> client = realm.where(Clients.class).equalTo("cliente", nClient).findAll();
+            RealmResults<Clients> client = realm.where(Clients.class)
+                    .equalTo("cliente", nClient)
+                    .findAll();
             double currentCustomerBalance, currentCustomerDebt;
 
             if(client.size() > 0){
@@ -243,19 +245,13 @@ public class SalesActivity extends AppCompatActivity {
                 currentCustomerBalance = functionsapp.getCurrentCustomerBalance(nClient);
                 currentCustomerDebt = functionsapp.getCurrentCustomerDebt(nClient);
 
-                /*if(client.get(0).getLimite_credito() > 0.0){
+                if(client.get(0).getLimite_credito() > 0.0){
                     layoutTypeSale.setVisibility(View.VISIBLE);
                     txtTitleLimitCredit.setText("Limite Crédito: $" + client.get(0).getLimite_credito());
                     txtTitleRemainingCredit.setText("Crédito Restante: $" + functionsapp.getCurrentCustomerBalance(nClient));
                 }else{
                     layoutTypeSale.setVisibility(View.GONE);
-                }*/
-
-                // TODO: Se habilita temporalmente para todos la venta a crédito
-
-                layoutTypeSale.setVisibility(View.VISIBLE);
-                txtTitleLimitCredit.setText("Limite Crédito: $" + client.get(0).getLimite_credito());
-                txtTitleRemainingCredit.setText("Crédito Restante: $" + currentCustomerBalance);
+                }
 
                 if(functionsapp.getCurrentCustomerDebt(nClient) > 0.0){
                     txtTitleDebt.setVisibility(View.VISIBLE);

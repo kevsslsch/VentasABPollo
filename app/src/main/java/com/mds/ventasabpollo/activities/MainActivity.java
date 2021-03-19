@@ -53,6 +53,7 @@ import com.mds.ventasabpollo.models.Departures;
 import com.mds.ventasabpollo.models.DetailsDepartures;
 import com.mds.ventasabpollo.models.Lists;
 import com.mds.ventasabpollo.models.MapRoutes;
+import com.mds.ventasabpollo.models.Prices;
 import com.mds.ventasabpollo.models.Routes;
 import com.mds.ventasabpollo.models.Users;
 import com.mds.ventasabpollo.models.VisitsClasifications;
@@ -85,7 +86,6 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog dialog;
     RecyclerView recyclerLists;
     RelativeLayout layoutList, layoutStartRoute, layoutNotData;
-    ImageView btnStartDay;
     Button btnStartRoute, btnFinishRoute;
     Spinner spinnerDays;
 
@@ -137,7 +137,6 @@ public class MainActivity extends AppCompatActivity
         btnStartRoute = findViewById(R.id.btnStartRoute);
         btnFinishRoute = findViewById(R.id.btnFinishRoute);
 
-        btnStartDay = findViewById(R.id.btnStartDay);
         spinnerDays = findViewById(R.id.spinnerDays);
 
         GridLayoutManager mGridLayoutManagerDetails = new GridLayoutManager(this, 1);
@@ -163,9 +162,7 @@ public class MainActivity extends AppCompatActivity
                 vib.vibrate(50);
             }
 
-
             backgroundProcess("checkDeparture", "bar", "Consultando salidas...");
-
         });
 
         btnFinishRoute.setOnClickListener(v-> showMenuBottonFinishRoute());
@@ -177,9 +174,6 @@ public class MainActivity extends AppCompatActivity
 
         /*hideItemAuthorize();
         verifyAlarms();*/
-
-        final RippleBackground rippleBackground = findViewById(R.id.content);
-        rippleBackground.startRippleAnimation();
 
         spinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -240,7 +234,7 @@ public class MainActivity extends AppCompatActivity
             try (Realm realm = Realm.getDefaultInstance()) {
 
                 publishProgress("Subiendo datos... (14 / 100)");
-                //uploadData();
+                uploadData();
 
                 publishProgress("Subiendo clientes... (28 / 100)");
                 //uploadNewClients();
@@ -361,7 +355,7 @@ public class MainActivity extends AppCompatActivity
             listLists = realm.where(Lists.class).equalTo("dia_semana", day).equalTo("dia_semana", day).or().equalTo("dia_semana", 0).equalTo("user_id", nUser).sort("dia_semana", Sort.DESCENDING).findAll();
             totaLists = listLists.size();
 
-            if (listLists.size() > 0) {
+            /*if (listLists.size() > 0) {
                 layoutList.setVisibility(View.VISIBLE);
                 layoutNotData.setVisibility(View.GONE);
                 layoutStartRoute.setVisibility(View.GONE);
@@ -377,9 +371,9 @@ public class MainActivity extends AppCompatActivity
                 layoutNotData.setVisibility(View.VISIBLE);
 
                 spinnerDays.setVisibility(View.VISIBLE);
-            }
+            }*/
 
-            /*
+
             if(spClass.boolGetSP("inRoute")) {
                 if (listLists.size() > 0) {
                     layoutList.setVisibility(View.VISIBLE);
@@ -411,7 +405,7 @@ public class MainActivity extends AppCompatActivity
                 }
 
                 spinnerDays.setVisibility(View.GONE);
-            }*/
+            }
 
         } catch (Exception ex) {
             baseApp.showAlert("Error", "Ocurrió un error al mostrar las listas, reporta el siguiente error al departamento de Sistemas" +  ex);
@@ -545,7 +539,7 @@ public class MainActivity extends AppCompatActivity
         ClientsLists clientsLists;
         Clients clients;
         Articles articles;
-        //Prices prices;
+        Prices prices;
         //Alarms alarms;
         //VisitsPayments visitsPayments;
 
@@ -704,7 +698,7 @@ public class MainActivity extends AppCompatActivity
                                 Datos.close();
                             }
 
-                            /*if (countResults == 4) {
+                            if (countResults == 5) {
                                 ResultSet Datos = loComando.getResultSet();
 
                                 baseApp.showLog("Descargando precios de artículos...");
@@ -714,17 +708,15 @@ public class MainActivity extends AppCompatActivity
                                     realm.beginTransaction();
                                     deletePrice(Datos.getInt("cliente"), Datos.getInt("clave_articulo"));
 
-                                    //TODO: Campos correctos
                                     prices = new Prices(
                                             Datos.getInt("cliente"),
                                             Datos.getInt("clave_articulo"),
-                                            Datos.getDouble("precio"), //Datos.getDouble("precio_contado"),
-                                            0, //Datos.getDouble("precio_credito"),
-                                            0, //Datos.getInt("tiene_iva"),
-                                            0, //Datos.getDouble("tasa_iva"),
-                                            0, //Datos.getDouble("tasa_IEPS"),
-                                            "", //Datos.getString("tipo_IEPS"),
-                                            "", //Datos.getString("fecha_actualizacion"),
+                                            Datos.getDouble("precio"),
+                                            Datos.getInt("tiene_iva"),
+                                            Datos.getDouble("tasa_iva"),
+                                            Datos.getDouble("tasa_IEPS"),
+                                            Datos.getString("tipo_IEPS"),
+                                            Datos.getString("fecha_actualizacion"),
                                             Datos.getInt("promedio_piezas"),
                                             nUser);
 
@@ -736,6 +728,8 @@ public class MainActivity extends AppCompatActivity
 
                                 Datos.close();
                             }
+
+                            /*
 
                             if (countResults == 5) {
                                 ResultSet Datos = loComando.getResultSet();
@@ -856,16 +850,16 @@ public class MainActivity extends AppCompatActivity
                         messagesSync += "\n\n Clasificaciones de Visitas cargados";
                     }
 
-                    /*
+
                     if (realm.where(Prices.class).findAll().size() == 0) {
                         baseApp.showLog("No se encontraron Precios de Artículos para cargar");
                         messagesSync += "\n\n No se encontraron Precios de Artículos para cargar";
-
                     } else {
                         baseApp.showLog("Precios de Artículos cargados");
                         messagesSync += "\n\n Precios de Artículos cargados";
                     }
 
+                    /*
                     if (realm.where(Alarms.class).findAll().size() == 0) {
                         baseApp.showLog("No se encontraron Alarmas para cargar");
                         messagesSync += "\n\n No se encontraron Alarmas para cargar";
@@ -883,6 +877,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void deletePrice(int client, int article){
+        try{
+
+            try (Realm realm = Realm.getDefaultInstance()) {
+                RealmResults<Prices> results = realm.where(Prices.class).equalTo("cliente", client).equalTo("clave_articulo", article).findAll();
+                results.deleteAllFromRealm();
+            }
+
+        }catch (Exception ex){
+            baseApp.showLog("Ocurrió un error al intentar eliminar un precio: " + ex);
+        }
+    }
 
     public void checkAlertConnection(){
         if(spClass.strGetSP("IPConnection").equals("ND")){
@@ -915,18 +921,18 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_account) {
             functionsapp.goAccountActivity();
         } else if (id == R.id.nav_routes) {
-            //functionsapp.goRoutesActivity();
+            functionsapp.goRoutesActivity();
         }else if(id == R.id.nav_change_connection){
             functionsapp.goChangeConnection();
         }/*else if(id == R.id.nav_alarms){
             //functionsapp.goAlarmsActivity();
         }*/else if(id == R.id.nav_about){
             functionsapp.goAboutActivity();
-        }else if(id == R.id.nav_new_client) {
+        }/*else if(id == R.id.nav_new_client) {
             //newClient();
-        }/*else if(id == R.id.nav_configuration){
+        }*/else if(id == R.id.nav_configuration){
             functionsapp.goConfigurationActivity();
-        }*/
+        }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;

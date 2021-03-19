@@ -29,14 +29,15 @@
             android:id="@+id/nav_visits"
             android:icon="@drawable/ico_visits"
             android:title="Visitas Realizadas" />-->
-        <item
+        <!--<item
             android:id="@+id/nav_new_client"
             android:icon="@drawable/ico_profile"
-            android:title="Nuevo cliente" />
-        <!--<item
+            android:title="Nuevo cliente" />-->
+
+        <item
          android:id="@+id/nav_configuration"
          android:icon="@drawable/ico_settings"
-         android:title="Configuraciones" />-->
+         android:title="Configuraciones" />
 
         <item
             android:id="@+id/nav_change_connection"
