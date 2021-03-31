@@ -70,14 +70,14 @@ public class AdapterArticlesInventory extends RecyclerView.Adapter<AdapterArticl
         }
 
         holder.txtArticle.setText(listArticles.get(position).getNombre_articulo().trim());
-        holder.txtViewAmount.setText(Double.toString(listArticles.get(position).getCantidad_inicial() + countChanges));
+        holder.txtViewAmount.setText(baseApp.formattedNumber(listArticles.get(position).getCantidad_inicial() + countChanges));
         //holder.txtViewAmount2.setText(Integer.toString(listArticles.get(position).getCantidad()));
-        holder.txtViewAmount2.setText(Double.toString(functionsapp.getAmountArticleRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), false, true)));
+        holder.txtViewAmount2.setText(baseApp.formattedNumber(functionsapp.getAmountArticleRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), false, true)));
 
-        holder.txtViewSalesAmount.setText(Integer.toString(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "venta")));
-        holder.txtViewDevolutionsAmount.setText(Integer.toString(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "devolucion")));
-        holder.txtViewSeparatedAmount.setText(Integer.toString(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "cambio")));
-        holder.txtViewChangesAmount.setText(Integer.toString(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "apartado")));
+        holder.txtViewSalesAmount.setText(baseApp.formattedNumber(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "venta")));
+        holder.txtViewDevolutionsAmount.setText(baseApp.formattedNumber(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "devolucion")));
+        holder.txtViewSeparatedAmount.setText(baseApp.formattedNumber(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "cambio")));
+        holder.txtViewChangesAmount.setText(baseApp.formattedNumber(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "apartado")));
     }
 
     @Override

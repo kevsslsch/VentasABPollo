@@ -415,9 +415,9 @@ public class FunctionsApp extends Application {
         }
     }
 
-    public int getDataInventoryRoute(int route, int article, String data){
+    public double getDataInventoryRoute(int route, int article, String data){
         BaseApp baseApp = new BaseApp(context);
-        int amountSale = 0, amountDevolution = 0, amountChange = 0, amountSeparated = 0;
+        double amountSale = 0, amountDevolution = 0, amountChange = 0, amountSeparated = 0;
 
         try{
             realm = Realm.getDefaultInstance();
@@ -542,7 +542,7 @@ public class FunctionsApp extends Application {
                         .equalTo("clave_articulo", article)
                         .notEqualTo("visita", nVisit)
                         .sum("piezas_devolucion")
-                        .intValue();
+                        .doubleValue();
             }else{
                 /*amountSales = realm.where(DetailsSales.class)
                         .equalTo("ruta", route)
@@ -560,7 +560,7 @@ public class FunctionsApp extends Application {
                                         .equalTo("visita", visitsClients1.getId())
                                         .equalTo("clave_articulo", article)
                                         .sum("cantidad")
-                                        .intValue()
+                                        .doubleValue()
                         );
                     }
                 }
