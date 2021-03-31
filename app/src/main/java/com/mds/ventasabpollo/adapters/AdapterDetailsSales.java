@@ -354,7 +354,7 @@ public class AdapterDetailsSales extends RecyclerView.Adapter<AdapterDetailsSale
                     if(editTxtDialogAmount.getText().toString().length() > 0){
                         if(!functionsapp.checkAmountSale(idRoute, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), Double.parseDouble(editTxtDialogAmount.getText().toString()))){
                             baseApp.showToast("La cantidad supera a la existente en inventario, se remplazará a la máxima posible.");
-                            editTxtDialogAmount.setText(Integer.toString(functionsapp.getAmountArticleRoute(idRoute, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), false, false)));
+                            editTxtDialogAmount.setText(Double.toString(functionsapp.getAmountArticleRoute(idRoute, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), false, false)));
                             editTxtDialogAmount.setSelection(editTxtDialogAmount.getText().length());
                         }
                     }
@@ -432,7 +432,7 @@ public class AdapterDetailsSales extends RecyclerView.Adapter<AdapterDetailsSale
                 lnIEPS = totalImport * lnTasaIEPS;
                 totalImport = totalImport + lnIVA + lnIEPS;
 
-                if(functionsApp.checkAmountSale(idRoute, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), Integer.parseInt(editTxtDialogAmount.getText().toString()))) {
+                if(functionsApp.checkAmountSale(idRoute, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), Double.parseDouble(editTxtDialogAmount.getText().toString()))) {
                     //functionsApp.changeMovementsSalesArticle(idRoute, nVisit, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), Integer.parseInt(editTxtDialogAmount.getText().toString()));
 
                     RealmResults<DetailsSales> details = realm.where(DetailsSales.class).equalTo("clave_articulo", DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo()).equalTo("visita", nVisit).findAll();

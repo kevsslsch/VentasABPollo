@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import com.mds.ventasabpollo.R;
 import com.mds.ventasabpollo.activities.AboutActivity;
 import com.mds.ventasabpollo.activities.AccountActivity;
+import com.mds.ventasabpollo.activities.AddClientActivity;
 import com.mds.ventasabpollo.activities.AveragesActivity;
 import com.mds.ventasabpollo.activities.ChangeConnectionActivity;
 import com.mds.ventasabpollo.activities.ChangeInventoryActivity;
@@ -41,6 +42,7 @@ import com.mds.ventasabpollo.models.DetailsDepartures;
 import com.mds.ventasabpollo.models.DetailsSales;
 import com.mds.ventasabpollo.models.Images;
 import com.mds.ventasabpollo.models.Inventories;
+import com.mds.ventasabpollo.models.NewClients;
 import com.mds.ventasabpollo.models.Prices;
 import com.mds.ventasabpollo.models.Routes;
 import com.mds.ventasabpollo.models.VisitsClasifications;
@@ -265,6 +267,12 @@ public class FunctionsApp extends Application {
         //((Activity) (context)).finish();
     }
 
+    public void goAddClientActivity() {
+        Intent iAddClientActivity = new Intent(context, AddClientActivity.class);
+        context.startActivity(iAddClientActivity);
+        //((Activity) (context)).finish();
+    }
+
     public int clasificationVisit(int client, int route) {
         BaseApp baseApp = new BaseApp(context);
 
@@ -469,11 +477,12 @@ public class FunctionsApp extends Application {
         }
     }
 
-    public int getAmountArticleRoute(int route, int article, boolean inDevoluting, boolean isInventory){
+    public double getAmountArticleRoute(int route, int article, boolean inDevoluting, boolean isInventory){
         SPClass spClass = new SPClass(context);
         BaseApp baseApp = new BaseApp(context);
 
-        int nVisit, amountSales = 0, amountDevolutions = 0, countChanges = 0;
+        int nVisit;
+        double amountSales = 0, amountDevolutions = 0, countChanges = 0;
 
         try{
             realm = Realm.getDefaultInstance();
@@ -509,7 +518,7 @@ public class FunctionsApp extends Application {
                                 .equalTo("visita", visitsClients1.getId())
                                 .equalTo("clave_articulo", article)
                                 .sum("cantidad")
-                                .intValue()
+                                .doubleValue()
                 );
             }
 
@@ -559,7 +568,7 @@ public class FunctionsApp extends Application {
                 amountDevolutions = getDataInventoryRoute(route, article, "devolucion");
             }
 
-            if(inventories.get(0) != null){
+            if(inventories.size() > 0){
                 //return inventories.get(0).getCantidad();
 
                 baseApp.showLog("sales: " + amountSales);
@@ -572,6 +581,7 @@ public class FunctionsApp extends Application {
 
         }catch (Exception ex){
             baseApp.showToast("Ocurrió el error: " + ex);
+            ex.printStackTrace();
             return 0;
         }
     }
@@ -741,10 +751,10 @@ public class FunctionsApp extends Application {
 
         try {
             int countDetail;
-            double total = 0.0;
-            double totalImport = 0.0;
-            double lnIVA = 0.0;
-            double lnIEPS = 0.0;
+            double total = 0.00;
+            double totalImport = 0.00;
+            double lnIVA = 0.00;
+            double lnIEPS = 0.00;
 
             RealmResults<DetailsSales> details = realm.where(DetailsSales.class).equalTo("visita", visit).findAll();
             int countDetails = details.size();
@@ -1175,8 +1185,8 @@ public class FunctionsApp extends Application {
                         stringSplit += detail.getPrecio() + "|"; // 5 precio
                         stringSplit += detail.getTasa_IVA() + "|"; // 6 tasa_impuesto
                         stringSplit += detail.getIVA() + "|"; // 7 impuesto*/
-                        stringSplit += "0" + "|"; // 8 es_credito
-                        stringSplit += "0" + "Ç"; // 9 es_remision
+                        stringSplit += getVisit(detail.getVisita()).isEs_credito()  + "|"; // 8 es_credito
+                        stringSplit += getVisit(detail.getVisita()).isEs_remision() + "Ç"; // 9 es_remision
                         line++;
                     }
                 }
@@ -1589,6 +1599,21 @@ public class FunctionsApp extends Application {
         return nextID;
     }
 
+    public int getNextIdClientNew() {
+        realm = Realm.getDefaultInstance();
+
+        realm.executeTransaction(realm -> {
+            // increment index
+            Number num = realm.where(NewClients.class).max("id");
+            if (num == null) {
+                nextID = 1;
+            } else {
+                nextID = num.intValue() + 1;
+            }
+        });
+        return nextID;
+    }
+
     public void initiateMovementsArticlesVisit(int route, int visit){
         BaseApp baseApp = new BaseApp(context);
         SPClass spClass = new SPClass(context);
@@ -1629,7 +1654,7 @@ public class FunctionsApp extends Application {
                                        int amountChange, int amountSeparated, String dateSeparated){
 
         BaseApp baseApp = new BaseApp(context);
-        int pieces;
+        double pieces;
         boolean errorUpdateSaleAmount = false;
 
         try{
@@ -2034,6 +2059,115 @@ public class FunctionsApp extends Application {
             baseApp.showToast( "Ruta terminada con éxito");
         }catch (Exception ex){
             baseApp.showToast("Ocurrió el error : " + ex);
+        }
+    }
+
+    public void addNewClient(){
+        SPClass spClass = new SPClass(context);
+        BaseApp baseApp = new BaseApp(context);
+
+        RealmResults<Articles> listArticles;
+        int idClient, nUser;
+        NewClients newClients;
+        Inventories inventories;
+
+        try{
+            realm = Realm.getDefaultInstance();
+
+            idClient = getNextIdClientNew();
+            nUser = spClass.intGetSP("user");
+
+            realm.beginTransaction();
+            newClients = new NewClients(
+                    idClient,
+                    "",
+                    "",
+                    "XAXX-010101-000",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    0,
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    0,
+                    true,
+                    false,
+                    "");
+
+            realm.copyToRealm(newClients);
+            realm.commitTransaction();
+
+            spClass.intSetSP("idNewClient", idClient);
+
+            goAddClientActivity();
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error al registrar un nuevo cliente.");
+        }
+    }
+
+    public void cancelAddClient(){
+        SPClass spClass = new SPClass(context);
+        BaseApp baseApp = new BaseApp(context);
+
+        try {
+            realm = Realm.getDefaultInstance();
+
+            RealmResults<NewClients> newClients = realm.where(NewClients.class).
+                    equalTo("id", spClass.intGetSP("idNewClient"))
+                    .findAll();
+
+            if(newClients.size() > 0){
+                realm.beginTransaction();
+                newClients.deleteAllFromRealm();
+                realm.commitTransaction();
+            }
+
+            spClass.deleteSP("idNewClient");
+            baseApp.showToast("Registro de cliente cancelado");
+            ((Activity) (context)).finish();
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió el error : " + ex);
+        }
+    }
+
+    public VisitsClients getVisit(int nVisit){
+        BaseApp baseApp = new BaseApp(context);
+
+        try{
+            realm = Realm.getDefaultInstance();
+
+            return realm.where(VisitsClients.class).equalTo("id", nVisit).findFirst();
+        }catch (Exception ex){
+            ex.printStackTrace();
+            baseApp.showLog("Ocurrió un error al obtener una visita");
+            return null;
+        }
+    }
+
+    public Clients getClient(int nClient){
+        BaseApp baseApp = new BaseApp(context);
+
+        try{
+            realm = Realm.getDefaultInstance();
+
+            return realm.where(Clients.class).equalTo("cliente", nClient).findFirst();
+        }catch (Exception ex){
+            ex.printStackTrace();
+            baseApp.showLog("Ocurrió un error al obtener un cliente");
+            return null;
         }
     }
 }

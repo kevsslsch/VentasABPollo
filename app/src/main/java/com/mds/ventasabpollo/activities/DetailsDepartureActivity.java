@@ -97,7 +97,9 @@ public class DetailsDepartureActivity extends AppCompatActivity implements Realm
 
         try {
             realm = Realm.getDefaultInstance();
-            listArticles = realm.where(DetailsDepartures.class).equalTo("salida", nDeparture).findAll();
+            listArticles = realm.where(DetailsDepartures.class)
+                    .equalTo("salida", nDeparture)
+                    .findAll();
             totalArticles = listArticles.size();
             listArticles.addChangeListener(this);
 

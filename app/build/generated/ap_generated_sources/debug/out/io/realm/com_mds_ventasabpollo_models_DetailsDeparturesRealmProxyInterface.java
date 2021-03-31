@@ -8,6 +8,6 @@ public interface com_mds_ventasabpollo_models_DetailsDeparturesRealmProxyInterfa
     public void realmSet$clave_articulo(int value);
     public String realmGet$nombre_articulo();
     public void realmSet$nombre_articulo(String value);
-    public int realmGet$cantidad();
-    public void realmSet$cantidad(int value);
+    public double realmGet$cantidad();
+    public void realmSet$cantidad(double value);
 }

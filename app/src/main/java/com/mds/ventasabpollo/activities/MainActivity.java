@@ -47,16 +47,21 @@ import com.mds.ventasabpollo.application.SPClass;
 import com.mds.ventasabpollo.classes.MyDividerItemDecoration;
 import com.mds.ventasabpollo.classes.ShakeDetector;
 import com.mds.ventasabpollo.models.Articles;
+import com.mds.ventasabpollo.models.Cities;
 import com.mds.ventasabpollo.models.Clients;
 import com.mds.ventasabpollo.models.ClientsLists;
 import com.mds.ventasabpollo.models.Departures;
 import com.mds.ventasabpollo.models.DetailsDepartures;
 import com.mds.ventasabpollo.models.Lists;
 import com.mds.ventasabpollo.models.MapRoutes;
+import com.mds.ventasabpollo.models.MethodPay;
+import com.mds.ventasabpollo.models.NewClients;
 import com.mds.ventasabpollo.models.Prices;
 import com.mds.ventasabpollo.models.Routes;
+import com.mds.ventasabpollo.models.UseCFDI;
 import com.mds.ventasabpollo.models.Users;
 import com.mds.ventasabpollo.models.VisitsClasifications;
+import com.mds.ventasabpollo.models.WayPay;
 import com.mds.ventasabpollo.services.ShakeService;
 import com.skyfishjy.library.RippleBackground;
 
@@ -237,7 +242,7 @@ public class MainActivity extends AppCompatActivity
                 uploadData();
 
                 publishProgress("Subiendo clientes... (28 / 100)");
-                //uploadNewClients();
+                uploadNewClients();
 
                 publishProgress("Borrando datos... (42 / 100)");
                 realm.beginTransaction();
@@ -275,18 +280,19 @@ public class MainActivity extends AppCompatActivity
                 publishProgress("Descargando datos... (56 / 100)");
                 loadData();
 
-                /*
-
                 publishProgress("Descargando datos de Combos... (70 / 100)");
                 loadSpinnersData();
 
                 publishProgress("Creando Rutas de Mapas... (84 / 100)");
                 loadMapRoutes();
 
+                publishProgress("Finalizando... (100 / 100)");
+
+                /*
                 publishProgress("Descargando Personal... (95 / 100)");
                 loadPersonal();
+                */
 
-                publishProgress("Finalizando... (100 / 100)");*/
             } catch (Exception e) {
                 baseApp.showLog("Ocurrió el error: " + e);
                 e.printStackTrace();
@@ -877,6 +883,113 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void uploadNewClients(){
+
+        baseApp.showLog("Comenzando a sincronizar los nuevos clientes...");
+
+        try (Realm realm = Realm.getDefaultInstance()) {
+
+            RealmResults<NewClients> newClients = realm.where(NewClients.class).equalTo("sincronizado", false).findAll();
+
+            int countClients = newClients.size();
+
+            if(countClients > 0) {
+
+                for (NewClients client : newClients) {
+                    PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Guarda_Cliente_Android ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
+                            "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
+                    if (loComando == null) {
+                        baseApp.showLog("Error al Crear SP Guarda_Cliente_Android");
+                        messagesSync += "\n\n Error al Crear SP Guarda_Cliente_Android";
+
+                    } else {
+                        try {
+
+                            loComando.setString(1, "      1");
+                            loComando.setInt(2, nUser);
+                            loComando.setInt(3, nUser);
+                            loComando.setInt(4, nUser);
+                            loComando.setString(5, "      1");
+                            loComando.setInt(6, 1);
+                            loComando.setInt(7, 1);
+                            loComando.setInt(8, 1);
+                            loComando.setInt(9, client.getCiudad());
+                            loComando.setInt(10, 0); // colonia
+                            loComando.setString(11, client.getNombre_cliente());
+                            loComando.setString(12, client.getNombre_comercial());
+                            loComando.setString(13, client.getRfc());
+                            loComando.setString(14, client.getCurp());
+                            loComando.setString(15, "");
+                            loComando.setString(16, client.getCorreo_electronico());
+                            loComando.setString(17, ""); //forma pago
+                            loComando.setString(18, ""); // cuenta
+                            loComando.setString(19, ""); // uso
+                            loComando.setString(20, ""); // método
+                            loComando.setString(21, client.getNombre_contacto());
+                            loComando.setString(22, client.getApellido_contacto());
+                            loComando.setString(23, client.getNombre_calle());
+                            loComando.setString(24, client.getNo_exterior());
+                            loComando.setString(25, client.getNo_interior());
+                            loComando.setString(26, client.getCodigo_postal());
+                            loComando.setString(27, client.getColonia());
+                            loComando.setString(28, client.getLocalidad());
+                            loComando.setString(29, client.getMunicipio());
+                            loComando.setString(30, client.getDescripcion());
+                            loComando.setString(31, client.getNombre_calle() + " No. " + client.getNo_exterior() + " Int. " + client.getNo_exterior());
+                            loComando.setString(32, ""); // area
+                            loComando.setString(33, client.getTelefono());
+                            loComando.setBoolean(34, false);
+                            loComando.setBoolean(35, false);
+
+                            ResultSet Datos = loComando.executeQuery();
+
+                            while (Datos.next()) {
+
+                                if (Datos.getInt("exito") == 1) {
+                                    baseApp.showLog("Datos del cliente : " + client.getNombre_cliente() + " guardados en el Sistema");
+                                    messagesSync += "\n\n Datos del cliente : " + client.getNombre_cliente() + " guardados en el Sistema";
+
+                                    markClientLikeSent(client.getId());
+                                } else {
+                                    baseApp.showLog("Ocurrió un error al guardar los datos del cliente: " + client.getNombre_cliente());
+                                    messagesSync += "\n\n Ocurrió un error al guardar los datos del cliente: " + client.getNombre_cliente();
+                                }
+                            }
+                        } catch (Exception ex) {
+                            baseApp.showLog("Error en SP Guarda_Cliente_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
+                            messagesSync += "\n\n Error en SP Guarda_Cliente_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso";
+                        }
+                    }
+                }
+            }
+        }catch (Exception ex){
+            baseApp.showLog("ERRROR: " + ex);
+        }
+
+        baseApp.showLog("Fin de la sincronización de datos");
+    }
+
+    public void markClientLikeSent(int idClient){
+        try (Realm realm = Realm.getDefaultInstance()) {
+
+            RealmResults<NewClients> client = realm.where(NewClients.class).equalTo("id", idClient).findAll();
+            int countClients = client.size();
+
+            if (countClients > 0) {
+                realm.beginTransaction();
+                client.get(0).setSincronizado(true);
+                client.get(0).setFecha_sincronizado(baseApp.getCurrentDateFormated());
+                realm.commitTransaction();
+
+                baseApp.showLog("Cliente " + client.get(0).getNombre_cliente() + " sincronizado al Servidor marcado como enviado");
+            }
+
+        }catch (Exception ex){
+            baseApp.showLog("Ocurrió el error: " + ex + " y se detuvo el proceso");
+            messagesSync += "\n\nOcurrió el error: " + ex + " y se detuvo el proceso" + ", al intentar marcas los clientes como enviadas";
+        }
+    }
+
     public void deletePrice(int client, int article){
         try{
 
@@ -893,6 +1006,33 @@ public class MainActivity extends AppCompatActivity
     public void checkAlertConnection(){
         if(spClass.strGetSP("IPConnection").equals("ND")){
             //showMenuBottomNoServer();
+        }
+    }
+
+    public void newClient(){
+        try{
+            int idNewClient = spClass.intGetSP("idNewClient");
+
+            if (idNewClient == 0) {
+                baseApp.showToast("Espera un momento, cargando componentes...");
+                functionsapp.addNewClient();
+            } else {
+                new AlertDialog.Builder(this)
+                        .setMessage("Tienes un cliente nuevo en borrador, deseas continuar o empezar uno nuevo.")
+                        .setCancelable(true)
+                        .setPositiveButton("Continuar registrándolo", (dialog, id2) -> {
+                            baseApp.showToast("Recuperando información, espera un momento...");
+                            functionsapp.goAddClientActivity();
+                        })
+                        .setNegativeButton("Empezar uno nuevo", (dialog, id2) -> {
+                            baseApp.showToast("Espera un momento, cargando componentes...");
+                            functionsapp.cancelAddClient();
+                            functionsapp.addNewClient();
+                        })
+                        .show();
+            }
+        }catch (Exception ex) {
+            baseApp.showToast("Ocurrió un error.");
         }
     }
 
@@ -928,9 +1068,9 @@ public class MainActivity extends AppCompatActivity
             //functionsapp.goAlarmsActivity();
         }*/else if(id == R.id.nav_about){
             functionsapp.goAboutActivity();
-        }/*else if(id == R.id.nav_new_client) {
-            //newClient();
-        }*/else if(id == R.id.nav_configuration){
+        }else if(id == R.id.nav_new_client) {
+            newClient();
+        }else if(id == R.id.nav_configuration){
             functionsapp.goConfigurationActivity();
         }
 
@@ -1045,7 +1185,7 @@ public class MainActivity extends AppCompatActivity
                                                 Datos2.getInt("salida"),
                                                 Datos2.getInt("clave_articulo"),
                                                 Datos2.getString("nombre_articulo"),
-                                                Datos2.getInt("cantidad"));
+                                                Datos2.getDouble("cantidad"));
 
                                         realm.copyToRealm(detailsDepartures);
                                         realm.commitTransaction();
@@ -1071,9 +1211,12 @@ public class MainActivity extends AppCompatActivity
                                 RealmResults<Articles> articles = realm.where(Articles.class).findAll();
                                 for (Articles article : articles) {
 
-                                    RealmResults<DetailsDepartures> details = realm.where(DetailsDepartures.class).equalTo("salida", departure.getSalida()).equalTo("clave_articulo", article.getClave_articulo()).findAll();
+                                    RealmResults<DetailsDepartures> details = realm.where(DetailsDepartures.class)
+                                            .equalTo("salida", departure.getSalida())
+                                            .equalTo("clave_articulo", article.getClave_articulo())
+                                            .findAll();
                                     if (details.size() == 0) {
-                                        realm.beginTransaction();
+                                        /*realm.beginTransaction();
                                         detailsDepartures = new DetailsDepartures(
                                                 departure.getSalida(),
                                                 article.getClave_articulo(),
@@ -1083,7 +1226,7 @@ public class MainActivity extends AppCompatActivity
                                         realm.copyToRealm(detailsDepartures);
                                         realm.commitTransaction();
 
-                                        baseApp.showLog("Detalle agregado");
+                                        baseApp.showLog("Detalle agregado");*/
                                     }
                                 }
                             }
@@ -1106,6 +1249,217 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void loadSpinnersData() {
+
+        WayPay wayPay;
+        UseCFDI useCFDI;
+        MethodPay methodPay;
+        Cities cities;
+
+        boolean isResultSet;
+        int countResults = 0, i = 0;
+
+        try (Realm realm = Realm.getDefaultInstance()) {
+
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Combos_Añadir_Cliente_Android");
+
+            if (loComando == null) {
+                //baseApp.showToast("Error al Crear SP Consulta_Datos_Android");
+                baseApp.showLog("Error al Crear SP Combos_Añadir_Cliente_Android");
+                messagesSync += "\n\n Error al Crear SP Combos_Añadir_Cliente_Android";
+
+            } else {
+                try {
+
+                    isResultSet = loComando.execute();
+
+                    while (true) {
+                        if (isResultSet) {
+
+                            if (countResults == 0) {
+                                ResultSet Datos = loComando.getResultSet();
+
+                                baseApp.showLog("Descargando Formas de Pago...");
+                                while (Datos.next()) {
+
+                                    realm.beginTransaction();
+                                    wayPay = new WayPay(
+                                            Datos.getString("descripcion"),
+                                            Datos.getString("forma_SAT"));
+
+                                    realm.copyToRealm(wayPay);
+                                    realm.commitTransaction();
+                                }
+
+                                Datos.close();
+                            }
+
+                            if (countResults == 1) {
+                                ResultSet Datos = loComando.getResultSet();
+
+                                baseApp.showLog("Descargando Uso de CFDI...");
+
+                                while (Datos.next()) {
+
+                                    realm.beginTransaction();
+                                    useCFDI = new UseCFDI(
+                                            Datos.getString("descripcion"),
+                                            Datos.getString("uso_SAT"));
+
+                                    realm.copyToRealm(useCFDI);
+                                    realm.commitTransaction();
+                                }
+
+                                Datos.close();
+                            }
+
+                            if (countResults == 2) {
+                                ResultSet Datos = loComando.getResultSet();
+
+                                baseApp.showLog("Descargando Método de Pago...");
+
+                                while (Datos.next()) {
+
+                                    realm.beginTransaction();
+                                    methodPay = new MethodPay(
+                                            Datos.getString("descripcion"),
+                                            Datos.getString("metodo_SAT"));
+
+                                    realm.copyToRealm(methodPay);
+                                    realm.commitTransaction();
+                                }
+
+                                Datos.close();
+                            }
+
+                            if (countResults == 3) {
+                                ResultSet Datos = loComando.getResultSet();
+
+                                baseApp.showLog("Descargando Ciudades...");
+                                i = 0;
+
+                                while (Datos.next()) {
+
+                                    i++;
+                                    realm.beginTransaction();
+                                    cities = new Cities(
+                                            i,
+                                            Datos.getInt("ciudad"),
+                                            Datos.getString("nombre"));
+
+                                    realm.copyToRealm(cities);
+                                    realm.commitTransaction();
+                                }
+
+                                Datos.close();
+                            }
+
+                        } else {
+                            if (loComando.getUpdateCount() == -1) {
+                                break;
+                            }
+
+                            baseApp.showLog("Result {} is just a count: {}" + countResults + ", " + loComando.getUpdateCount());
+                        }
+
+                        countResults++;
+                        isResultSet = loComando.getMoreResults();
+                    }
+
+                    if (realm.where(WayPay.class).findAll().size() == 0) {
+                        baseApp.showLog("No se encontraron Métodos de pago para cargar");
+                        messagesSync += "\n\n No se encontraron Métodos de pago  de Visitas para cargar";
+
+                    } else {
+                        baseApp.showLog("Métodos de pago  de Visitas cargados");
+                        messagesSync += "\n\n Métodos de pago  de Visitas cargados";
+                    }
+
+                    if (realm.where(UseCFDI.class).findAll().size() == 0) {
+                        baseApp.showLog("No se encontraron lista de Uso de CFDI");
+                        messagesSync += "\n\n No se encontraron lista de Uso de CFDI";
+
+                    } else {
+                        baseApp.showLog("Lista de Uso de CFDI cargadas");
+                        messagesSync += "\n\n Lista de Uso de CFDI cargadas";
+                    }
+
+                    if (realm.where(MethodPay.class).findAll().size() == 0) {
+                        baseApp.showLog("No se encontraron métodos de pago de Clientes para cargar");
+                        messagesSync += "\n\n No se encontraron métodos de pago de Clientes para cargar";
+
+                    } else {
+                        baseApp.showLog("Métodos de pago cargadas");
+                        messagesSync += "\n\n Métodos de pago cargadas";
+                    }
+
+                    if (realm.where(Cities.class).findAll().size() == 0) {
+                        baseApp.showLog("No se encontraron Ciudades para cargar");
+                        messagesSync += "\n\n No se encontraron Ciudades para cargar";
+
+                    } else {
+                        baseApp.showLog("Ciudades cargadas");
+                        messagesSync += "\n\n Ciudades cargadas";
+                    }
+
+                } catch (Exception ex) {
+                    //baseApp.showAlert("Error", "Error en SP Consulta_Datos_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
+                    baseApp.showLog("Error en SP Combos_Añadir_Cliente_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
+                    messagesSync += "\n\n Error en SP Combos_Añadir_Cliente_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso";
+                }
+            }
+        }
+    }
+
+    public void loadMapRoutes() {
+
+        final FunctionsApp functionsapp = new FunctionsApp(this);
+        MapRoutes mapRoutes;
+        List<MapRoutes> listMapRoutes;
+
+        try (Realm realm = Realm.getDefaultInstance()) {
+
+            try {
+
+                RealmResults<ClientsLists> listClients = realm.where(ClientsLists.class)
+                        .findAll();
+                int totaListClients = listClients.size();
+
+                for (int i = 0; i < totaListClients; i++) {
+                    realm.beginTransaction();
+
+                    Clients client = realm.where(Clients.class).equalTo("cliente", listClients.get(i).getCliente()).findFirst();
+
+                    mapRoutes = new MapRoutes(
+                            listClients.get(i).getLista(),
+                            listClients.get(i).getCliente(),
+                            client.getNombre_cliente(),
+                            client.getNombre_comercial(),
+                            client.getLatitud(),
+                            client.getLongitud(),
+                            listClients.get(i).getOrden(),
+                            client.getUser_id());
+
+                    realm.copyToRealm(mapRoutes);
+                    realm.commitTransaction();
+                }
+
+                RealmResults<MapRoutes> mapRoutesB = realm.where(MapRoutes.class).equalTo("user_id", nUser).findAll();
+                int totalMapRoutes = mapRoutesB.size();
+
+                if (totalMapRoutes == 0) {
+                    //functionsapp.showToast("No se cargaron las Rutas de Clientes");
+                    baseApp.showLog("No se cargaron las Rutas de Clientes");
+                }else{
+                    baseApp.showLog("Rutas de Clientes cargadas");
+                }
+
+            } catch (Exception ex) {
+                //functionsespp.showAlert("Error", "Ocurrió un error al cargar las Rutas de Clientes: " + ex);
+                messagesSync = messagesSync + "\nERROR un error al cargas las Rutas de Clientes: " + ex;
+            }
+        }
+    }
 
     public void markDepartureLikeAccepted(int nDeparture){
 

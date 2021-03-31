@@ -103,7 +103,7 @@ public class AdapterArticles extends RecyclerView.Adapter<AdapterArticles.Articl
                 if(holder.editTxtAmountDevolution.getText().length() > 0){
                     if(!functionsapp.checkAmountDevolution(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), Double.parseDouble(holder.editTxtAmountDevolution.getText().toString()))){
                         baseApp.showToast("La cantidad supera a la existente en inventario, se remplazará a la máxima posible.");
-                        holder.editTxtAmountDevolution.setText(Integer.toString(functionsapp.getAmountArticleRoute(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), true, false)));
+                        holder.editTxtAmountDevolution.setText(Double.toString(functionsapp.getAmountArticleRoute(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), true, false)));
                         holder.editTxtAmountDevolution.setSelection(holder.editTxtAmountDevolution.getText().length());
                     }
                 }

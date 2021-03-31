@@ -7,8 +7,8 @@ public class Inventories extends RealmObject {
     private int ruta;
     private int clave_articulo;
     private String nombre_articulo;
-    private int cantidad_inicial;
-    //private int cantidad;
+    private double cantidad_inicial;
+    //private double cantidad;
     private int user_id;
 
     public Inventories() {
@@ -18,8 +18,8 @@ public class Inventories extends RealmObject {
             int ruta,
             int clave_articulo,
             String nombre_articulo,
-            int cantidad_inicial,
-            //int cantidad,
+            double cantidad_inicial,
+            //double cantidad,
             int user_id) {
 
         this.ruta = ruta;
@@ -54,19 +54,19 @@ public class Inventories extends RealmObject {
         this.nombre_articulo = nombre_articulo;
     }
 
-    public int getCantidad_inicial() {
+    public double getCantidad_inicial() {
         return cantidad_inicial;
     }
 
-    public void setCantidad_inicial(int cantidad_inicial) {
+    public void setCantidad_inicial(double cantidad_inicial) {
         this.cantidad_inicial = cantidad_inicial;
     }
 
-    /*public int getCantidad() {
+    /*public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }*/
 

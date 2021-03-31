@@ -107,7 +107,7 @@ public class AdapterListClients extends RecyclerView.Adapter<AdapterListClients.
 
             holder.btnVisit.setVisibility(View.VISIBLE);
             //holder.btnAverages.setVisibility(View.VISIBLE);
-            holder.btnMap.setVisibility(View.GONE);
+            holder.btnMap.setVisibility(View.VISIBLE);
         }
 
         if(!client.getNombre_comercial().trim().equals("")){

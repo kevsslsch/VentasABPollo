@@ -6,8 +6,8 @@ public class ChangesInventories extends RealmObject {
 
     private int ruta;
     private int clave_articulo;
-    private int cantidad_anterior;
-    private int cantidad_nueva;
+    private double cantidad_anterior;
+    private double cantidad_nueva;
     private String fecha;
     private boolean enviado;
     private int user_id;
@@ -18,8 +18,8 @@ public class ChangesInventories extends RealmObject {
     public ChangesInventories(
             int ruta,
             int clave_articulo,
-            int cantidad_anterior,
-            int cantidad_nueva,
+            double cantidad_anterior,
+            double cantidad_nueva,
             String fecha,
             int user_id) {
 
@@ -39,7 +39,7 @@ public class ChangesInventories extends RealmObject {
         this.ruta = ruta;
     }
 
-    public int getClave_articulo() {
+    public double getClave_articulo() {
         return clave_articulo;
     }
 
@@ -47,7 +47,7 @@ public class ChangesInventories extends RealmObject {
         this.clave_articulo = clave_articulo;
     }
 
-    public int getCantidad_anterior() {
+    public double getCantidad_anterior() {
         return cantidad_anterior;
     }
 
@@ -55,11 +55,11 @@ public class ChangesInventories extends RealmObject {
         this.cantidad_anterior = cantidad_anterior;
     }
 
-    public int getCantidad_nueva() {
+    public double getCantidad_nueva() {
         return cantidad_nueva;
     }
 
-    public void setCantidad_nueva(int cantidad_nueva) {
+    public void setCantidad_nueva(double cantidad_nueva) {
         this.cantidad_nueva = cantidad_nueva;
     }
 
@@ -70,7 +70,6 @@ public class ChangesInventories extends RealmObject {
     public void setFecha(String fecha) {
         this.fecha = fecha;
     }
-
 
     public boolean isEnviado() {
         return enviado;

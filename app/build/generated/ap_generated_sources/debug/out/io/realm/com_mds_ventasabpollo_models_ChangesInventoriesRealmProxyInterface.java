@@ -6,10 +6,10 @@ public interface com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterf
     public void realmSet$ruta(int value);
     public int realmGet$clave_articulo();
     public void realmSet$clave_articulo(int value);
-    public int realmGet$cantidad_anterior();
-    public void realmSet$cantidad_anterior(int value);
-    public int realmGet$cantidad_nueva();
-    public void realmSet$cantidad_nueva(int value);
+    public double realmGet$cantidad_anterior();
+    public void realmSet$cantidad_anterior(double value);
+    public double realmGet$cantidad_nueva();
+    public void realmSet$cantidad_nueva(double value);
     public String realmGet$fecha();
     public void realmSet$fecha(String value);
     public boolean realmGet$enviado();

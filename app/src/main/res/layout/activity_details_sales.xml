@@ -8,83 +8,112 @@
     android:background="#FFFFFF"
     tools:context=".activities.DetailsSalesActivity">
 
-    <TextView
-        android:id="@+id/txtTitleSaleDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
-        android:text="Pago"
-        android:textColor="@android:color/black"
-        android:textSize="30sp"
-        android:textStyle="bold" />
-
     <LinearLayout
-        android:id="@+id/layoutTypeSale"
-        android:layout_width="190dp"
+        android:id="@+id/layoutHeader"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:orientation="vertical"
-        android:visibility="invisible">
-
-        <TextView
-            android:id="@+id/txtTitleLimitCredit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="5dp"
-            android:text="Limite Crédito: $0.00"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/txtTitleRemainingCredit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:text="Crédito Restante: $0.00"
-            android:textAlignment="center"
-            android:textColor="@android:color/black"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:id="@+id/layoutSwitch"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="center|center_vertical"
-            android:gravity="center|center_horizontal|center_vertical"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txtTitleCounted"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="Contado"
-                android:textColor="@android:color/black" />
-
-            <Switch
-                android:id="@+id/switchTypeSale"
-                android:layout_width="wrap_content"
+                android:id="@+id/txtTitleHeader"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp" />
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="5dp"
+                android:text="Pago"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutTypeSale"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <TextView
-                android:id="@+id/txtTitleCredit"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:id="@+id/txtTitleLimitCredit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="Limite Crédito: $0.00"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/txtTitleRemainingCredit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="Crédito Restante: $0.00"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/txtTitleDebt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:text="Adeudo: $0.00"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/layoutSwitchTypeSale"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:text="Crédito"
-                android:textColor="@android:color/black" />
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/txtTitleCounted"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Contado"
+                    android:textColor="@android:color/black" />
+
+                <Switch
+                    android:id="@+id/switchTypeSale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp" />
+
+                <TextView
+                    android:id="@+id/txtTitleCredit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Crédito"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/chkBoxFiscalInvoice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Facturar" />
+
         </LinearLayout>
 
     </LinearLayout>
@@ -94,7 +123,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/layoutButtons"
-        android:layout_below="@id/layoutTypeSale"
+        android:layout_below="@id/layoutHeader"
         android:background="#FFFFFF"
         android:visibility="visible"
         tools:context=".activities.DetailsSalesActivity">

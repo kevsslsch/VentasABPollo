@@ -175,24 +175,24 @@ public class com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy extends co
 
     @Override
     @SuppressWarnings("cast")
-    public int realmGet$cantidad() {
+    public double realmGet$cantidad() {
         proxyState.getRealm$realm().checkIfValid();
-        return (int) proxyState.getRow$realm().getLong(columnInfo.cantidadIndex);
+        return (double) proxyState.getRow$realm().getDouble(columnInfo.cantidadIndex);
     }
 
     @Override
-    public void realmSet$cantidad(int value) {
+    public void realmSet$cantidad(double value) {
         if (proxyState.isUnderConstruction()) {
             if (!proxyState.getAcceptDefaultValue$realm()) {
                 return;
             }
             final Row row = proxyState.getRow$realm();
-            row.getTable().setLong(columnInfo.cantidadIndex, row.getIndex(), value, true);
+            row.getTable().setDouble(columnInfo.cantidadIndex, row.getIndex(), value, true);
             return;
         }
 
         proxyState.getRealm$realm().checkIfValid();
-        proxyState.getRow$realm().setLong(columnInfo.cantidadIndex, value);
+        proxyState.getRow$realm().setDouble(columnInfo.cantidadIndex, value);
     }
 
     private static OsObjectSchemaInfo createExpectedObjectSchemaInfo() {
@@ -200,7 +200,7 @@ public class com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy extends co
         builder.addPersistedProperty("salida", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("clave_articulo", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("nombre_articulo", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
-        builder.addPersistedProperty("cantidad", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("cantidad", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         return builder.build();
     }
 
@@ -252,7 +252,7 @@ public class com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy extends co
             if (json.isNull("cantidad")) {
                 throw new IllegalArgumentException("Trying to set non-nullable field 'cantidad' to null.");
             } else {
-                objProxy.realmSet$cantidad((int) json.getInt("cantidad"));
+                objProxy.realmSet$cantidad((double) json.getDouble("cantidad"));
             }
         }
         return obj;
@@ -291,7 +291,7 @@ public class com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy extends co
                 }
             } else if (name.equals("cantidad")) {
                 if (reader.peek() != JsonToken.NULL) {
-                    objProxy.realmSet$cantidad((int) reader.nextInt());
+                    objProxy.realmSet$cantidad((double) reader.nextDouble());
                 } else {
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'cantidad' to null.");
@@ -347,7 +347,7 @@ public class com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy extends co
         builder.addInteger(columnInfo.salidaIndex, realmObjectSource.realmGet$salida());
         builder.addInteger(columnInfo.clave_articuloIndex, realmObjectSource.realmGet$clave_articulo());
         builder.addString(columnInfo.nombre_articuloIndex, realmObjectSource.realmGet$nombre_articulo());
-        builder.addInteger(columnInfo.cantidadIndex, realmObjectSource.realmGet$cantidad());
+        builder.addDouble(columnInfo.cantidadIndex, realmObjectSource.realmGet$cantidad());
 
         // Create the underlying object and cache it before setting any object/objectlist references
         // This will allow us to break any circular dependencies by using the object cache.
@@ -373,7 +373,7 @@ public class com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy extends co
         if (realmGet$nombre_articulo != null) {
             Table.nativeSetString(tableNativePtr, columnInfo.nombre_articuloIndex, rowIndex, realmGet$nombre_articulo, false);
         }
-        Table.nativeSetLong(tableNativePtr, columnInfo.cantidadIndex, rowIndex, ((com_mds_ventasabpollo_models_DetailsDeparturesRealmProxyInterface) object).realmGet$cantidad(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.cantidadIndex, rowIndex, ((com_mds_ventasabpollo_models_DetailsDeparturesRealmProxyInterface) object).realmGet$cantidad(), false);
         return rowIndex;
     }
 
@@ -399,7 +399,7 @@ public class com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy extends co
             if (realmGet$nombre_articulo != null) {
                 Table.nativeSetString(tableNativePtr, columnInfo.nombre_articuloIndex, rowIndex, realmGet$nombre_articulo, false);
             }
-            Table.nativeSetLong(tableNativePtr, columnInfo.cantidadIndex, rowIndex, ((com_mds_ventasabpollo_models_DetailsDeparturesRealmProxyInterface) object).realmGet$cantidad(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.cantidadIndex, rowIndex, ((com_mds_ventasabpollo_models_DetailsDeparturesRealmProxyInterface) object).realmGet$cantidad(), false);
         }
     }
 
@@ -420,7 +420,7 @@ public class com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy extends co
         } else {
             Table.nativeSetNull(tableNativePtr, columnInfo.nombre_articuloIndex, rowIndex, false);
         }
-        Table.nativeSetLong(tableNativePtr, columnInfo.cantidadIndex, rowIndex, ((com_mds_ventasabpollo_models_DetailsDeparturesRealmProxyInterface) object).realmGet$cantidad(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.cantidadIndex, rowIndex, ((com_mds_ventasabpollo_models_DetailsDeparturesRealmProxyInterface) object).realmGet$cantidad(), false);
         return rowIndex;
     }
 
@@ -448,7 +448,7 @@ public class com_mds_ventasabpollo_models_DetailsDeparturesRealmProxy extends co
             } else {
                 Table.nativeSetNull(tableNativePtr, columnInfo.nombre_articuloIndex, rowIndex, false);
             }
-            Table.nativeSetLong(tableNativePtr, columnInfo.cantidadIndex, rowIndex, ((com_mds_ventasabpollo_models_DetailsDeparturesRealmProxyInterface) object).realmGet$cantidad(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.cantidadIndex, rowIndex, ((com_mds_ventasabpollo_models_DetailsDeparturesRealmProxyInterface) object).realmGet$cantidad(), false);
         }
     }
 

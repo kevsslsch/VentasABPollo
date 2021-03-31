@@ -54,6 +54,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         long long_visita_finIndex;
         long enviadaIndex;
         long es_creditoIndex;
+        long es_remisionIndex;
         long visitadaIndex;
         long finalizado_forzadoIndex;
         long estado_ventasIndex;
@@ -61,7 +62,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         long user_idIndex;
 
         VisitsClientsColumnInfo(OsSchemaInfo schemaInfo) {
-            super(20);
+            super(21);
             OsObjectSchemaInfo objectSchemaInfo = schemaInfo.getObjectSchemaInfo("VisitsClients");
             this.idIndex = addColumnDetails("id", "id", objectSchemaInfo);
             this.rutaIndex = addColumnDetails("ruta", "ruta", objectSchemaInfo);
@@ -78,6 +79,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
             this.long_visita_finIndex = addColumnDetails("long_visita_fin", "long_visita_fin", objectSchemaInfo);
             this.enviadaIndex = addColumnDetails("enviada", "enviada", objectSchemaInfo);
             this.es_creditoIndex = addColumnDetails("es_credito", "es_credito", objectSchemaInfo);
+            this.es_remisionIndex = addColumnDetails("es_remision", "es_remision", objectSchemaInfo);
             this.visitadaIndex = addColumnDetails("visitada", "visitada", objectSchemaInfo);
             this.finalizado_forzadoIndex = addColumnDetails("finalizado_forzado", "finalizado_forzado", objectSchemaInfo);
             this.estado_ventasIndex = addColumnDetails("estado_ventas", "estado_ventas", objectSchemaInfo);
@@ -115,6 +117,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
             dst.long_visita_finIndex = src.long_visita_finIndex;
             dst.enviadaIndex = src.enviadaIndex;
             dst.es_creditoIndex = src.es_creditoIndex;
+            dst.es_remisionIndex = src.es_remisionIndex;
             dst.visitadaIndex = src.visitadaIndex;
             dst.finalizado_forzadoIndex = src.finalizado_forzadoIndex;
             dst.estado_ventasIndex = src.estado_ventasIndex;
@@ -499,6 +502,28 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
 
     @Override
     @SuppressWarnings("cast")
+    public boolean realmGet$es_remision() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (boolean) proxyState.getRow$realm().getBoolean(columnInfo.es_remisionIndex);
+    }
+
+    @Override
+    public void realmSet$es_remision(boolean value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setBoolean(columnInfo.es_remisionIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setBoolean(columnInfo.es_remisionIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
     public boolean realmGet$visitada() {
         proxyState.getRealm$realm().checkIfValid();
         return (boolean) proxyState.getRow$realm().getBoolean(columnInfo.visitadaIndex);
@@ -608,7 +633,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
     }
 
     private static OsObjectSchemaInfo createExpectedObjectSchemaInfo() {
-        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("VisitsClients", 20, 0);
+        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("VisitsClients", 21, 0);
         builder.addPersistedProperty("id", RealmFieldType.INTEGER, Property.PRIMARY_KEY, Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("ruta", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("cliente", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
@@ -624,6 +649,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         builder.addPersistedProperty("long_visita_fin", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("enviada", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("es_credito", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("es_remision", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("visitada", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("finalizado_forzado", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("estado_ventas", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
@@ -782,6 +808,13 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
                 objProxy.realmSet$es_credito((boolean) json.getBoolean("es_credito"));
             }
         }
+        if (json.has("es_remision")) {
+            if (json.isNull("es_remision")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'es_remision' to null.");
+            } else {
+                objProxy.realmSet$es_remision((boolean) json.getBoolean("es_remision"));
+            }
+        }
         if (json.has("visitada")) {
             if (json.isNull("visitada")) {
                 throw new IllegalArgumentException("Trying to set non-nullable field 'visitada' to null.");
@@ -937,6 +970,13 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'es_credito' to null.");
                 }
+            } else if (name.equals("es_remision")) {
+                if (reader.peek() != JsonToken.NULL) {
+                    objProxy.realmSet$es_remision((boolean) reader.nextBoolean());
+                } else {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'es_remision' to null.");
+                }
             } else if (name.equals("visitada")) {
                 if (reader.peek() != JsonToken.NULL) {
                     objProxy.realmSet$visitada((boolean) reader.nextBoolean());
@@ -1057,6 +1097,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         builder.addDouble(columnInfo.long_visita_finIndex, realmObjectSource.realmGet$long_visita_fin());
         builder.addBoolean(columnInfo.enviadaIndex, realmObjectSource.realmGet$enviada());
         builder.addBoolean(columnInfo.es_creditoIndex, realmObjectSource.realmGet$es_credito());
+        builder.addBoolean(columnInfo.es_remisionIndex, realmObjectSource.realmGet$es_remision());
         builder.addBoolean(columnInfo.visitadaIndex, realmObjectSource.realmGet$visitada());
         builder.addBoolean(columnInfo.finalizado_forzadoIndex, realmObjectSource.realmGet$finalizado_forzado());
         builder.addBoolean(columnInfo.estado_ventasIndex, realmObjectSource.realmGet$estado_ventas());
@@ -1114,6 +1155,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         Table.nativeSetDouble(tableNativePtr, columnInfo.long_visita_finIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$long_visita_fin(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.enviadaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$enviada(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.es_creditoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$es_credito(), false);
+        Table.nativeSetBoolean(tableNativePtr, columnInfo.es_remisionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$es_remision(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.visitadaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$visitada(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.finalizado_forzadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$finalizado_forzado(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.estado_ventasIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$estado_ventas(), false);
@@ -1171,6 +1213,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
             Table.nativeSetDouble(tableNativePtr, columnInfo.long_visita_finIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$long_visita_fin(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.enviadaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$enviada(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.es_creditoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$es_credito(), false);
+            Table.nativeSetBoolean(tableNativePtr, columnInfo.es_remisionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$es_remision(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.visitadaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$visitada(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.finalizado_forzadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$finalizado_forzado(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.estado_ventasIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$estado_ventas(), false);
@@ -1225,6 +1268,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         Table.nativeSetDouble(tableNativePtr, columnInfo.long_visita_finIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$long_visita_fin(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.enviadaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$enviada(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.es_creditoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$es_credito(), false);
+        Table.nativeSetBoolean(tableNativePtr, columnInfo.es_remisionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$es_remision(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.visitadaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$visitada(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.finalizado_forzadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$finalizado_forzado(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.estado_ventasIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$estado_ventas(), false);
@@ -1286,6 +1330,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
             Table.nativeSetDouble(tableNativePtr, columnInfo.long_visita_finIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$long_visita_fin(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.enviadaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$enviada(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.es_creditoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$es_credito(), false);
+            Table.nativeSetBoolean(tableNativePtr, columnInfo.es_remisionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$es_remision(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.visitadaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$visitada(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.finalizado_forzadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$finalizado_forzado(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.estado_ventasIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$estado_ventas(), false);
@@ -1328,6 +1373,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         unmanagedCopy.realmSet$long_visita_fin(realmSource.realmGet$long_visita_fin());
         unmanagedCopy.realmSet$enviada(realmSource.realmGet$enviada());
         unmanagedCopy.realmSet$es_credito(realmSource.realmGet$es_credito());
+        unmanagedCopy.realmSet$es_remision(realmSource.realmGet$es_remision());
         unmanagedCopy.realmSet$visitada(realmSource.realmGet$visitada());
         unmanagedCopy.realmSet$finalizado_forzado(realmSource.realmGet$finalizado_forzado());
         unmanagedCopy.realmSet$estado_ventas(realmSource.realmGet$estado_ventas());
@@ -1357,6 +1403,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         builder.addDouble(columnInfo.long_visita_finIndex, realmObjectSource.realmGet$long_visita_fin());
         builder.addBoolean(columnInfo.enviadaIndex, realmObjectSource.realmGet$enviada());
         builder.addBoolean(columnInfo.es_creditoIndex, realmObjectSource.realmGet$es_credito());
+        builder.addBoolean(columnInfo.es_remisionIndex, realmObjectSource.realmGet$es_remision());
         builder.addBoolean(columnInfo.visitadaIndex, realmObjectSource.realmGet$visitada());
         builder.addBoolean(columnInfo.finalizado_forzadoIndex, realmObjectSource.realmGet$finalizado_forzado());
         builder.addBoolean(columnInfo.estado_ventasIndex, realmObjectSource.realmGet$estado_ventas());
@@ -1432,6 +1479,10 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         stringBuilder.append(",");
         stringBuilder.append("{es_credito:");
         stringBuilder.append(realmGet$es_credito());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{es_remision:");
+        stringBuilder.append(realmGet$es_remision());
         stringBuilder.append("}");
         stringBuilder.append(",");
         stringBuilder.append("{visitada:");

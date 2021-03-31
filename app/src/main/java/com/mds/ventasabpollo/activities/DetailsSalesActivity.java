@@ -19,6 +19,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -71,12 +73,14 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
     RelativeLayout layoutNotData, layoutMoney;
     LinearLayout layoutTotales, layoutDetails, layoutTypeSale;
     FloatingActionButton fbtnBack, fbtnDeleteAll, fbtnHelp, fbtnNext, fbtnFinishSale;
-    TextView txtTitleSaleDetails, txtChange, txtSubTotalValueD, txtIVAValueD, txtTotalValueD, txtTitleLimitCredit, txtTitleRemainingCredit;
+    TextView txtChange, txtSubTotalValueD, txtIVAValueD, txtTotalValueD, txtTitleLimitCredit, txtTitleDebt, txtTitleRemainingCredit;
     EditText editTxtImport;
     ScrollView scrollViewDetailsSale;
     TableLayout tableHeaders;
     BottomSheetDialog menuBottomSheet;
     Switch switchTypeSale;
+    CheckBox chkBoxFiscalInvoice;
+    LinearLayout layoutSwitchTypeSale;
 
     CardView cardExact, card20, card50, card100, card200, card500;
 
@@ -133,8 +137,8 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
         layoutDetails = findViewById(R.id.layoutDetails);
         layoutTypeSale = findViewById(R.id.layoutTypeSale);
         layoutMoney = findViewById(R.id.layoutMoney);
+        layoutSwitchTypeSale = findViewById(R.id.layoutSwitchTypeSale);
 
-        txtTitleSaleDetails = findViewById(R.id.txtTitleSaleDetails);
         txtSubTotalValueD = findViewById(R.id.txtSubTotalValueD);
         txtIVAValueD = findViewById(R.id.txtIVAValueD);
         txtChange = findViewById(R.id.txtChange);
@@ -149,8 +153,10 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
         fbtnFinishSale = findViewById(R.id.fbtnFinishSale);
 
         txtTitleLimitCredit = findViewById(R.id.txtTitleLimitCredit);
+        txtTitleDebt = findViewById(R.id.txtTitleDebt);
         txtTitleRemainingCredit = findViewById(R.id.txtTitleRemainingCredit);
         switchTypeSale = findViewById(R.id.switchTypeSale);
+        chkBoxFiscalInvoice = findViewById(R.id.chkBoxFiscalInvoice);
 
         cardExact = findViewById(R.id.cardExact);
         card20 = findViewById(R.id.card20);
@@ -219,14 +225,29 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
 
         if(functionsapp.getIsVisitFinished(nVisit)){
             switchTypeSale.setEnabled(false);
+            chkBoxFiscalInvoice.setEnabled(false);
             setAmountPaid();
         }else{
             switchTypeSale.setEnabled(true);
+            chkBoxFiscalInvoice.setEnabled(true);
         }
+
+        chkBoxFiscalInvoice.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            VisitsClients visitsClients = realm.where(VisitsClients.class)
+                    .equalTo("id", nVisit)
+                    .findFirst();
+            realm.beginTransaction();
+            visitsClients.setEs_remision(!isChecked);
+            realm.commitTransaction();
+        });
 
         if(functionsapp.getIsVisitFinished(nVisit)){
             fbtnFinishSale.setVisibility(View.GONE);
         }
+
+        chkBoxFiscalInvoice.setChecked(!(realm.where(VisitsClients.class)
+                .equalTo("id", nVisit)
+                .findFirst().isEs_remision()));
 
         refreshVisibilityButtons();
         refreshTotales();
@@ -239,7 +260,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
         try{
             if(!functionsapp.getIsVisitFinished(nVisit)){
                 if(amount == -1){
-                    baseApp.setTextView(findViewById(R.id.editTxtImport), Double.toString(functionsapp.getTotalSale(nVisit, "totalImport")));
+                    baseApp.setTextView(findViewById(R.id.editTxtImport), baseApp.formattedNumber(functionsapp.getTotalSale(nVisit, "totalImport")));
                 }else{
                     baseApp.setTextView(findViewById(R.id.editTxtImport), Double.toString(amount));
                 }
@@ -293,7 +314,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
                 totalImport = Double.parseDouble(valueImport);
 
                 change = totalImport - functionsapp.getTotalSale(nVisit, "totalImport");
-                txtChange.setText("$ " + change);
+                txtChange.setText("$ " + baseApp.formattedNumber(change));
             }
 
         }catch (Exception ex){
@@ -323,17 +344,40 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
     public void visibilityCredit(){
         try{
             RealmResults<Clients> client = realm.where(Clients.class).equalTo("cliente", nClient).findAll();
+            double currentCustomerDebt;
 
             if(client.size() > 0){
+                currentCustomerDebt = functionsapp.getCurrentCustomerDebt(nClient);
+
                 if(client.get(0).getLimite_credito() > 0.0){
-                    layoutTypeSale.setVisibility(View.VISIBLE);
-                    txtTitleLimitCredit.setText("Limite Crédito: $" + client.get(0).getLimite_credito());
-                    txtTitleRemainingCredit.setText("Crédito Restante: $" + functionsapp.getCurrentCustomerBalance(nClient));
+                    //layoutTypeSale.setVisibility(View.VISIBLE);
+                    txtTitleLimitCredit.setVisibility(View.VISIBLE);
+                    txtTitleRemainingCredit.setVisibility(View.VISIBLE);
+                    layoutSwitchTypeSale.setVisibility(View.VISIBLE);
+
+                    txtTitleLimitCredit.setText("Limite Crédito: $" + baseApp.formattedNumber(client.get(0).getLimite_credito()));
+                    txtTitleRemainingCredit.setText("Crédito Restante: $" + baseApp.formattedNumber(functionsapp.getCurrentCustomerBalance(nClient)));
                 }else{
-                    layoutTypeSale.setVisibility(View.INVISIBLE);
+                    //layoutTypeSale.setVisibility(View.INVISIBLE);
+                    txtTitleLimitCredit.setVisibility(View.GONE);
+                    txtTitleRemainingCredit.setVisibility(View.GONE);
+                    layoutSwitchTypeSale.setVisibility(View.GONE);
                 }
+
+                 /*if(functionsapp.getCurrentCustomerDebt(nClient) > 0.0){
+                    txtTitleDebt.setVisibility(View.VISIBLE);
+                    txtTitleDebt.setText("Adeudo: $" + currentCustomerDebt);
+
+                    baseApp.showAlert("Adeudo", "El cliente tiene un adeudo de: $" + currentCustomerDebt);
+                }else{
+                    txtTitleDebt.setVisibility(View.GONE);
+                }*/
+                /* TODO */
+                txtTitleDebt.setVisibility(View.GONE);
             }else{
-                layoutTypeSale.setVisibility(View.INVISIBLE);
+                //layoutTypeSale.setVisibility(View.INVISIBLE);
+                txtTitleLimitCredit.setVisibility(View.GONE);
+                txtTitleRemainingCredit.setVisibility(View.GONE);
             }
 
             if(functionsapp.getIsVisitFinished(nVisit)) {

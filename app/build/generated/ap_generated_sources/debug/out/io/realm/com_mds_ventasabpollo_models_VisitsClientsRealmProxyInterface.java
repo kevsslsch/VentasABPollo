@@ -32,6 +32,8 @@ public interface com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface {
     public void realmSet$enviada(boolean value);
     public boolean realmGet$es_credito();
     public void realmSet$es_credito(boolean value);
+    public boolean realmGet$es_remision();
+    public void realmSet$es_remision(boolean value);
     public boolean realmGet$visitada();
     public void realmSet$visitada(boolean value);
     public boolean realmGet$finalizado_forzado();

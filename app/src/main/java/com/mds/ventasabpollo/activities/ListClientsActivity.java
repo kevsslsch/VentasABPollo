@@ -347,14 +347,13 @@ public class ListClientsActivity extends AppCompatActivity implements LocationLi
 
         for (int i = 0; i < listClientsChanging.size(); i++) {
             stringSplit += listClientsChanging.get(i).getCliente() + "|";
-            //TODO
-            // stringSplit += listClientsChanging.get(i).getId_domicilio() + "|";
+            stringSplit += functionsapp.getClient(listClientsChanging.get(i).getCliente()).getId_domicilio() + "|";
             stringSplit += position + "Ç"; // 1 familia
 
             position++;
         }
 
-        PreparedStatement loComando = baseApp.execute_SP("EXECUTE Nudito.dbo.Cambia_Orden_Clientes_Android ?, ?, ?");
+        PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Cambia_Orden_Clientes_Android ?, ?, ?");
         if (loComando == null) {
             baseApp.showToast("Error al Crear SP Cambia_Orden_Clientes_Android");
         } else {

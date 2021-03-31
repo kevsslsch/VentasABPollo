@@ -22,6 +22,7 @@ public class VisitsClients extends RealmObject {
     private double  long_visita_fin;
     private boolean enviada;
     private boolean es_credito;
+    private boolean es_remision;
     private boolean visitada;
     private boolean finalizado_forzado;
     private boolean estado_ventas;
@@ -54,7 +55,8 @@ public class VisitsClients extends RealmObject {
         this.clasificacion_visita = clasificacion_visita;
         this.position_clasificacion_visita = position_clasificacion_visita;
         this.visitada = visitada;
-        this.es_credito = es_credito;
+        this.es_credito = false;
+        this.es_remision = true;
         this.estado_ventas = estado_ventas;
         this.fecha_visita_inicio = fecha_visita_inicio;
         this.fecha_visita_fin = fecha_visita_fin;
@@ -64,6 +66,14 @@ public class VisitsClients extends RealmObject {
         this.long_visita_fin = long_visita_fin;
         this.id_db = id_db;
         this.user_id = user_id;
+    }
+
+    public boolean isEs_remision() {
+        return es_remision;
+    }
+
+    public void setEs_remision(boolean es_remision) {
+        this.es_remision = es_remision;
     }
 
     public int getId() {

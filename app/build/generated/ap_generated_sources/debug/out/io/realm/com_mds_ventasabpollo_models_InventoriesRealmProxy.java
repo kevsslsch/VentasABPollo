@@ -178,24 +178,24 @@ public class com_mds_ventasabpollo_models_InventoriesRealmProxy extends com.mds.
 
     @Override
     @SuppressWarnings("cast")
-    public int realmGet$cantidad_inicial() {
+    public double realmGet$cantidad_inicial() {
         proxyState.getRealm$realm().checkIfValid();
-        return (int) proxyState.getRow$realm().getLong(columnInfo.cantidad_inicialIndex);
+        return (double) proxyState.getRow$realm().getDouble(columnInfo.cantidad_inicialIndex);
     }
 
     @Override
-    public void realmSet$cantidad_inicial(int value) {
+    public void realmSet$cantidad_inicial(double value) {
         if (proxyState.isUnderConstruction()) {
             if (!proxyState.getAcceptDefaultValue$realm()) {
                 return;
             }
             final Row row = proxyState.getRow$realm();
-            row.getTable().setLong(columnInfo.cantidad_inicialIndex, row.getIndex(), value, true);
+            row.getTable().setDouble(columnInfo.cantidad_inicialIndex, row.getIndex(), value, true);
             return;
         }
 
         proxyState.getRealm$realm().checkIfValid();
-        proxyState.getRow$realm().setLong(columnInfo.cantidad_inicialIndex, value);
+        proxyState.getRow$realm().setDouble(columnInfo.cantidad_inicialIndex, value);
     }
 
     @Override
@@ -225,7 +225,7 @@ public class com_mds_ventasabpollo_models_InventoriesRealmProxy extends com.mds.
         builder.addPersistedProperty("ruta", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("clave_articulo", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("nombre_articulo", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
-        builder.addPersistedProperty("cantidad_inicial", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("cantidad_inicial", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("user_id", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         return builder.build();
     }
@@ -278,7 +278,7 @@ public class com_mds_ventasabpollo_models_InventoriesRealmProxy extends com.mds.
             if (json.isNull("cantidad_inicial")) {
                 throw new IllegalArgumentException("Trying to set non-nullable field 'cantidad_inicial' to null.");
             } else {
-                objProxy.realmSet$cantidad_inicial((int) json.getInt("cantidad_inicial"));
+                objProxy.realmSet$cantidad_inicial((double) json.getDouble("cantidad_inicial"));
             }
         }
         if (json.has("user_id")) {
@@ -324,7 +324,7 @@ public class com_mds_ventasabpollo_models_InventoriesRealmProxy extends com.mds.
                 }
             } else if (name.equals("cantidad_inicial")) {
                 if (reader.peek() != JsonToken.NULL) {
-                    objProxy.realmSet$cantidad_inicial((int) reader.nextInt());
+                    objProxy.realmSet$cantidad_inicial((double) reader.nextDouble());
                 } else {
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'cantidad_inicial' to null.");
@@ -387,7 +387,7 @@ public class com_mds_ventasabpollo_models_InventoriesRealmProxy extends com.mds.
         builder.addInteger(columnInfo.rutaIndex, realmObjectSource.realmGet$ruta());
         builder.addInteger(columnInfo.clave_articuloIndex, realmObjectSource.realmGet$clave_articulo());
         builder.addString(columnInfo.nombre_articuloIndex, realmObjectSource.realmGet$nombre_articulo());
-        builder.addInteger(columnInfo.cantidad_inicialIndex, realmObjectSource.realmGet$cantidad_inicial());
+        builder.addDouble(columnInfo.cantidad_inicialIndex, realmObjectSource.realmGet$cantidad_inicial());
         builder.addInteger(columnInfo.user_idIndex, realmObjectSource.realmGet$user_id());
 
         // Create the underlying object and cache it before setting any object/objectlist references
@@ -414,7 +414,7 @@ public class com_mds_ventasabpollo_models_InventoriesRealmProxy extends com.mds.
         if (realmGet$nombre_articulo != null) {
             Table.nativeSetString(tableNativePtr, columnInfo.nombre_articuloIndex, rowIndex, realmGet$nombre_articulo, false);
         }
-        Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_inicialIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$cantidad_inicial(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_inicialIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$cantidad_inicial(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$user_id(), false);
         return rowIndex;
     }
@@ -441,7 +441,7 @@ public class com_mds_ventasabpollo_models_InventoriesRealmProxy extends com.mds.
             if (realmGet$nombre_articulo != null) {
                 Table.nativeSetString(tableNativePtr, columnInfo.nombre_articuloIndex, rowIndex, realmGet$nombre_articulo, false);
             }
-            Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_inicialIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$cantidad_inicial(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_inicialIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$cantidad_inicial(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$user_id(), false);
         }
     }
@@ -463,7 +463,7 @@ public class com_mds_ventasabpollo_models_InventoriesRealmProxy extends com.mds.
         } else {
             Table.nativeSetNull(tableNativePtr, columnInfo.nombre_articuloIndex, rowIndex, false);
         }
-        Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_inicialIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$cantidad_inicial(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_inicialIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$cantidad_inicial(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$user_id(), false);
         return rowIndex;
     }
@@ -492,7 +492,7 @@ public class com_mds_ventasabpollo_models_InventoriesRealmProxy extends com.mds.
             } else {
                 Table.nativeSetNull(tableNativePtr, columnInfo.nombre_articuloIndex, rowIndex, false);
             }
-            Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_inicialIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$cantidad_inicial(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_inicialIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$cantidad_inicial(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_InventoriesRealmProxyInterface) object).realmGet$user_id(), false);
         }
     }

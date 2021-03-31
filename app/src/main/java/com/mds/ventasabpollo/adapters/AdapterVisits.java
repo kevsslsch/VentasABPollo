@@ -78,7 +78,9 @@ public class AdapterVisits extends RecyclerView.Adapter<AdapterVisits.VisitsView
         }
 
         if(visitsList.get(position).getCliente() != 0) {
-            clients = realm.where(Clients.class).equalTo("cliente", visitsList.get(position).getCliente()).equalTo("user_id", nUser).findAll();
+            clients = realm.where(Clients.class)
+                    .equalTo("cliente", visitsList.get(position).getCliente())
+                    .findAll();
 
             if(clients.size() > 0){
                 holder.txtClientName.setText(clients.get(0).getNombre_cliente());

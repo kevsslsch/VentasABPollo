@@ -72,10 +72,11 @@ public class SalesActivity extends AppCompatActivity {
     RecyclerView recyclerArticles;
     RelativeLayout layoutArticles, layoutNotData;
     FloatingActionButton fbtnBack, fbtnPayOff, fbtnDetails;
-    TextView txtTitleArticle, txtTotalDetails, txtTitleLimitCredit, txtTitleDebt, txtTitleRemainingCredit;
+    TextView txtTitleHeader, txtTotalDetails, txtTitleLimitCredit, txtTitleDebt, txtTitleRemainingCredit;
     LinearLayout layoutTypeSale;
     SearchView searchClients;
     Switch switchTypeSale;
+    LinearLayout layoutSwitchTypeSale;
 
     int nUser, nVisit, nList, nClient, idRoute;
     int limitArticlesTop = 20;
@@ -109,7 +110,7 @@ public class SalesActivity extends AppCompatActivity {
         fbtnPayOff = findViewById(R.id.fbtnPayOff);
         fbtnDetails = findViewById(R.id.fbtnDetails);
 
-        txtTitleArticle = findViewById(R.id.txtTitleArticle);
+        txtTitleHeader = findViewById(R.id.txtTitleHeader);
         txtTotalDetails = findViewById(R.id.txtTotalDetails);
         searchClients = findViewById(R.id.searchClients);
         layoutTypeSale = findViewById(R.id.layoutTypeSale);
@@ -117,6 +118,7 @@ public class SalesActivity extends AppCompatActivity {
         txtTitleDebt = findViewById(R.id.txtTitleDebt);
         txtTitleRemainingCredit = findViewById(R.id.txtTitleRemainingCredit);
         switchTypeSale = findViewById(R.id.switchTypeSale);
+        layoutSwitchTypeSale = findViewById(R.id.layoutSwitchTypeSale);
 
         GridLayoutManager mGridLayoutManagerDetails = new GridLayoutManager(this, 1);
         //GridAutofitLayoutManager mGridLayoutManagerDetails = new GridAutofitLayoutManager(this, 300);
@@ -237,38 +239,48 @@ public class SalesActivity extends AppCompatActivity {
             if(client.size() > 0){
 
                 if(client.get(0).getNombre_cliente() != null){
-                    txtTitleArticle.setText("Venta de " + client.get(0).getNombre_cliente().trim());
+                    txtTitleHeader.setText("Venta de " + client.get(0).getNombre_cliente().trim());
                 }else{
-                    txtTitleArticle.setText("Venta");
+                    txtTitleHeader.setText("Venta");
                 }
 
                 currentCustomerBalance = functionsapp.getCurrentCustomerBalance(nClient);
                 currentCustomerDebt = functionsapp.getCurrentCustomerDebt(nClient);
 
                 if(client.get(0).getLimite_credito() > 0.0){
-                    layoutTypeSale.setVisibility(View.VISIBLE);
-                    txtTitleLimitCredit.setText("Limite Crédito: $" + client.get(0).getLimite_credito());
-                    txtTitleRemainingCredit.setText("Crédito Restante: $" + functionsapp.getCurrentCustomerBalance(nClient));
+
+                    //layoutTypeSale.setVisibility(View.VISIBLE);
+
+                    txtTitleLimitCredit.setVisibility(View.VISIBLE);
+                    txtTitleRemainingCredit.setVisibility(View.VISIBLE);
+                    layoutSwitchTypeSale.setVisibility(View.VISIBLE);
+
+                    txtTitleLimitCredit.setText("Limite Crédito: $" + baseApp.formattedNumber(client.get(0).getLimite_credito()));
+                    txtTitleRemainingCredit.setText("Crédito Restante: $" + baseApp.formattedNumber(functionsapp.getCurrentCustomerBalance(nClient)));
                 }else{
-                    layoutTypeSale.setVisibility(View.GONE);
+                    //layoutTypeSale.setVisibility(View.GONE);
+
+                    txtTitleLimitCredit.setVisibility(View.GONE);
+                    txtTitleRemainingCredit.setVisibility(View.GONE);
+                    layoutSwitchTypeSale.setVisibility(View.GONE);
                 }
 
-                if(functionsapp.getCurrentCustomerDebt(nClient) > 0.0){
+                /*if(functionsapp.getCurrentCustomerDebt(nClient) > 0.0){
                     txtTitleDebt.setVisibility(View.VISIBLE);
                     txtTitleDebt.setText("Adeudo: $" + currentCustomerDebt);
-                }else{
-                    txtTitleDebt.setVisibility(View.GONE);
-                }
 
-                if(functionsapp.getCurrentCustomerDebt(nClient) > 0.0){
                     baseApp.showAlert("Adeudo", "El cliente tiene un adeudo de: $" + currentCustomerDebt);
                     fbtnPayOff.setVisibility(View.VISIBLE);
                 }else{
+                    txtTitleDebt.setVisibility(View.GONE);
                     fbtnPayOff.setVisibility(View.GONE);
-                }
+                }*/
+                /* TODO */
+                txtTitleDebt.setVisibility(View.GONE);
+                fbtnPayOff.setVisibility(View.GONE);
 
             }else{
-                layoutTypeSale.setVisibility(View.GONE);
+                //layoutTypeSale.setVisibility(View.GONE);
                 baseApp.showToast("Ocurrió un error al cargar el cliente.");
             }
         }catch (Exception ex){
@@ -310,17 +322,20 @@ public class SalesActivity extends AppCompatActivity {
                                     .findAll();
 
                             if(Articles.size() > 0) {
-                                listArticlesShow.add(new Articles(
-                                        Articles.get(i).getClave_articulo(),
-                                        Articles.get(i).getFamilia(),
-                                        Articles.get(i).getSublinea(),
-                                        Articles.get(i).getArticulo(),
-                                        Articles.get(i).getNombre_articulo(),
-                                        Articles.get(i).getNombre_unidad(),
-                                        Articles.get(i).getDescripcion_extendida(),
-                                        false,
-                                        Articles.get(i).getUser_id()));
-                                temporalFlag(Articles.get(i).getClave_articulo());
+
+                                if(functionsapp.getAmountArticleRoute(idRoute, Articles.get(i).getClave_articulo(), false, false) > 0) {
+                                    listArticlesShow.add(new Articles(
+                                            Articles.get(i).getClave_articulo(),
+                                            Articles.get(i).getFamilia(),
+                                            Articles.get(i).getSublinea(),
+                                            Articles.get(i).getArticulo(),
+                                            Articles.get(i).getNombre_articulo(),
+                                            Articles.get(i).getNombre_unidad(),
+                                            Articles.get(i).getDescripcion_extendida(),
+                                            false,
+                                            Articles.get(i).getUser_id()));
+                                    temporalFlag(Articles.get(i).getClave_articulo());
+                                }
                             }
                         }
 
@@ -337,6 +352,7 @@ public class SalesActivity extends AppCompatActivity {
                             RealmResults<Articles> Articles = realm.where(Articles.class).equalTo("clave_articulo", nArticle).equalTo("temporal_flag", false).sort("clave_articulo", Sort.ASCENDING).findAll();
 
                             if (Articles.size() > i) {
+                                if(functionsapp.getAmountArticleRoute(idRoute, Articles.get(i).getClave_articulo(), false, false) > 0) {
                                     listArticlesShow.add(new Articles(
                                             Articles.get(i).getClave_articulo(),
                                             Articles.get(i).getFamilia(),
@@ -347,7 +363,8 @@ public class SalesActivity extends AppCompatActivity {
                                             Articles.get(i).getDescripcion_extendida(),
                                             false,
                                             Articles.get(i).getUser_id()));
-                                temporalFlag(Articles.get(i).getClave_articulo());
+                                    temporalFlag(Articles.get(i).getClave_articulo());
+                                }
                             }
                         }
                     }
@@ -361,17 +378,19 @@ public class SalesActivity extends AppCompatActivity {
                     if(articles.size() > 0) {
                         for (Articles article: articles) {
 
-                            listArticlesShow.add(new Articles(
-                                    article.getClave_articulo(),
-                                    article.getFamilia(),
-                                    article.getSublinea(),
-                                    article.getArticulo(),
-                                    article.getNombre_articulo(),
-                                    article.getNombre_unidad(),
-                                    article.getDescripcion_extendida(),
-                                    false,
-                                    article.getUser_id()));
-                            temporalFlag(article.getClave_articulo());
+                            if(functionsapp.getAmountArticleRoute(idRoute, article.getClave_articulo(), false, false) > 0) {
+                                listArticlesShow.add(new Articles(
+                                        article.getClave_articulo(),
+                                        article.getFamilia(),
+                                        article.getSublinea(),
+                                        article.getArticulo(),
+                                        article.getNombre_articulo(),
+                                        article.getNombre_unidad(),
+                                        article.getDescripcion_extendida(),
+                                        false,
+                                        article.getUser_id()));
+                                temporalFlag(article.getClave_articulo());
+                            }
                         }
                     }
 

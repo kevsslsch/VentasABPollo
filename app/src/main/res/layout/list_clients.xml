@@ -147,8 +147,9 @@
                 android:layout_weight="10"
                 android:background="@drawable/custom_btn_info"
                 android:text="Ver Mapa"
+                android:textAllCaps="false"
                 android:textColor="@android:color/white"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
         </LinearLayout>
 

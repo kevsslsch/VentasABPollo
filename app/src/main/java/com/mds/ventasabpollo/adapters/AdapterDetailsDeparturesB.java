@@ -44,7 +44,7 @@ public class AdapterDetailsDeparturesB extends RecyclerView.Adapter<AdapterDetai
         final SPClass spClass = new SPClass(context);
 
         holder.txtArticle.setText(listArticles.get(position).getNombre_articulo().trim());
-        holder.txtViewAmount.setText(Integer.toString(listArticles.get(position).getCantidad()));
+        holder.txtViewAmount.setText(Double.toString(listArticles.get(position).getCantidad()));
     }
 
     @Override

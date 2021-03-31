@@ -7,7 +7,7 @@ public class DetailsDepartures extends RealmObject {
     private int salida;
     private int clave_articulo;
     private String nombre_articulo;
-    private int cantidad;
+    private double cantidad;
 
     public DetailsDepartures() {
     }
@@ -16,7 +16,7 @@ public class DetailsDepartures extends RealmObject {
             int salida,
             int clave_articulo,
             String nombre_articulo,
-            int cantidad) {
+            double cantidad) {
 
         this.salida = salida;
         this.clave_articulo = clave_articulo;
@@ -48,11 +48,11 @@ public class DetailsDepartures extends RealmObject {
         this.nombre_articulo = nombre_articulo;
     }
 
-    public int getCantidad() {
+    public double getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(int cantidad) {
+    public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
 }

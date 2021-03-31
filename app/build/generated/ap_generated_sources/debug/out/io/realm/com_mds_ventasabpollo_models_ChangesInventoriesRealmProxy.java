@@ -154,46 +154,46 @@ public class com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy extends c
 
     @Override
     @SuppressWarnings("cast")
-    public int realmGet$cantidad_anterior() {
+    public double realmGet$cantidad_anterior() {
         proxyState.getRealm$realm().checkIfValid();
-        return (int) proxyState.getRow$realm().getLong(columnInfo.cantidad_anteriorIndex);
+        return (double) proxyState.getRow$realm().getDouble(columnInfo.cantidad_anteriorIndex);
     }
 
     @Override
-    public void realmSet$cantidad_anterior(int value) {
+    public void realmSet$cantidad_anterior(double value) {
         if (proxyState.isUnderConstruction()) {
             if (!proxyState.getAcceptDefaultValue$realm()) {
                 return;
             }
             final Row row = proxyState.getRow$realm();
-            row.getTable().setLong(columnInfo.cantidad_anteriorIndex, row.getIndex(), value, true);
+            row.getTable().setDouble(columnInfo.cantidad_anteriorIndex, row.getIndex(), value, true);
             return;
         }
 
         proxyState.getRealm$realm().checkIfValid();
-        proxyState.getRow$realm().setLong(columnInfo.cantidad_anteriorIndex, value);
+        proxyState.getRow$realm().setDouble(columnInfo.cantidad_anteriorIndex, value);
     }
 
     @Override
     @SuppressWarnings("cast")
-    public int realmGet$cantidad_nueva() {
+    public double realmGet$cantidad_nueva() {
         proxyState.getRealm$realm().checkIfValid();
-        return (int) proxyState.getRow$realm().getLong(columnInfo.cantidad_nuevaIndex);
+        return (double) proxyState.getRow$realm().getDouble(columnInfo.cantidad_nuevaIndex);
     }
 
     @Override
-    public void realmSet$cantidad_nueva(int value) {
+    public void realmSet$cantidad_nueva(double value) {
         if (proxyState.isUnderConstruction()) {
             if (!proxyState.getAcceptDefaultValue$realm()) {
                 return;
             }
             final Row row = proxyState.getRow$realm();
-            row.getTable().setLong(columnInfo.cantidad_nuevaIndex, row.getIndex(), value, true);
+            row.getTable().setDouble(columnInfo.cantidad_nuevaIndex, row.getIndex(), value, true);
             return;
         }
 
         proxyState.getRealm$realm().checkIfValid();
-        proxyState.getRow$realm().setLong(columnInfo.cantidad_nuevaIndex, value);
+        proxyState.getRow$realm().setDouble(columnInfo.cantidad_nuevaIndex, value);
     }
 
     @Override
@@ -274,8 +274,8 @@ public class com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy extends c
         OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("ChangesInventories", 7, 0);
         builder.addPersistedProperty("ruta", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("clave_articulo", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
-        builder.addPersistedProperty("cantidad_anterior", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
-        builder.addPersistedProperty("cantidad_nueva", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("cantidad_anterior", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("cantidad_nueva", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("fecha", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
         builder.addPersistedProperty("enviado", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("user_id", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
@@ -323,14 +323,14 @@ public class com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy extends c
             if (json.isNull("cantidad_anterior")) {
                 throw new IllegalArgumentException("Trying to set non-nullable field 'cantidad_anterior' to null.");
             } else {
-                objProxy.realmSet$cantidad_anterior((int) json.getInt("cantidad_anterior"));
+                objProxy.realmSet$cantidad_anterior((double) json.getDouble("cantidad_anterior"));
             }
         }
         if (json.has("cantidad_nueva")) {
             if (json.isNull("cantidad_nueva")) {
                 throw new IllegalArgumentException("Trying to set non-nullable field 'cantidad_nueva' to null.");
             } else {
-                objProxy.realmSet$cantidad_nueva((int) json.getInt("cantidad_nueva"));
+                objProxy.realmSet$cantidad_nueva((double) json.getDouble("cantidad_nueva"));
             }
         }
         if (json.has("fecha")) {
@@ -383,14 +383,14 @@ public class com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy extends c
                 }
             } else if (name.equals("cantidad_anterior")) {
                 if (reader.peek() != JsonToken.NULL) {
-                    objProxy.realmSet$cantidad_anterior((int) reader.nextInt());
+                    objProxy.realmSet$cantidad_anterior((double) reader.nextDouble());
                 } else {
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'cantidad_anterior' to null.");
                 }
             } else if (name.equals("cantidad_nueva")) {
                 if (reader.peek() != JsonToken.NULL) {
-                    objProxy.realmSet$cantidad_nueva((int) reader.nextInt());
+                    objProxy.realmSet$cantidad_nueva((double) reader.nextDouble());
                 } else {
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'cantidad_nueva' to null.");
@@ -466,8 +466,8 @@ public class com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy extends c
         // Add all non-"object reference" fields
         builder.addInteger(columnInfo.rutaIndex, realmObjectSource.realmGet$ruta());
         builder.addInteger(columnInfo.clave_articuloIndex, realmObjectSource.realmGet$clave_articulo());
-        builder.addInteger(columnInfo.cantidad_anteriorIndex, realmObjectSource.realmGet$cantidad_anterior());
-        builder.addInteger(columnInfo.cantidad_nuevaIndex, realmObjectSource.realmGet$cantidad_nueva());
+        builder.addDouble(columnInfo.cantidad_anteriorIndex, realmObjectSource.realmGet$cantidad_anterior());
+        builder.addDouble(columnInfo.cantidad_nuevaIndex, realmObjectSource.realmGet$cantidad_nueva());
         builder.addString(columnInfo.fechaIndex, realmObjectSource.realmGet$fecha());
         builder.addBoolean(columnInfo.enviadoIndex, realmObjectSource.realmGet$enviado());
         builder.addInteger(columnInfo.user_idIndex, realmObjectSource.realmGet$user_id());
@@ -492,8 +492,8 @@ public class com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy extends c
         cache.put(object, rowIndex);
         Table.nativeSetLong(tableNativePtr, columnInfo.rutaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$ruta(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$clave_articulo(), false);
-        Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_anteriorIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_anterior(), false);
-        Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_nuevaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_nueva(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_anteriorIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_anterior(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_nuevaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_nueva(), false);
         String realmGet$fecha = ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$fecha();
         if (realmGet$fecha != null) {
             Table.nativeSetString(tableNativePtr, columnInfo.fechaIndex, rowIndex, realmGet$fecha, false);
@@ -521,8 +521,8 @@ public class com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy extends c
             cache.put(object, rowIndex);
             Table.nativeSetLong(tableNativePtr, columnInfo.rutaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$ruta(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$clave_articulo(), false);
-            Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_anteriorIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_anterior(), false);
-            Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_nuevaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_nueva(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_anteriorIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_anterior(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_nuevaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_nueva(), false);
             String realmGet$fecha = ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$fecha();
             if (realmGet$fecha != null) {
                 Table.nativeSetString(tableNativePtr, columnInfo.fechaIndex, rowIndex, realmGet$fecha, false);
@@ -543,8 +543,8 @@ public class com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy extends c
         cache.put(object, rowIndex);
         Table.nativeSetLong(tableNativePtr, columnInfo.rutaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$ruta(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$clave_articulo(), false);
-        Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_anteriorIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_anterior(), false);
-        Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_nuevaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_nueva(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_anteriorIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_anterior(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_nuevaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_nueva(), false);
         String realmGet$fecha = ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$fecha();
         if (realmGet$fecha != null) {
             Table.nativeSetString(tableNativePtr, columnInfo.fechaIndex, rowIndex, realmGet$fecha, false);
@@ -574,8 +574,8 @@ public class com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy extends c
             cache.put(object, rowIndex);
             Table.nativeSetLong(tableNativePtr, columnInfo.rutaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$ruta(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$clave_articulo(), false);
-            Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_anteriorIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_anterior(), false);
-            Table.nativeSetLong(tableNativePtr, columnInfo.cantidad_nuevaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_nueva(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_anteriorIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_anterior(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.cantidad_nuevaIndex, rowIndex, ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$cantidad_nueva(), false);
             String realmGet$fecha = ((com_mds_ventasabpollo_models_ChangesInventoriesRealmProxyInterface) object).realmGet$fecha();
             if (realmGet$fecha != null) {
                 Table.nativeSetString(tableNativePtr, columnInfo.fechaIndex, rowIndex, realmGet$fecha, false);

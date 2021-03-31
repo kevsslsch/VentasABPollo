@@ -322,7 +322,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
                         if(!functionsapp.checkAmountSale(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), amountDouble)){
                             baseApp.showToast("La cantidad supera a la existente en inventario, se remplazará a la máxima posible.");
-                            editTxtDialogAmount.setText(Integer.toString(functionsapp.getAmountArticleRoute(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), false, false)));
+                            editTxtDialogAmount.setText(Double.toString(functionsapp.getAmountArticleRoute(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), false, false)));
                             editTxtDialogAmount.setSelection(editTxtDialogAmount.getText().length());
                         }
                     }
@@ -409,7 +409,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
                 if (!functionsapp.checkAmountSale(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), Integer.parseInt(holder.editTxtAmount.getText().toString()))) {
                     baseApp.showToast("La cantidad supera a la existente en el inventario que es " + functionsapp.getAmountArticleRoute(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), false, false));
-                    holder.editTxtAmount.setText(Integer.toString(functionsapp.getAmountArticleRoute(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), false, false)));
+                    holder.editTxtAmount.setText(Double.toString(functionsapp.getAmountArticleRoute(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), false, false)));
                     holder.editTxtAmount.setSelection(holder.editTxtAmount.getText().length());
                 }else if (price == 0) {
                     baseApp.showToast("Este cliente no tiene precio configurado para este artículo, revisa en el Sistema.");

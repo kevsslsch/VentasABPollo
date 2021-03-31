@@ -29,10 +29,10 @@
             android:id="@+id/nav_visits"
             android:icon="@drawable/ico_visits"
             android:title="Visitas Realizadas" />-->
-        <!--<item
+        <item
             android:id="@+id/nav_new_client"
             android:icon="@drawable/ico_profile"
-            android:title="Nuevo cliente" />-->
+            android:title="Agregar cliente" />
 
         <item
          android:id="@+id/nav_configuration"

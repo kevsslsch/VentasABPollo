@@ -37,4 +37,7 @@
     <string name="text_date_lastweek2">Una semana</string>
     <string name="text_date_lastmonth2">Un mes</string>
     <string name="text_date_lastyear2">Un año</string>
+
+    <string name="tab_text_1">Datos Fiscales</string>
+    <string name="tab_text_2">Domicilios y Teléfonos</string>
 </resources>

@@ -30,7 +30,7 @@ public class AdapterArticlesChangeInventory extends RecyclerView.Adapter<Adapter
     private List<Inventories> listArticles;
     private HashMap<Integer, ArticlesViewHolder> holderlist;
 
-    private static List<Integer> mEditTextValues = new ArrayList<>();
+    private static List<Double> mEditTextValues = new ArrayList<>();
 
     public AdapterArticlesChangeInventory(Context context, List<Inventories> listArticles) {
         this.context = context;
@@ -41,7 +41,7 @@ public class AdapterArticlesChangeInventory extends RecyclerView.Adapter<Adapter
         }
 
         for(int i=1;i<=listArticles.size();i++){
-            mEditTextValues.add(0);
+            mEditTextValues.add(0.0);
         }
 
         holderlist = new HashMap<>();
@@ -65,21 +65,21 @@ public class AdapterArticlesChangeInventory extends RecyclerView.Adapter<Adapter
             holderlist.put(position, holder);
         }
 
-        int amount = functionsapp.getAmountArticleRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), false, true);
+        double amount = functionsapp.getAmountArticleRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), false, true);
 
         holder.txtKey.setText(Integer.toString(listArticles.get(position).getClave_articulo()));
         holder.txtArticle.setText(listArticles.get(position).getNombre_articulo().trim());
         //holder.txtViewAmount.setText(Integer.toString(listArticles.get(position).getCantidad()));
-        holder.txtViewAmount.setText(Integer.toString(amount));
+        holder.txtViewAmount.setText(Double.toString(amount));
 
         holder.editTxtViewNewAmount.setSelectAllOnFocus(true);
         holder.editTxtViewNewAmount.setTag(position);
 
         if(mEditTextValues.get(position) == 0 && amount != 0){
             mEditTextValues.set(position, amount);
-            holder.editTxtViewNewAmount.setText(Integer.toString(amount));
+            holder.editTxtViewNewAmount.setText(Double.toString(amount));
         }else{
-            holder.editTxtViewNewAmount.setText(Integer.toString(mEditTextValues.get(position)));
+            holder.editTxtViewNewAmount.setText(Double.toString(mEditTextValues.get(position)));
         }
     }
 
@@ -119,11 +119,11 @@ public class AdapterArticlesChangeInventory extends RecyclerView.Adapter<Adapter
                     if(editTxtViewNewAmount.getTag()!=null) {
 
                         if (charSequence.length() == 0) {
-                            mEditTextValues.set((int) editTxtViewNewAmount.getTag(), 0);
+                            mEditTextValues.set((int) editTxtViewNewAmount.getTag(), 0.0);
                         } else if (charSequence.length() > 9) {
-                            mEditTextValues.set((int) editTxtViewNewAmount.getTag(), Integer.valueOf(charSequence.toString().substring(0, 9)));
+                            mEditTextValues.set((int) editTxtViewNewAmount.getTag(), Double.valueOf(charSequence.toString().substring(0, 9)));
                         } else {
-                            mEditTextValues.set((int) editTxtViewNewAmount.getTag(), Integer.valueOf(charSequence.toString()));
+                            mEditTextValues.set((int) editTxtViewNewAmount.getTag(), Double.valueOf(charSequence.toString()));
                         }
                     }
                 }

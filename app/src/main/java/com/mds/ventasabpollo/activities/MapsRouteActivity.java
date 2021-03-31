@@ -87,7 +87,7 @@ public class MapsRouteActivity extends FragmentActivity implements OnMapReadyCal
 
                     if (lnX == 0.0 || lnY == 0.0) {
                         baseApp.showToast("El cliente " + listMapRoutes.getNombre_cliente().trim() + " tiene mal configuradas las coordenadas en el Sistema");
-                        finish();
+                        //finish();
                     } else {
 
                         // Add a marker in Sydney and move the camera
