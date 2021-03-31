@@ -311,7 +311,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
                 totalImport = 0;
                 txtChange.setText("$ 0.0");
             }else{
-                totalImport = Double.parseDouble(valueImport);
+                totalImport = Double.parseDouble(valueImport.replaceAll(",",""));
 
                 change = totalImport - functionsapp.getTotalSale(nVisit, "totalImport");
                 txtChange.setText("$ " + baseApp.formattedNumber(change));

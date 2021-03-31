@@ -66,7 +66,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
     @Override
     public ArticlesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_articles_b, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_articles, parent, false);
         return new ArticlesViewHolder(view);
     }
 
@@ -101,7 +101,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
         holder.txtName_Article.setText(articlesList.get(position).getNombre_articulo().trim());
 
         if(listDetails.size() > 0){
-            holder.editTxtAmount.setText(""+(int)listDetails.get(0).getCantidad());
+            holder.editTxtAmount.setText(Double.toString(listDetails.get(0).getCantidad()));
         }else{
             holder.editTxtAmount.setText("0");
         }
@@ -407,7 +407,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
                 }
             }else{
 
-                if (!functionsapp.checkAmountSale(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), Integer.parseInt(holder.editTxtAmount.getText().toString()))) {
+                if (!functionsapp.checkAmountSale(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), Double.parseDouble(holder.editTxtAmount.getText().toString()))) {
                     baseApp.showToast("La cantidad supera a la existente en el inventario que es " + functionsapp.getAmountArticleRoute(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), false, false));
                     holder.editTxtAmount.setText(Double.toString(functionsapp.getAmountArticleRoute(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), false, false)));
                     holder.editTxtAmount.setSelection(holder.editTxtAmount.getText().length());
@@ -471,6 +471,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
                 //alert.dismiss();
         } catch (Exception ex) {
             baseApp.showAlert("Error", "Ocurrió un error, repórtalo al departamento de Sistemas: " + ex);
+            ex.printStackTrace();
         }
     }
 }

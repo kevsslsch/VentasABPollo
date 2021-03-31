@@ -68,7 +68,7 @@ public class InventoryActivity extends AppCompatActivity implements RealmChangeL
 
         if(idRoute != 0){
             try{
-                txtTotalSales.setText("Total Ventas: $" + functionsApp.getTotalSaleRoute(idRoute));
+                txtTotalSales.setText("Total Ventas: $" + baseApp.formattedNumber(functionsApp.getTotalSaleRoute(idRoute)));
             }catch (Exception ex){
                 baseApp.showToast("Ocurrió un error: " + ex);
             }
