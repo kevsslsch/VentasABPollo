@@ -52,6 +52,7 @@ import com.mds.ventasabpollo.models.Clients;
 import com.mds.ventasabpollo.models.ClientsLists;
 import com.mds.ventasabpollo.models.Departures;
 import com.mds.ventasabpollo.models.DetailsDepartures;
+import com.mds.ventasabpollo.models.Images;
 import com.mds.ventasabpollo.models.Lists;
 import com.mds.ventasabpollo.models.MapRoutes;
 import com.mds.ventasabpollo.models.MethodPay;
@@ -546,6 +547,7 @@ public class MainActivity extends AppCompatActivity
         Clients clients;
         Articles articles;
         Prices prices;
+        Images images;
         //Alarms alarms;
         //VisitsPayments visitsPayments;
 
@@ -729,6 +731,29 @@ public class MainActivity extends AppCompatActivity
                                     baseApp.showLog("Precios cargados del cliente " + Datos.getInt("cliente") + ", del artículo " + Datos.getInt("clave_articulo"));
 
                                     realm.copyToRealm(prices);
+                                    realm.commitTransaction();
+                                }
+
+                                Datos.close();
+                            }
+
+                            if (countResults == 6) {
+                                ResultSet Datos = loComando.getResultSet();
+
+                                baseApp.showLog("Descargando fotos de artículos...");
+
+                                while (Datos.next()) {
+
+                                    realm.beginTransaction();
+                                    images = new Images(
+                                            Datos.getInt("foto"),
+                                            Datos.getInt("clave_integer"),
+                                            Datos.getString("texto_base64"),
+                                            "articles");
+
+                                    baseApp.showLog("Imagen del artículo " + Datos.getInt("clave_integer") + " cargada");
+
+                                    realm.copyToRealm(images);
                                     realm.commitTransaction();
                                 }
 

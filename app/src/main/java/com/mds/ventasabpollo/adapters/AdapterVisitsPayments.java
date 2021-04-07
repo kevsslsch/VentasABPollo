@@ -81,14 +81,14 @@ public class AdapterVisitsPayments extends RecyclerView.Adapter<AdapterVisitsPay
             holder.txtViewClient.setText(clients.get(0).getNombre_cliente());
         }
 
-        holder.txtViewTotal.setText("Venta total: $" + visitsList.get(position).getImporte());
+        holder.txtViewTotal.setText("Venta total: $" + baseApp.formattedNumber(visitsList.get(position).getImporte()));
 
         if(visitsList.get(position).getImporte_saldado() != 0){
             holder.txtViewTotalPayed.setVisibility(View.VISIBLE);
             holder.txtViewTotalDifference.setVisibility(View.VISIBLE);
 
-            holder.txtViewTotalPayed.setText("Abono: $" + visitsList.get(position).getImporte_saldado());
-            holder.txtViewTotalDifference.setText("Restante: $" + ( visitsList.get(position).getImporte() - visitsList.get(position).getImporte_saldado()));
+            holder.txtViewTotalPayed.setText("Abono: $" + baseApp.formattedNumber(visitsList.get(position).getImporte_saldado()));
+            holder.txtViewTotalDifference.setText("Restante: $" + baseApp.formattedNumber(( visitsList.get(position).getImporte() - visitsList.get(position).getImporte_saldado())));
         }else{
             holder.txtViewTotalPayed.setVisibility(View.GONE);
             holder.txtViewTotalDifference.setVisibility(View.GONE);

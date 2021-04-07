@@ -218,10 +218,10 @@ public class FinalReportActivity extends AppCompatActivity implements RealmChang
                 txtDateStart.setText("Fecha inicio: " + route.get(0).getFecha_inicio());
                 txtDateEnd.setText("Fecha fin: " + route.get(0).getFecha_fin());
                 txtDuration.setText("Duración: " + baseApp.dateFormatTwoDates(baseApp.convertDate(route.get(0).getFecha_inicio()), baseApp.convertDate(route.get(0).getFecha_fin())));
-                txtTotalSales.setText("T. Ventas Contado: $" + functionsApp.getTotalSaleRoute(idRoute));
-                txtTotalSalesCreditPayed.setText("T. Ventas Crédito Saldado: $" + functionsApp.getTotalSaleRouteCreditPayed(idRoute));
-                txtTotalCash.setText("T. Efectivo: " + (functionsApp.getTotalSaleRoute(idRoute) + functionsApp.getTotalSaleRouteCreditPayed(idRoute)));
-                txtTotalSalesCredit.setText("T. Ventas Crédito: $" + functionsApp.getTotalSaleRouteCredit(idRoute));
+                txtTotalSales.setText("T. Ventas Contado: $" + baseApp.formattedNumber(functionsApp.getTotalSaleRoute(idRoute)));
+                txtTotalSalesCreditPayed.setText("T. Ventas Crédito Saldado: $" + baseApp.formattedNumber(functionsApp.getTotalSaleRouteCreditPayed(idRoute)));
+                txtTotalCash.setText("T. Efectivo: " + baseApp.formattedNumber(((functionsApp.getTotalSaleRoute(idRoute) + functionsApp.getTotalSaleRouteCreditPayed(idRoute)))));
+                txtTotalSalesCredit.setText("T. Ventas Crédito: $" + baseApp.formattedNumber(functionsApp.getTotalSaleRouteCredit(idRoute)));
             }
 
         }catch (Exception ex){
