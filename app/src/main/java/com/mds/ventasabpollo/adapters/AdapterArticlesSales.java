@@ -99,6 +99,8 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
         holder.imgArticle.setImageDrawable(mDrawable);
 
         holder.txtName_Article.setText(articlesList.get(position).getNombre_articulo().trim());
+        holder.txtViewPrice.setText(baseApp.formattedNumber(functionsapp.getFinalPrice(nClient, articlesList.get(position).getClave_articulo(), "precio_contado")));
+        holder.txtViewUnit.setText(articlesList.get(position).getNombre_unidad().trim());
 
         if(listDetails.size() > 0){
             holder.editTxtAmount.setText(Double.toString(listDetails.get(0).getCantidad()));
@@ -161,7 +163,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
     public class ArticlesViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgArticle;
-        TextView txtName_Article;
+        TextView txtName_Article, txtViewPrice, txtViewUnit;
         EditText editTxtAmount;
         LinearLayout layoutArticle;
 
@@ -171,6 +173,8 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
             imgArticle = itemView.findViewById(R.id.imgArticle);
             editTxtAmount = itemView.findViewById(R.id.editTxtAmount);
             txtName_Article = itemView.findViewById(R.id.txtNameArticle);
+            txtViewPrice = itemView.findViewById(R.id.txtViewPrice);
+            txtViewUnit = itemView.findViewById(R.id.txtViewUnit);
             layoutArticle = itemView.findViewById(R.id.layoutArticle);
         }
     }

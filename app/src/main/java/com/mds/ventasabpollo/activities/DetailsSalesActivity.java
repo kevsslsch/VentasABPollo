@@ -73,7 +73,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
     RelativeLayout layoutNotData, layoutMoney;
     LinearLayout layoutTotales, layoutDetails, layoutTypeSale;
     FloatingActionButton fbtnBack, fbtnDeleteAll, fbtnHelp, fbtnNext, fbtnFinishSale;
-    TextView txtChange, txtSubTotalValueD, txtIVAValueD, txtTotalValueD, txtTitleLimitCredit, txtTitleDebt, txtTitleRemainingCredit;
+    TextView txtChange, txtSubTotalValueD, txtIVAValueD, txtIEPSValueD, txtTotalValueD, txtTitleLimitCredit, txtTitleDebt, txtTitleRemainingCredit;
     EditText editTxtImport;
     ScrollView scrollViewDetailsSale;
     TableLayout tableHeaders;
@@ -141,6 +141,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
 
         txtSubTotalValueD = findViewById(R.id.txtSubTotalValueD);
         txtIVAValueD = findViewById(R.id.txtIVAValueD);
+        txtIEPSValueD = findViewById(R.id.txtIEPSValueD);
         txtChange = findViewById(R.id.txtChange);
         txtTotalValueD = findViewById(R.id.txtTotalValueD);
         editTxtImport = findViewById(R.id.editTxtImport);
@@ -647,12 +648,14 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
         if(functionsapp.countDetailsSaleVisit(nVisit, 2) > 0){
             txtSubTotalValueD.setText("$ " + baseApp.formattedNumber(functionsapp.getTotalSale(nVisit, "subTotal")));
             txtIVAValueD.setText("$ " +  baseApp.formattedNumber(functionsapp.getTotalSale(nVisit, "totalIVA")));
+            txtIEPSValueD.setText("$ " +  baseApp.formattedNumber(functionsapp.getTotalSale(nVisit, "totalIEPS")));
             txtTotalValueD.setText("$ " + baseApp.formattedNumber(functionsapp.getTotalSale(nVisit, "totalImport")));
 
             baseApp.setTextView(findViewById(R.id.txtViewExact), "$ " + baseApp.formattedNumber(functionsapp.getTotalSale(nVisit, "totalImport")));
         }else{
             txtSubTotalValueD.setText("$ 0.00");
             txtIVAValueD.setText("$ 0.00");
+            txtIEPSValueD.setText("$ 0.00");
             txtTotalValueD.setText("$ 0.00");
         }
     }

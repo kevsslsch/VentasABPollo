@@ -442,6 +442,7 @@ public class AdapterDetailsSales extends RecyclerView.Adapter<AdapterDetailsSale
                     detail.setCantidad(amount);
                     detail.setImporte(totalImport);
                     detail.setIVA(lnIVA);
+                    detail.setIEPS(lnIEPS);
 
                     realm.insertOrUpdate(detail);
                     realm.commitTransaction();

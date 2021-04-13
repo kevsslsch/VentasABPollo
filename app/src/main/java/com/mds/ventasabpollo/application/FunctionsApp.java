@@ -657,6 +657,62 @@ public class FunctionsApp extends Application {
         }
     }
 
+    public double getFinalPrice(int client, int clave_integer, String field){
+        BaseApp baseApp = new BaseApp(context);
+
+        double data = 0.0;
+
+        try{
+            realm = Realm.getDefaultInstance();
+
+            if(client != 0 && clave_integer != 0 && !field.isEmpty()) {
+
+                RealmResults<Prices> prices = realm.where(Prices.class)
+                        .equalTo("cliente", client)
+                        .equalTo("clave_articulo", clave_integer)
+                        .sort("clave_articulo", Sort.DESCENDING)
+                        .findAll();
+                int countPrices = prices.size();
+
+                if(countPrices > 0){
+
+                    switch (field){
+                        case "precio_credito":
+                            if(prices.get(0).getPrecio_credito() != 0.0) {
+                                data = prices.get(0).getPrecio_credito();
+                            }else{
+                                data = 0.0;
+                            }
+                            break;
+                        case "precio_contado":
+                            /*if(prices.get(0).getPrecio_contado() != 0.0) {
+                                data = String.valueOf(prices.get(0).getPrecio_contado());
+                            }else{
+                                data = "0.00";
+                            }*/
+                            if(prices.get(0).getPrecio() != 0.0) {
+                                data = prices.get(0).getPrecio();
+                            }else{
+                                data = 0.0;
+                            }
+                            break;
+                    }
+
+                    data = data * (1 + (prices.get(0).getTasa_IVA() + prices.get(0).getTasa_IEPS()));
+                }else{
+                    data = 0.0;
+                }
+
+            }else{
+                baseApp.showToast("Error al traer información, no puede estar vacia la clave del cliente, la clave integer o el campo requerido a buscar");
+            }
+        }catch (Exception ex){
+            baseApp.showAlert("Error", "Ocurrió un error al obtener la información de un Artículo, error: " + ex);
+        }
+
+       return data;
+    }
+
     public boolean getIsVisitFinished(int visit){
         realm = Realm.getDefaultInstance();
 
