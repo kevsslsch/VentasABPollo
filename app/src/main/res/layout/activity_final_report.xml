@@ -144,7 +144,7 @@
                 android:id="@+id/txtTotalSalesCreditPayed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="T. Ventas Contado:"
+                android:text="T. Ventas Crédito Saldado:"
                 android:textColor="@android:color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -159,10 +159,19 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txtTotalSalesCredit"
+                android:id="@+id/txtTotalTransfers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:text="T. Transferencias:"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtTotalSalesCredit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="T. Ventas Crédito: "
                 android:textColor="@android:color/black"
                 android:textSize="20sp"

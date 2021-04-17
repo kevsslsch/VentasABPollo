@@ -31,6 +31,7 @@ import com.mds.ventasabpollo.activities.MapsActivity;
 import com.mds.ventasabpollo.activities.MapsRouteActivity;
 import com.mds.ventasabpollo.activities.OthersActivity;
 import com.mds.ventasabpollo.activities.PayOffActivity;
+import com.mds.ventasabpollo.activities.PrepareDepartureActivity;
 import com.mds.ventasabpollo.activities.RestoreDBActivity;
 import com.mds.ventasabpollo.activities.RoutesActivity;
 import com.mds.ventasabpollo.activities.SalesActivity;
@@ -43,6 +44,7 @@ import com.mds.ventasabpollo.models.DetailsSales;
 import com.mds.ventasabpollo.models.Images;
 import com.mds.ventasabpollo.models.Inventories;
 import com.mds.ventasabpollo.models.NewClients;
+import com.mds.ventasabpollo.models.PrepareDeparture;
 import com.mds.ventasabpollo.models.Prices;
 import com.mds.ventasabpollo.models.Routes;
 import com.mds.ventasabpollo.models.VisitsClasifications;
@@ -273,6 +275,12 @@ public class FunctionsApp extends Application {
         //((Activity) (context)).finish();
     }
 
+    public void goPrepareDepartureActivity() {
+        Intent iPrepareDepartureActivity = new Intent(context, PrepareDepartureActivity.class);
+        context.startActivity(iPrepareDepartureActivity);
+        //((Activity) (context)).finish();
+    }
+
     public int clasificationVisit(int client, int route) {
         BaseApp baseApp = new BaseApp(context);
 
@@ -381,6 +389,54 @@ public class FunctionsApp extends Application {
             RealmResults<VisitsPayments> visitsPayments = realm.where(VisitsPayments.class)
                     .equalTo("ruta", route)
                     .equalTo("metodo_pago", "Contado")
+                    .findAll();
+
+            baseApp.showLog("visitsPayments" + visitsPayments.size());
+            //RealmResults<VisitsPayments> visitsPayments2 = realm.where(VisitsPayments.class).equalTo("ruta", route).equalTo("metodo_pago", "Crédito").equalTo("cobrado", true).findAll();
+
+            int countVisits = visitsPayments.size();
+            //int countVisits2 = visitsPayments2.size();
+
+            int contador = 1;
+
+            if(countVisits > 0){
+                for(VisitsPayments visit: visitsPayments){
+                    total += visit.getImporte_saldado();
+                    baseApp.showLog(contador + "" +  + visit.getImporte_saldado());
+                    contador++;
+                }
+            }
+
+           /*/ if(countVisits2 > 0){
+                for(VisitsPayments visit: visitsPayments2){
+                    total += visit.getTotal_venta();
+                }
+            }/
+
+            //return round(total);***/
+
+            return total;
+        }catch (Exception ex){
+            baseApp.showAlert("Error", "Ocurrió un error al cargar un Total, reporta el siguiente error al Dpto de Sistemas: " + ex);
+            baseApp.showLog("Error: " + ex);
+            return 0;
+        }
+    }
+
+    public double getTotalTransfersRoute(int route){
+        realm = Realm.getDefaultInstance();
+        BaseApp baseApp = new BaseApp(context);
+
+        try {
+            int countDetail;
+            double total = 0.0;
+            double totalImport = 0.0;
+            double lnIVA = 0.0;
+            double lnIEPS = 0.0;
+
+            RealmResults<VisitsPayments> visitsPayments = realm.where(VisitsPayments.class)
+                    .equalTo("ruta", route)
+                    .equalTo("metodo_pago", "Transferencia")
                     .findAll();
 
             baseApp.showLog("visitsPayments" + visitsPayments.size());
@@ -637,6 +693,10 @@ public class FunctionsApp extends Application {
                                 data = "0.00";
                             }
                             break;
+
+                        case "tiene_IVA":
+                            data = String.valueOf(prices.get(0).getTiene_iva());
+                            break;
                     }
 
                 }else{
@@ -660,7 +720,7 @@ public class FunctionsApp extends Application {
     public double getFinalPrice(int client, int clave_integer, String field){
         BaseApp baseApp = new BaseApp(context);
 
-        double data = 0.0;
+        double data = 0.0, tasaIVA = 0.0;
 
         try{
             realm = Realm.getDefaultInstance();
@@ -698,7 +758,9 @@ public class FunctionsApp extends Application {
                             break;
                     }
 
-                    data = data * (1 + (prices.get(0).getTasa_IVA() + prices.get(0).getTasa_IEPS()));
+                    tasaIVA = (prices.get(0).getTiene_iva() == 1 ? prices.get(0).getTasa_IVA() : 0.0);
+                    data = data * (1 + (tasaIVA + prices.get(0).getTasa_IEPS()));
+
                 }else{
                     data = 0.0;
                 }
@@ -1423,6 +1485,26 @@ public class FunctionsApp extends Application {
 
         return stringSplit;
     }
+
+    public String generateSplitPrepareDeparture(){
+        String stringSplit = "";
+
+        try (Realm realm = Realm.getDefaultInstance()) {
+            RealmResults<PrepareDeparture> detailsPrepareDeparture = realm.where(PrepareDeparture.class)
+                    .findAll();
+            int countDetails = detailsPrepareDeparture.size();
+
+            if(countDetails > 0){
+                for(PrepareDeparture detail: detailsPrepareDeparture){
+                    stringSplit += detail.getClave_articulo() + "|"; // articulo
+                    stringSplit += detail.getCantidad() + "Ç"; // 2 cantidad
+                }
+            }
+        }
+
+        return stringSplit;
+    }
+
 
     public void markAllDataLikeSent() {
         BaseApp baseApp = new BaseApp(context);
@@ -2224,6 +2306,41 @@ public class FunctionsApp extends Application {
             ex.printStackTrace();
             baseApp.showLog("Ocurrió un error al obtener un cliente");
             return null;
+        }
+    }
+
+    public Articles getArticle(int nArticle){
+        BaseApp baseApp = new BaseApp(context);
+
+        try{
+            realm = Realm.getDefaultInstance();
+
+            return realm.where(Articles.class).equalTo("clave_articulo", nArticle).findFirst();
+        }catch (Exception ex){
+            ex.printStackTrace();
+            baseApp.showLog("Ocurrió un error al obtener un cliente");
+            return null;
+        }
+    }
+
+    public double getAmountPrepareDeparture(int article){
+        BaseApp baseApp = new BaseApp(context);
+
+        try{
+            realm = Realm.getDefaultInstance();
+
+            PrepareDeparture prepareDeparture = realm.where(PrepareDeparture.class).equalTo("clave_articulo", article).findFirst();
+
+            if(prepareDeparture != null){
+                return prepareDeparture.getCantidad();
+            }else{
+                return 0;
+            }
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error interno: " + ex);
+            ex.printStackTrace();
+
+            return 0;
         }
     }
 }

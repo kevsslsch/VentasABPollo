@@ -430,7 +430,13 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
                     String lcArticulo;
 
                     lcArticulo = articlesList.get(holder.getAdapterPosition()).getArticulo();
-                    lnTasaIVA = Double.parseDouble((functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")));
+
+                    if(functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tiene_IVA") == "1"){
+                        lnTasaIVA = Double.parseDouble((functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")));
+                    }else{
+                        lnTasaIVA = 0;
+                    }
+
                     lnTasaIEPS = Double.parseDouble((functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_IEPS")));
 
                     lnIVA = totalImport * lnTasaIVA;

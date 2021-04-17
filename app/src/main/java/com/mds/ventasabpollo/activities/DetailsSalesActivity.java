@@ -82,7 +82,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
     CheckBox chkBoxFiscalInvoice;
     LinearLayout layoutSwitchTypeSale;
 
-    CardView cardExact, card20, card50, card100, card200, card500;
+    CardView cardExact, card20, card50, card100, card200, card500, cardReset, cardSPEI;
 
     int nUser, nClient, nVisit, nList, idRoute, nPedido, totalDetails;
     boolean bAlertDetailsSale;
@@ -101,6 +101,8 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
     private static final long MIN_TIME = 400;
     private static final float MIN_DISTANCE = 1000;
     RealmResults<VisitsClasifications> listClasifications;
+
+    boolean isSPEI = false;
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -165,6 +167,8 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
         card100 = findViewById(R.id.card100);
         card200 = findViewById(R.id.card200);
         card500 = findViewById(R.id.card500);
+        cardReset = findViewById(R.id.cardReset);
+        cardSPEI = findViewById(R.id.cardSPEI);
 
         scrollViewDetailsSale = findViewById(R.id.scrollViewDetailsSale);
 
@@ -187,6 +191,8 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
         card100.setOnClickListener(v-> updateTotalImport(100));
         card200.setOnClickListener(v-> updateTotalImport(200));
         card500.setOnClickListener(v-> updateTotalImport(500));
+        cardReset.setOnClickListener(v->updateTotalImport(0));
+        cardSPEI.setOnClickListener(v->askSPEI());
 
         if(!bAlertDetailsSale && !functionsapp.getIsVisitFinished(nVisit)){
             //showAlertHelp();
@@ -262,8 +268,16 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
             if(!functionsapp.getIsVisitFinished(nVisit)){
                 if(amount == -1){
                     baseApp.setTextView(findViewById(R.id.editTxtImport), baseApp.formattedNumber(functionsapp.getTotalSale(nVisit, "totalImport")));
-                }else{
+                }else if(amount == 0) {
                     baseApp.setTextView(findViewById(R.id.editTxtImport), Double.toString(amount));
+                }else{
+                    double currentImport = 0.0;
+
+                    if(!editTxtImport.getText().toString().isEmpty()){
+                        currentImport = Double.valueOf(editTxtImport.getText().toString().replaceAll(",", ""));
+                    }
+
+                    baseApp.setTextView(findViewById(R.id.editTxtImport), baseApp.formattedNumber((currentImport + amount)));
                 }
 
                 updateChange();
@@ -451,7 +465,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
 
             menuBottomSheet = new BottomSheetDialog(this, R.style.BottomSheetDialogTheme);
             menuBottomSheet.setContentView(R.layout.bottom_sheet_clasification_visit);
-            menuBottomSheet.setCancelable(true);
+            menuBottomSheet.setCancelable(false);
             menuBottomSheet.show();
 
             btnCancel = menuBottomSheet.findViewById(R.id.btnCancel);
@@ -485,7 +499,11 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
                     ultimoClick = SystemClock.elapsedRealtime();
                 }
             });
-            btnCancel.setOnClickListener(v -> menuBottomSheet.dismiss());
+            btnCancel.setOnClickListener(v -> {
+                isSPEI = false;
+                updateTotalImport(0);
+                menuBottomSheet.dismiss();
+            });
 
         }catch (Exception ex){
             baseApp.showToast("No se puede mostrar la alerta de clasificaciones. " + ex);
@@ -688,6 +706,22 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
 
     }
 
+    public void askSPEI(){
+        new AlertDialog.Builder(this)
+                .setMessage("¿Estás seguro de pagar la visita con Transferencia SPEI?")
+                .setCancelable(true)
+                .setPositiveButton("Sí", (dialog, id) -> {
+                    isSPEI = true;
+                    updateTotalImport(-1);
+                    finishSale(true);
+                })
+                .setNegativeButton("No", (dialog, id) -> {
+                    isSPEI = false;
+                })
+                .show();
+
+    }
+
     public void showMenuBottomFinishSale(boolean withDetails) {
         TextView btnYes, btnNo, txtViewTitle;
 
@@ -768,7 +802,13 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
                             visitsPayments.setMetodo_pago("Crédito");
                             visits.setEs_credito(true);
                         } else if (spClass.strGetSP("sTypeSale").equals("counted")) {
-                            visitsPayments.setMetodo_pago("Contado");
+
+                            if(isSPEI){
+                                visitsPayments.setMetodo_pago("Transferencia");
+                            }else{
+                                visitsPayments.setMetodo_pago("Contado");
+                            }
+
                             visitsPayments.setCobrado(true);
                             visitsPayments.setFecha_cobrado(baseApp.getCurrentDateFormated());
                             visitsPayments.setImporte_saldado(totalImportSale);

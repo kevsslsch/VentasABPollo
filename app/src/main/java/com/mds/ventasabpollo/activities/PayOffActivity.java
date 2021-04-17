@@ -183,7 +183,6 @@ public class PayOffActivity extends AppCompatActivity implements RealmChangeList
         }, 1000);
     }
 
-
     public void onResume() {
         super.onResume();
     }

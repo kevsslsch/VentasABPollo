@@ -28,6 +28,7 @@ import com.mds.ventasabpollo.models.Prices;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
+import io.realm.Sort;
 
 public class AveragesActivity extends AppCompatActivity implements RealmChangeListener<RealmResults<Prices>> {
 
@@ -89,7 +90,10 @@ public class AveragesActivity extends AppCompatActivity implements RealmChangeLi
 
         try {
             realm = Realm.getDefaultInstance();
-            listArticles = realm.where(Prices.class).equalTo("cliente", nClient).findAll();
+            listArticles = realm.where(Prices.class)
+                    .equalTo("cliente", nClient)
+                    .sort("clave_articulo", Sort.ASCENDING)
+                    .findAll();
             totalArticles = listArticles.size();
             listArticles.addChangeListener(this);
 

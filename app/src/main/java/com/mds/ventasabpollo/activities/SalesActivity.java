@@ -74,7 +74,7 @@ public class SalesActivity extends AppCompatActivity {
     FloatingActionButton fbtnBack, fbtnPayOff, fbtnDetails;
     TextView txtTitleHeader, txtTotalDetails, txtTitleLimitCredit, txtTitleDebt, txtTitleRemainingCredit;
     LinearLayout layoutTypeSale;
-    SearchView searchClients;
+    SearchView searchArticles;
     Switch switchTypeSale;
     LinearLayout layoutSwitchTypeSale;
 
@@ -112,7 +112,7 @@ public class SalesActivity extends AppCompatActivity {
 
         txtTitleHeader = findViewById(R.id.txtTitleHeader);
         txtTotalDetails = findViewById(R.id.txtTotalDetails);
-        searchClients = findViewById(R.id.searchClients);
+        searchArticles = findViewById(R.id.searchArticles);
         layoutTypeSale = findViewById(R.id.layoutTypeSale);
         txtTitleLimitCredit = findViewById(R.id.txtTitleLimitCredit);
         txtTitleDebt = findViewById(R.id.txtTitleDebt);
@@ -126,10 +126,9 @@ public class SalesActivity extends AppCompatActivity {
         recyclerArticles.setItemAnimator(new DefaultItemAnimator());
         recyclerArticles.addItemDecoration(new SpacesItemDecoration(1));
 
-        searchClients.setOnClickListener(v -> searchClients.onActionViewExpanded());
-
-        searchClients.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        searchClients.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        searchArticles.setOnClickListener(v -> searchArticles.onActionViewExpanded());
+        searchArticles.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        searchArticles.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -613,8 +612,8 @@ public class SalesActivity extends AppCompatActivity {
 
     public void backFunction(){
 
-        if(!searchClients.isIconified()){
-            searchClients.onActionViewCollapsed();
+        if(!searchArticles.isIconified()){
+            searchArticles.onActionViewCollapsed();
         }else {
             /*finish();
             functionsapp.goMainActivity();

@@ -236,7 +236,7 @@ public class AdapterListClients extends RecyclerView.Adapter<AdapterListClients.
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         //builder.setTitle("Selecciona una opción");
 
-        String[] animals = {"Cambiar ubicación", "Abrir mapa", "Saldar cuentas", "Cancelar"};
+        String[] animals = {"Cambiar ubicación", "Abrir mapa", "Promedios de Ventas", "Saldar cuentas", "Cancelar"};
         builder.setItems(animals, (dialog, which) -> {
             switch (which) {
                 case 0:
@@ -256,9 +256,12 @@ public class AdapterListClients extends RecyclerView.Adapter<AdapterListClients.
                     dialog.dismiss();
                     break;
                 case 2:
-                    functionsapp.goPayOffActivity(listsListClients.get(position).getCliente());
+                    functionsapp.goAveragesActivity(listsListClients.get(position).getCliente());
                     break;
                 case 3:
+                    functionsapp.goPayOffActivity(listsListClients.get(position).getCliente());
+                    break;
+                case 4:
                     dialog.dismiss();
                     break;
             }

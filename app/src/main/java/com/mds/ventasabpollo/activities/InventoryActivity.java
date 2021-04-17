@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -41,6 +42,7 @@ public class InventoryActivity extends AppCompatActivity implements RealmChangeL
     RecyclerView recyclerArticles;
     RelativeLayout layoutList, layoutNotData;
     TextView txtTotalSales;
+    Button btnPrepareDeparture;
 
     FloatingActionButton fbtnBack, fbtnUpdate;
 
@@ -56,10 +58,12 @@ public class InventoryActivity extends AppCompatActivity implements RealmChangeL
 
         txtTotalSales = findViewById(R.id.txtTotalSales);
         recyclerArticles = findViewById(R.id.recyclerArticles);
-        layoutList = findViewById(R.id.layoutListClients);
+        layoutList = findViewById(R.id.layoutListArticles);
         layoutNotData = findViewById(R.id.layoutNotData);
+
         fbtnUpdate = findViewById(R.id.fbtnUpdate);
         fbtnBack = findViewById(R.id.fbtnBack);
+        btnPrepareDeparture = findViewById(R.id.btnPrepareDeparture);
 
         GridLayoutManager mGridLayoutManagerDetails = new GridLayoutManager(this, 1);
         recyclerArticles.setLayoutManager(mGridLayoutManagerDetails);
@@ -81,6 +85,8 @@ public class InventoryActivity extends AppCompatActivity implements RealmChangeL
 
         fbtnUpdate.setOnClickListener(v-> functionsApp.goChangeInventoryActivity());
         fbtnBack.setOnClickListener(v -> backFunction());
+        btnPrepareDeparture.setOnClickListener(v->functionsApp.goPrepareDepartureActivity());
+
         baseApp.darkenStatusBar(this, Color.WHITE);
     }
 
