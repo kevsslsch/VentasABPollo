@@ -182,68 +182,68 @@ public class com_mds_ventasabpollo_models_VisitsMovementsRealmProxy extends com.
 
     @Override
     @SuppressWarnings("cast")
-    public int realmGet$piezas_devolucion() {
+    public double realmGet$piezas_devolucion() {
         proxyState.getRealm$realm().checkIfValid();
-        return (int) proxyState.getRow$realm().getLong(columnInfo.piezas_devolucionIndex);
+        return (double) proxyState.getRow$realm().getDouble(columnInfo.piezas_devolucionIndex);
     }
 
     @Override
-    public void realmSet$piezas_devolucion(int value) {
+    public void realmSet$piezas_devolucion(double value) {
         if (proxyState.isUnderConstruction()) {
             if (!proxyState.getAcceptDefaultValue$realm()) {
                 return;
             }
             final Row row = proxyState.getRow$realm();
-            row.getTable().setLong(columnInfo.piezas_devolucionIndex, row.getIndex(), value, true);
+            row.getTable().setDouble(columnInfo.piezas_devolucionIndex, row.getIndex(), value, true);
             return;
         }
 
         proxyState.getRealm$realm().checkIfValid();
-        proxyState.getRow$realm().setLong(columnInfo.piezas_devolucionIndex, value);
+        proxyState.getRow$realm().setDouble(columnInfo.piezas_devolucionIndex, value);
     }
 
     @Override
     @SuppressWarnings("cast")
-    public int realmGet$piezas_cambio() {
+    public double realmGet$piezas_cambio() {
         proxyState.getRealm$realm().checkIfValid();
-        return (int) proxyState.getRow$realm().getLong(columnInfo.piezas_cambioIndex);
+        return (double) proxyState.getRow$realm().getDouble(columnInfo.piezas_cambioIndex);
     }
 
     @Override
-    public void realmSet$piezas_cambio(int value) {
+    public void realmSet$piezas_cambio(double value) {
         if (proxyState.isUnderConstruction()) {
             if (!proxyState.getAcceptDefaultValue$realm()) {
                 return;
             }
             final Row row = proxyState.getRow$realm();
-            row.getTable().setLong(columnInfo.piezas_cambioIndex, row.getIndex(), value, true);
+            row.getTable().setDouble(columnInfo.piezas_cambioIndex, row.getIndex(), value, true);
             return;
         }
 
         proxyState.getRealm$realm().checkIfValid();
-        proxyState.getRow$realm().setLong(columnInfo.piezas_cambioIndex, value);
+        proxyState.getRow$realm().setDouble(columnInfo.piezas_cambioIndex, value);
     }
 
     @Override
     @SuppressWarnings("cast")
-    public int realmGet$piezas_apartado() {
+    public double realmGet$piezas_apartado() {
         proxyState.getRealm$realm().checkIfValid();
-        return (int) proxyState.getRow$realm().getLong(columnInfo.piezas_apartadoIndex);
+        return (double) proxyState.getRow$realm().getDouble(columnInfo.piezas_apartadoIndex);
     }
 
     @Override
-    public void realmSet$piezas_apartado(int value) {
+    public void realmSet$piezas_apartado(double value) {
         if (proxyState.isUnderConstruction()) {
             if (!proxyState.getAcceptDefaultValue$realm()) {
                 return;
             }
             final Row row = proxyState.getRow$realm();
-            row.getTable().setLong(columnInfo.piezas_apartadoIndex, row.getIndex(), value, true);
+            row.getTable().setDouble(columnInfo.piezas_apartadoIndex, row.getIndex(), value, true);
             return;
         }
 
         proxyState.getRealm$realm().checkIfValid();
-        proxyState.getRow$realm().setLong(columnInfo.piezas_apartadoIndex, value);
+        proxyState.getRow$realm().setDouble(columnInfo.piezas_apartadoIndex, value);
     }
 
     @Override
@@ -325,9 +325,9 @@ public class com_mds_ventasabpollo_models_VisitsMovementsRealmProxy extends com.
         builder.addPersistedProperty("ruta", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("visita", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("clave_articulo", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
-        builder.addPersistedProperty("piezas_devolucion", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
-        builder.addPersistedProperty("piezas_cambio", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
-        builder.addPersistedProperty("piezas_apartado", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("piezas_devolucion", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("piezas_cambio", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("piezas_apartado", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("fecha_apartado", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
         builder.addPersistedProperty("enviada", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("user_id", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
@@ -382,21 +382,21 @@ public class com_mds_ventasabpollo_models_VisitsMovementsRealmProxy extends com.
             if (json.isNull("piezas_devolucion")) {
                 throw new IllegalArgumentException("Trying to set non-nullable field 'piezas_devolucion' to null.");
             } else {
-                objProxy.realmSet$piezas_devolucion((int) json.getInt("piezas_devolucion"));
+                objProxy.realmSet$piezas_devolucion((double) json.getDouble("piezas_devolucion"));
             }
         }
         if (json.has("piezas_cambio")) {
             if (json.isNull("piezas_cambio")) {
                 throw new IllegalArgumentException("Trying to set non-nullable field 'piezas_cambio' to null.");
             } else {
-                objProxy.realmSet$piezas_cambio((int) json.getInt("piezas_cambio"));
+                objProxy.realmSet$piezas_cambio((double) json.getDouble("piezas_cambio"));
             }
         }
         if (json.has("piezas_apartado")) {
             if (json.isNull("piezas_apartado")) {
                 throw new IllegalArgumentException("Trying to set non-nullable field 'piezas_apartado' to null.");
             } else {
-                objProxy.realmSet$piezas_apartado((int) json.getInt("piezas_apartado"));
+                objProxy.realmSet$piezas_apartado((double) json.getDouble("piezas_apartado"));
             }
         }
         if (json.has("fecha_apartado")) {
@@ -456,21 +456,21 @@ public class com_mds_ventasabpollo_models_VisitsMovementsRealmProxy extends com.
                 }
             } else if (name.equals("piezas_devolucion")) {
                 if (reader.peek() != JsonToken.NULL) {
-                    objProxy.realmSet$piezas_devolucion((int) reader.nextInt());
+                    objProxy.realmSet$piezas_devolucion((double) reader.nextDouble());
                 } else {
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'piezas_devolucion' to null.");
                 }
             } else if (name.equals("piezas_cambio")) {
                 if (reader.peek() != JsonToken.NULL) {
-                    objProxy.realmSet$piezas_cambio((int) reader.nextInt());
+                    objProxy.realmSet$piezas_cambio((double) reader.nextDouble());
                 } else {
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'piezas_cambio' to null.");
                 }
             } else if (name.equals("piezas_apartado")) {
                 if (reader.peek() != JsonToken.NULL) {
-                    objProxy.realmSet$piezas_apartado((int) reader.nextInt());
+                    objProxy.realmSet$piezas_apartado((double) reader.nextDouble());
                 } else {
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'piezas_apartado' to null.");
@@ -547,9 +547,9 @@ public class com_mds_ventasabpollo_models_VisitsMovementsRealmProxy extends com.
         builder.addInteger(columnInfo.rutaIndex, realmObjectSource.realmGet$ruta());
         builder.addInteger(columnInfo.visitaIndex, realmObjectSource.realmGet$visita());
         builder.addInteger(columnInfo.clave_articuloIndex, realmObjectSource.realmGet$clave_articulo());
-        builder.addInteger(columnInfo.piezas_devolucionIndex, realmObjectSource.realmGet$piezas_devolucion());
-        builder.addInteger(columnInfo.piezas_cambioIndex, realmObjectSource.realmGet$piezas_cambio());
-        builder.addInteger(columnInfo.piezas_apartadoIndex, realmObjectSource.realmGet$piezas_apartado());
+        builder.addDouble(columnInfo.piezas_devolucionIndex, realmObjectSource.realmGet$piezas_devolucion());
+        builder.addDouble(columnInfo.piezas_cambioIndex, realmObjectSource.realmGet$piezas_cambio());
+        builder.addDouble(columnInfo.piezas_apartadoIndex, realmObjectSource.realmGet$piezas_apartado());
         builder.addString(columnInfo.fecha_apartadoIndex, realmObjectSource.realmGet$fecha_apartado());
         builder.addBoolean(columnInfo.enviadaIndex, realmObjectSource.realmGet$enviada());
         builder.addInteger(columnInfo.user_idIndex, realmObjectSource.realmGet$user_id());
@@ -575,9 +575,9 @@ public class com_mds_ventasabpollo_models_VisitsMovementsRealmProxy extends com.
         Table.nativeSetLong(tableNativePtr, columnInfo.rutaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$ruta(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.visitaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$visita(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$clave_articulo(), false);
-        Table.nativeSetLong(tableNativePtr, columnInfo.piezas_devolucionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_devolucion(), false);
-        Table.nativeSetLong(tableNativePtr, columnInfo.piezas_cambioIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_cambio(), false);
-        Table.nativeSetLong(tableNativePtr, columnInfo.piezas_apartadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_apartado(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_devolucionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_devolucion(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_cambioIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_cambio(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_apartadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_apartado(), false);
         String realmGet$fecha_apartado = ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$fecha_apartado();
         if (realmGet$fecha_apartado != null) {
             Table.nativeSetString(tableNativePtr, columnInfo.fecha_apartadoIndex, rowIndex, realmGet$fecha_apartado, false);
@@ -606,9 +606,9 @@ public class com_mds_ventasabpollo_models_VisitsMovementsRealmProxy extends com.
             Table.nativeSetLong(tableNativePtr, columnInfo.rutaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$ruta(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.visitaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$visita(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$clave_articulo(), false);
-            Table.nativeSetLong(tableNativePtr, columnInfo.piezas_devolucionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_devolucion(), false);
-            Table.nativeSetLong(tableNativePtr, columnInfo.piezas_cambioIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_cambio(), false);
-            Table.nativeSetLong(tableNativePtr, columnInfo.piezas_apartadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_apartado(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_devolucionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_devolucion(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_cambioIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_cambio(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_apartadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_apartado(), false);
             String realmGet$fecha_apartado = ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$fecha_apartado();
             if (realmGet$fecha_apartado != null) {
                 Table.nativeSetString(tableNativePtr, columnInfo.fecha_apartadoIndex, rowIndex, realmGet$fecha_apartado, false);
@@ -630,9 +630,9 @@ public class com_mds_ventasabpollo_models_VisitsMovementsRealmProxy extends com.
         Table.nativeSetLong(tableNativePtr, columnInfo.rutaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$ruta(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.visitaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$visita(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$clave_articulo(), false);
-        Table.nativeSetLong(tableNativePtr, columnInfo.piezas_devolucionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_devolucion(), false);
-        Table.nativeSetLong(tableNativePtr, columnInfo.piezas_cambioIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_cambio(), false);
-        Table.nativeSetLong(tableNativePtr, columnInfo.piezas_apartadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_apartado(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_devolucionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_devolucion(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_cambioIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_cambio(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_apartadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_apartado(), false);
         String realmGet$fecha_apartado = ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$fecha_apartado();
         if (realmGet$fecha_apartado != null) {
             Table.nativeSetString(tableNativePtr, columnInfo.fecha_apartadoIndex, rowIndex, realmGet$fecha_apartado, false);
@@ -663,9 +663,9 @@ public class com_mds_ventasabpollo_models_VisitsMovementsRealmProxy extends com.
             Table.nativeSetLong(tableNativePtr, columnInfo.rutaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$ruta(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.visitaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$visita(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.clave_articuloIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$clave_articulo(), false);
-            Table.nativeSetLong(tableNativePtr, columnInfo.piezas_devolucionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_devolucion(), false);
-            Table.nativeSetLong(tableNativePtr, columnInfo.piezas_cambioIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_cambio(), false);
-            Table.nativeSetLong(tableNativePtr, columnInfo.piezas_apartadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_apartado(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_devolucionIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_devolucion(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_cambioIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_cambio(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.piezas_apartadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$piezas_apartado(), false);
             String realmGet$fecha_apartado = ((com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface) object).realmGet$fecha_apartado();
             if (realmGet$fecha_apartado != null) {
                 Table.nativeSetString(tableNativePtr, columnInfo.fecha_apartadoIndex, rowIndex, realmGet$fecha_apartado, false);

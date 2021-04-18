@@ -11,6 +11,7 @@ public class VisitsPayments extends RealmObject {
     private double  importe;
     private double  importe_pago; // con lo que se pagó
     private double  importe_saldado; // lo que se ha abonado
+    private int     ultimos_4_tarjeta;
     private String metodo_pago;
     private String fecha;
     private String fecha_cobrado;
@@ -61,6 +62,14 @@ public class VisitsPayments extends RealmObject {
         this.cobrado = cobrado;
         this.descargado = descargado;
         this.user_id = user_id;
+    }
+
+    public int getUltimos_4_tarjeta() {
+        return ultimos_4_tarjeta;
+    }
+
+    public void setUltimos_4_tarjeta(int ultimos_4_tarjeta) {
+        this.ultimos_4_tarjeta = ultimos_4_tarjeta;
     }
 
     public double getImporte_pago() {

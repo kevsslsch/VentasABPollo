@@ -169,6 +169,15 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/txtTotalCreditCards"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="T. Tarjetas:"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/txtTotalSalesCredit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

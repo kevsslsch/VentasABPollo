@@ -46,7 +46,7 @@ public class FinalReportActivity extends AppCompatActivity implements RealmChang
     SPClass spClass = new SPClass(this);
     Realm realm;
 
-    TextView txtRoute, txtDeparture, txtScheduledClients, txtCustomersVisited, txtCustomersSales, txtUserAuthorizer, txtDateStart, txtDateEnd, txtDuration, txtTotalSales, txtTotalSalesCreditPayed, txtTotalCash, txtTotalTransfers,  txtTotalSalesCredit, txtTitleClients, txtTitleSpecialClients;
+    TextView txtRoute, txtDeparture, txtScheduledClients, txtCustomersVisited, txtCustomersSales, txtUserAuthorizer, txtDateStart, txtDateEnd, txtDuration, txtTotalSales, txtTotalSalesCreditPayed, txtTotalCash, txtTotalTransfers, txtTotalCreditCards,  txtTotalSalesCredit, txtTitleClients, txtTitleSpecialClients;
     RecyclerView recyclerVisits, recyclerArticles, recyclerCreditPayed, recyclerCreditGranted, recyclerSpecialClients;
     HorizontalScrollView layoutDetailsSales;
     ImageButton imgBtnPrint;
@@ -88,6 +88,7 @@ public class FinalReportActivity extends AppCompatActivity implements RealmChang
         txtTotalSalesCredit = findViewById(R.id.txtTotalSalesCredit);
         txtTotalCash = findViewById(R.id.txtTotalCash);
         txtTotalTransfers = findViewById(R.id.txtTotalTransfers);
+        txtTotalCreditCards = findViewById(R.id.txtTotalCreditCards);
         txtTitleClients = findViewById(R.id.txtTitleClients);
         txtTitleSpecialClients = findViewById(R.id.txtTitleSpecialClients);
 
@@ -222,9 +223,10 @@ public class FinalReportActivity extends AppCompatActivity implements RealmChang
 
                 txtTotalSales.setText("T. Ventas Contado: $" + baseApp.formattedNumber(functionsApp.getTotalSaleRoute(idRoute)));
                 txtTotalSalesCreditPayed.setText("T. Ventas Crédito Saldado: $" + baseApp.formattedNumber(functionsApp.getTotalSaleRouteCreditPayed(idRoute)));
-                txtTotalCash.setText("T. Efectivo: " + baseApp.formattedNumber(((functionsApp.getTotalSaleRoute(idRoute) + functionsApp.getTotalSaleRouteCreditPayed(idRoute)))));
+                txtTotalCash.setText("T. Efectivo: " + baseApp.formattedNumber(((functionsApp.getTotalRoute(idRoute, "Efectivo MXP") + functionsApp.getTotalSaleRouteCreditPayed(idRoute)))));
 
-                txtTotalTransfers.setText("T. Transferencias: $" + baseApp.formattedNumber(functionsApp.getTotalTransfersRoute(idRoute)));
+                txtTotalTransfers.setText("T. Transferencias: $" + baseApp.formattedNumber(functionsApp.getTotalRoute(idRoute, "Transferencia Electrónica")));
+                txtTotalCreditCards.setText("T. Tarjetas: $" + baseApp.formattedNumber(functionsApp.getTotalRoute(idRoute, "Tarjeta de Débito") + functionsApp.getTotalRoute(idRoute, "Tarjeta de Crédito")));
                 txtTotalSalesCredit.setText("T. Ventas Crédito: $" + baseApp.formattedNumber(functionsApp.getTotalSaleRouteCredit(idRoute)));
             }
 

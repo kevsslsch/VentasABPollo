@@ -79,7 +79,7 @@ public class InventoryActivity extends AppCompatActivity implements RealmChangeL
 
             getArticles();
         }else{
-            finish();
+            //finish();
             baseApp.showToast("No hay una Ruta en proceso.");
         }
 

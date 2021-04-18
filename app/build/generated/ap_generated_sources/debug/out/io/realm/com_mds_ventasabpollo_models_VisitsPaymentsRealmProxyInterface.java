@@ -16,6 +16,8 @@ public interface com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface 
     public void realmSet$importe_pago(double value);
     public double realmGet$importe_saldado();
     public void realmSet$importe_saldado(double value);
+    public int realmGet$ultimos_4_tarjeta();
+    public void realmSet$ultimos_4_tarjeta(int value);
     public String realmGet$metodo_pago();
     public void realmSet$metodo_pago(String value);
     public String realmGet$fecha();

@@ -130,7 +130,7 @@ public class AdapterArticlesPrepareDeparture extends RecyclerView.Adapter<Adapte
 
             txtKey            = itemView.findViewById(R.id.txtKey);
             txtArticle        = itemView.findViewById(R.id.txtArticle);
-            editTxtViewAmount    = itemView.findViewById(R.id.editTxtViewAmount);
+            editTxtViewAmount = itemView.findViewById(R.id.editTxtViewAmount);
 
             editTxtViewAmount.addTextChangedListener(new TextWatcher() {
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
@@ -158,7 +158,13 @@ public class AdapterArticlesPrepareDeparture extends RecyclerView.Adapter<Adapte
         realm = Realm.getDefaultInstance();
 
         try {
-            double value = Double.valueOf(holder.editTxtViewAmount.getText().toString());
+
+            double value = 0.0;
+
+            if(!holder.editTxtViewAmount.getText().toString().isEmpty()){
+                value = Double.parseDouble(holder.editTxtViewAmount.getText().toString());
+            }
+
             int key = Integer.valueOf(holder.txtKey.getText().toString());
 
             RealmResults<PrepareDeparture> prepareDepartures = realm.where(PrepareDeparture.class)

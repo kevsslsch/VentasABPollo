@@ -8,12 +8,12 @@ public interface com_mds_ventasabpollo_models_VisitsMovementsRealmProxyInterface
     public void realmSet$visita(int value);
     public int realmGet$clave_articulo();
     public void realmSet$clave_articulo(int value);
-    public int realmGet$piezas_devolucion();
-    public void realmSet$piezas_devolucion(int value);
-    public int realmGet$piezas_cambio();
-    public void realmSet$piezas_cambio(int value);
-    public int realmGet$piezas_apartado();
-    public void realmSet$piezas_apartado(int value);
+    public double realmGet$piezas_devolucion();
+    public void realmSet$piezas_devolucion(double value);
+    public double realmGet$piezas_cambio();
+    public void realmSet$piezas_cambio(double value);
+    public double realmGet$piezas_apartado();
+    public void realmSet$piezas_apartado(double value);
     public String realmGet$fecha_apartado();
     public void realmSet$fecha_apartado(String value);
     public boolean realmGet$enviada();

@@ -30,18 +30,19 @@ import java.util.Locale;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class AdapterArticles extends RecyclerView.Adapter<AdapterArticles.ArticlesViewHolder>{
+public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesOthers.ArticlesViewHolder>{
 
     private Context context;
     private List<Articles> articlesList;
-    int nClient, nVisit, idRoute, initialAmountSale, initialAmountDevolution, initialAmountChanges, initialAmountSeparated;
+    int nClient, nVisit, idRoute;
+    double initialAmountSale, initialAmountDevolution, initialAmountChanges, initialAmountSeparated;
 
     final Calendar myCalendar = Calendar.getInstance();
 
     RealmResults<VisitsMovements> movements;
     Realm realm;
 
-    public AdapterArticles(Context context, List<Articles> articlesList) {
+    public AdapterArticlesOthers(Context context, List<Articles> articlesList) {
         this.context = context;
         this.articlesList = articlesList;
     }
@@ -71,10 +72,10 @@ public class AdapterArticles extends RecyclerView.Adapter<AdapterArticles.Articl
 
         initialiteAmounts(position);
 
-        //holder.editTxtAmountSale.setText(Integer.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "venta")));
-        holder.editTxtAmountDevolution.setText(Integer.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "devolucion")));
-        holder.editTxtAmountChanges.setText(Integer.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "cambio")));
-        holder.editTxtAmountSeparated.setText(Integer.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "apartado")));
+        //holder.editTxtAmountSale.setText(Double.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "venta")));
+        holder.editTxtAmountDevolution.setText(Double.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "devolucion")));
+        holder.editTxtAmountChanges.setText(Double.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "cambio")));
+        holder.editTxtAmountSeparated.setText(Double.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "apartado")));
 
         holder.editTxtAmountDevolution.setSelectAllOnFocus(true);
         holder.editTxtAmountChanges.setSelectAllOnFocus(true);
@@ -193,24 +194,24 @@ public class AdapterArticles extends RecyclerView.Adapter<AdapterArticles.Articl
         final SPClass spClass = new SPClass(context);
 
         try{
-            int amountDevolution, amountChanges, amountSeparated;
+            double amountDevolution, amountChanges, amountSeparated;
 
             if(holder.editTxtAmountDevolution.getText().toString().length() == 0){
                 amountDevolution = 0;
             }else{
-                amountDevolution = Integer.valueOf(holder.editTxtAmountDevolution.getText().toString());
+                amountDevolution = Double.valueOf(holder.editTxtAmountDevolution.getText().toString());
             }
 
             if(holder.editTxtAmountChanges.getText().toString().length() == 0){
                 amountChanges = 0;
             }else{
-                amountChanges = Integer.valueOf(holder.editTxtAmountChanges.getText().toString());
+                amountChanges = Double.valueOf(holder.editTxtAmountChanges.getText().toString());
             }
 
             if(holder.editTxtAmountSeparated.getText().toString().length() == 0){
                 amountSeparated = 0;
             }else{
-                amountSeparated = Integer.valueOf(holder.editTxtAmountSeparated.getText().toString());
+                amountSeparated = Double.valueOf(holder.editTxtAmountSeparated.getText().toString());
             }
 
             if(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "apartado") != amountSeparated) {
@@ -262,23 +263,23 @@ public class AdapterArticles extends RecyclerView.Adapter<AdapterArticles.Articl
         int amountSale, amountDevolution, amountChanges, amountSeparated;
 
         try {
-            //amountSalef = Integer.valueOf(holder.editTxtAmountSale.getText().toString());
+            //amountSalef = Double.valueOf(holder.editTxtAmountSale.getText().toString());
             if(holder.editTxtAmountDevolution.getText().toString().length() == 0){
                 amountDevolution = 0;
             }else{
-                amountDevolution = Integer.valueOf(holder.editTxtAmountDevolution.getText().toString());
+                amountDevolution = Double.valueOf(holder.editTxtAmountDevolution.getText().toString());
             }
 
             if(holder.editTxtAmountChanges.getText().toString().length() == 0){
                 amountChanges = 0;
             }else{
-                amountChanges = Integer.valueOf(holder.editTxtAmountChanges.getText().toString());
+                amountChanges = Double.valueOf(holder.editTxtAmountChanges.getText().toString());
             }
 
             if(holder.editTxtAmountSeparated.getText().toString().length() == 0){
                 amountSeparated = 0;
             }else{
-                amountSeparated = Integer.valueOf(holder.editTxtAmountSeparated.getText().toString());
+                amountSeparated = Double.valueOf(holder.editTxtAmountSeparated.getText().toString());
             }
 
             if(initialAmountDevolution != amountDevolution ||

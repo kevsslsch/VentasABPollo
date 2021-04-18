@@ -525,7 +525,7 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_margin="10dp"
-                            android:layout_weight="1"
+                            android:layout_weight="1.1"
                             app:cardCornerRadius="5dp"
                             app:cardElevation="2dp">
 
@@ -548,7 +548,7 @@
                             android:layout_margin="5dp"
                             android:layout_weight="1"
                             android:background="@drawable/card_edge"
-                            app:cardBackgroundColor="#2196F3"
+                            app:cardBackgroundColor="#8BC34A"
                             app:cardCornerRadius="5dp"
                             app:cardElevation="2dp">
 
@@ -566,6 +566,39 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Transferencia SPEI"
+                                    android:textAlignment="center"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="17sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardCreditCard"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:background="@drawable/card_edge"
+                            app:cardBackgroundColor="#2196F3"
+                            app:cardCornerRadius="5dp"
+                            app:cardElevation="2dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical">
+
+                                <ImageView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    app:srcCompat="@drawable/icobig_credit_card" />
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Tarjeta Débito/Crédito"
                                     android:textAlignment="center"
                                     android:textColor="@android:color/white"
                                     android:textSize="17sp"
@@ -669,7 +702,7 @@
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@id/fbtnFinishSale"
             android:clickable="false"
-            android:visibility="gone"
+            android:visibility="visible"
             app:srcCompat="@drawable/ico_next" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -35,7 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mds.ventasabpollo.R;
-import com.mds.ventasabpollo.adapters.AdapterArticles;
+import com.mds.ventasabpollo.adapters.AdapterArticlesOthers;
 import com.mds.ventasabpollo.application.BaseApp;
 import com.mds.ventasabpollo.application.FunctionsApp;
 import com.mds.ventasabpollo.application.SPClass;
@@ -342,10 +342,10 @@ public class OthersActivity extends AppCompatActivity implements RealmChangeList
                     layoutArticles.setVisibility(View.VISIBLE);
                     layoutNotData.setVisibility(View.GONE);
 
-                    AdapterArticles adapterArticles = new AdapterArticles(this, listArticlesShow);
+                    AdapterArticlesOthers adapterArticlesOthers = new AdapterArticlesOthers(this, listArticlesShow);
 
                     recyclerArticles.setItemAnimator(new DefaultItemAnimator());
-                    recyclerArticles.setAdapter(adapterArticles);
+                    recyclerArticles.setAdapter(adapterArticlesOthers);
                 } else {
                     layoutArticles.setVisibility(View.GONE);
                     layoutNotData.setVisibility(View.VISIBLE);
@@ -376,9 +376,9 @@ public class OthersActivity extends AppCompatActivity implements RealmChangeList
                         .contains("nombre_articulo", text, Case.INSENSITIVE)
                         .equalTo("user_id", nUser).limit(30).findAll();
 
-                AdapterArticles adapterArticles = new AdapterArticles(this, listArticles);
+                AdapterArticlesOthers adapterArticlesOthers = new AdapterArticlesOthers(this, listArticles);
                 recyclerArticles.setItemAnimator(new DefaultItemAnimator());
-                recyclerArticles.setAdapter(adapterArticles);
+                recyclerArticles.setAdapter(adapterArticlesOthers);
             }
         }catch (Exception ex){
             baseApp.showAlert("Error", "Ocurrió un error al intentar mostrar los artículos, repórtalo: " + ex);

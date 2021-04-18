@@ -46,6 +46,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
         long importeIndex;
         long importe_pagoIndex;
         long importe_saldadoIndex;
+        long ultimos_4_tarjetaIndex;
         long metodo_pagoIndex;
         long fechaIndex;
         long fecha_cobradoIndex;
@@ -55,7 +56,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
         long user_idIndex;
 
         VisitsPaymentsColumnInfo(OsSchemaInfo schemaInfo) {
-            super(14);
+            super(15);
             OsObjectSchemaInfo objectSchemaInfo = schemaInfo.getObjectSchemaInfo("VisitsPayments");
             this.pagoIndex = addColumnDetails("pago", "pago", objectSchemaInfo);
             this.rutaIndex = addColumnDetails("ruta", "ruta", objectSchemaInfo);
@@ -64,6 +65,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
             this.importeIndex = addColumnDetails("importe", "importe", objectSchemaInfo);
             this.importe_pagoIndex = addColumnDetails("importe_pago", "importe_pago", objectSchemaInfo);
             this.importe_saldadoIndex = addColumnDetails("importe_saldado", "importe_saldado", objectSchemaInfo);
+            this.ultimos_4_tarjetaIndex = addColumnDetails("ultimos_4_tarjeta", "ultimos_4_tarjeta", objectSchemaInfo);
             this.metodo_pagoIndex = addColumnDetails("metodo_pago", "metodo_pago", objectSchemaInfo);
             this.fechaIndex = addColumnDetails("fecha", "fecha", objectSchemaInfo);
             this.fecha_cobradoIndex = addColumnDetails("fecha_cobrado", "fecha_cobrado", objectSchemaInfo);
@@ -95,6 +97,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
             dst.importeIndex = src.importeIndex;
             dst.importe_pagoIndex = src.importe_pagoIndex;
             dst.importe_saldadoIndex = src.importe_saldadoIndex;
+            dst.ultimos_4_tarjetaIndex = src.ultimos_4_tarjetaIndex;
             dst.metodo_pagoIndex = src.metodo_pagoIndex;
             dst.fechaIndex = src.fechaIndex;
             dst.fecha_cobradoIndex = src.fecha_cobradoIndex;
@@ -285,6 +288,28 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
 
     @Override
     @SuppressWarnings("cast")
+    public int realmGet$ultimos_4_tarjeta() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (int) proxyState.getRow$realm().getLong(columnInfo.ultimos_4_tarjetaIndex);
+    }
+
+    @Override
+    public void realmSet$ultimos_4_tarjeta(int value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setLong(columnInfo.ultimos_4_tarjetaIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setLong(columnInfo.ultimos_4_tarjetaIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
     public String realmGet$metodo_pago() {
         proxyState.getRealm$realm().checkIfValid();
         return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.metodo_pagoIndex);
@@ -462,7 +487,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
     }
 
     private static OsObjectSchemaInfo createExpectedObjectSchemaInfo() {
-        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("VisitsPayments", 14, 0);
+        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("VisitsPayments", 15, 0);
         builder.addPersistedProperty("pago", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("ruta", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("visita", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
@@ -470,6 +495,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
         builder.addPersistedProperty("importe", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("importe_pago", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("importe_saldado", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("ultimos_4_tarjeta", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("metodo_pago", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
         builder.addPersistedProperty("fecha", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
         builder.addPersistedProperty("fecha_cobrado", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
@@ -550,6 +576,13 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
                 throw new IllegalArgumentException("Trying to set non-nullable field 'importe_saldado' to null.");
             } else {
                 objProxy.realmSet$importe_saldado((double) json.getDouble("importe_saldado"));
+            }
+        }
+        if (json.has("ultimos_4_tarjeta")) {
+            if (json.isNull("ultimos_4_tarjeta")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'ultimos_4_tarjeta' to null.");
+            } else {
+                objProxy.realmSet$ultimos_4_tarjeta((int) json.getInt("ultimos_4_tarjeta"));
             }
         }
         if (json.has("metodo_pago")) {
@@ -663,6 +696,13 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'importe_saldado' to null.");
                 }
+            } else if (name.equals("ultimos_4_tarjeta")) {
+                if (reader.peek() != JsonToken.NULL) {
+                    objProxy.realmSet$ultimos_4_tarjeta((int) reader.nextInt());
+                } else {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'ultimos_4_tarjeta' to null.");
+                }
             } else if (name.equals("metodo_pago")) {
                 if (reader.peek() != JsonToken.NULL) {
                     objProxy.realmSet$metodo_pago((String) reader.nextString());
@@ -767,6 +807,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
         builder.addDouble(columnInfo.importeIndex, realmObjectSource.realmGet$importe());
         builder.addDouble(columnInfo.importe_pagoIndex, realmObjectSource.realmGet$importe_pago());
         builder.addDouble(columnInfo.importe_saldadoIndex, realmObjectSource.realmGet$importe_saldado());
+        builder.addInteger(columnInfo.ultimos_4_tarjetaIndex, realmObjectSource.realmGet$ultimos_4_tarjeta());
         builder.addString(columnInfo.metodo_pagoIndex, realmObjectSource.realmGet$metodo_pago());
         builder.addString(columnInfo.fechaIndex, realmObjectSource.realmGet$fecha());
         builder.addString(columnInfo.fecha_cobradoIndex, realmObjectSource.realmGet$fecha_cobrado());
@@ -800,6 +841,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
         Table.nativeSetDouble(tableNativePtr, columnInfo.importeIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe(), false);
         Table.nativeSetDouble(tableNativePtr, columnInfo.importe_pagoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe_pago(), false);
         Table.nativeSetDouble(tableNativePtr, columnInfo.importe_saldadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe_saldado(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.ultimos_4_tarjetaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$ultimos_4_tarjeta(), false);
         String realmGet$metodo_pago = ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$metodo_pago();
         if (realmGet$metodo_pago != null) {
             Table.nativeSetString(tableNativePtr, columnInfo.metodo_pagoIndex, rowIndex, realmGet$metodo_pago, false);
@@ -842,6 +884,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
             Table.nativeSetDouble(tableNativePtr, columnInfo.importeIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe(), false);
             Table.nativeSetDouble(tableNativePtr, columnInfo.importe_pagoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe_pago(), false);
             Table.nativeSetDouble(tableNativePtr, columnInfo.importe_saldadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe_saldado(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.ultimos_4_tarjetaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$ultimos_4_tarjeta(), false);
             String realmGet$metodo_pago = ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$metodo_pago();
             if (realmGet$metodo_pago != null) {
                 Table.nativeSetString(tableNativePtr, columnInfo.metodo_pagoIndex, rowIndex, realmGet$metodo_pago, false);
@@ -877,6 +920,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
         Table.nativeSetDouble(tableNativePtr, columnInfo.importeIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe(), false);
         Table.nativeSetDouble(tableNativePtr, columnInfo.importe_pagoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe_pago(), false);
         Table.nativeSetDouble(tableNativePtr, columnInfo.importe_saldadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe_saldado(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.ultimos_4_tarjetaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$ultimos_4_tarjeta(), false);
         String realmGet$metodo_pago = ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$metodo_pago();
         if (realmGet$metodo_pago != null) {
             Table.nativeSetString(tableNativePtr, columnInfo.metodo_pagoIndex, rowIndex, realmGet$metodo_pago, false);
@@ -925,6 +969,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
             Table.nativeSetDouble(tableNativePtr, columnInfo.importeIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe(), false);
             Table.nativeSetDouble(tableNativePtr, columnInfo.importe_pagoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe_pago(), false);
             Table.nativeSetDouble(tableNativePtr, columnInfo.importe_saldadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$importe_saldado(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.ultimos_4_tarjetaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$ultimos_4_tarjeta(), false);
             String realmGet$metodo_pago = ((com_mds_ventasabpollo_models_VisitsPaymentsRealmProxyInterface) object).realmGet$metodo_pago();
             if (realmGet$metodo_pago != null) {
                 Table.nativeSetString(tableNativePtr, columnInfo.metodo_pagoIndex, rowIndex, realmGet$metodo_pago, false);
@@ -976,6 +1021,7 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
         unmanagedCopy.realmSet$importe(realmSource.realmGet$importe());
         unmanagedCopy.realmSet$importe_pago(realmSource.realmGet$importe_pago());
         unmanagedCopy.realmSet$importe_saldado(realmSource.realmGet$importe_saldado());
+        unmanagedCopy.realmSet$ultimos_4_tarjeta(realmSource.realmGet$ultimos_4_tarjeta());
         unmanagedCopy.realmSet$metodo_pago(realmSource.realmGet$metodo_pago());
         unmanagedCopy.realmSet$fecha(realmSource.realmGet$fecha());
         unmanagedCopy.realmSet$fecha_cobrado(realmSource.realmGet$fecha_cobrado());
@@ -1020,6 +1066,10 @@ public class com_mds_ventasabpollo_models_VisitsPaymentsRealmProxy extends com.m
         stringBuilder.append(",");
         stringBuilder.append("{importe_saldado:");
         stringBuilder.append(realmGet$importe_saldado());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{ultimos_4_tarjeta:");
+        stringBuilder.append(realmGet$ultimos_4_tarjeta());
         stringBuilder.append("}");
         stringBuilder.append(",");
         stringBuilder.append("{metodo_pago:");

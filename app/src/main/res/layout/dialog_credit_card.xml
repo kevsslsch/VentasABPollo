@@ -28,41 +28,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center|center_horizontal|center_vertical"
-                    android:text="Escribe el total a pagar"
+                    android:text="Seleccione el tipo de tarjeta y los últimos 4 digitos de la misma."
                     android:textColor="@color/ic_launcher_background"
                     android:textSize="22sp"
                     android:textStyle="bold" />
-            </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layoutPayed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
-                    android:gravity="bottom|right"
-                    android:padding="10dp"
-                    android:text="Total pagado:"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txtTotalPayed"
+                <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:padding="10dp"
-                    android:text="$"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:layout_marginTop="10dp">
 
+                    <RadioButton
+                        android:id="@+id/radioBtnDebit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="T. Débito" />
+
+                    <RadioButton
+                        android:id="@+id/radioBtnCredit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="T. Crédito" />
+                </RadioGroup>
             </LinearLayout>
 
             <LinearLayout
@@ -76,21 +63,21 @@
                     android:layout_height="match_parent"
                     android:gravity="bottom|right"
                     android:padding="10dp"
-                    android:text="$"
+                    android:text="4 últimos digitos"
                     android:textAlignment="center"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/editTxtTotal"
+                    android:id="@+id/editTxtLast4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:background="@null"
                     android:gravity="center"
                     android:hint="Escribe algo aquí..."
-                    android:inputType="number|text|numberDecimal"
+                    android:inputType="number"
                     android:padding="10dp"
                     android:textAlignment="textStart"
                     android:textSize="16sp" />

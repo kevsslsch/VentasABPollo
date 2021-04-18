@@ -423,7 +423,7 @@ public class FunctionsApp extends Application {
         }
     }
 
-    public double getTotalTransfersRoute(int route){
+    public double getTotalRoute(int route, String paymentMethod){
         realm = Realm.getDefaultInstance();
         BaseApp baseApp = new BaseApp(context);
 
@@ -436,7 +436,7 @@ public class FunctionsApp extends Application {
 
             RealmResults<VisitsPayments> visitsPayments = realm.where(VisitsPayments.class)
                     .equalTo("ruta", route)
-                    .equalTo("metodo_pago", "Transferencia")
+                    .equalTo("metodo_pago", paymentMethod)
                     .findAll();
 
             baseApp.showLog("visitsPayments" + visitsPayments.size());
@@ -793,7 +793,7 @@ public class FunctionsApp extends Application {
         }
     }
 
-    public int getDataInventoryVisit(int route, int visit, int article, String data){
+    public double getDataInventoryVisit(int route, int visit, int article, String data){
         BaseApp baseApp = new BaseApp(context);
 
         try{
@@ -807,7 +807,7 @@ public class FunctionsApp extends Application {
                     case "venta":
 
                         if(detailsSales.size() > 0){
-                            return (int)detailsSales.get(0).getCantidad();
+                            return detailsSales.get(0).getCantidad();
                         }else{
                             return 0;
                         }
@@ -1049,7 +1049,6 @@ public class FunctionsApp extends Application {
             stringSplitDomiciles = generateSplitDomiciles();
             stringSplitPendingPayments = generateSplitPendingPayments();
 
-            //if(countVisits > 0 || countRoutes > 0 || stringSplitDomiciles.length() > 0 || stringSplitPendingPayments.length() > 0) {
             stringSplitVisits = ""; // reset
             stringSplitSales = ""; // reset
             stringSplitChanges = ""; // reset
@@ -1059,7 +1058,7 @@ public class FunctionsApp extends Application {
             stringSplitReturns = "";
             stringSplitChangesInventories = "";
 
-            PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Guarda_Datos_Android ?, ?, ?, ?, ?, ?, ?");
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Guarda_Datos_Android ?, ?, ?, ?, ?, ?, ?, ?, ?");
             if (loComando == null) {
                 baseApp.showLog("Error al Crear SP Guarda_Datos_Android");
                 messagesSync += "\n\n Error al Crear SP Guarda_Datos_Android";
@@ -1072,36 +1071,27 @@ public class FunctionsApp extends Application {
                     stringSplitChanges = generateSplitChanges();
                     stringSplitDevolutions = generateSplitDevolutions();
                     stringSplitPayments = generateSplitPayments();
-                    stringSplitSeparateds = generateSplitSeparateds();
                     stringSplitReturns = generateSplitReturns();
-                    stringSplitChangesInventories = generateSplitChangesInventory();
-                    //stringSplitLogs = generateSplitLogs();
 
                     loComando.setInt(1, nUser);
                     loComando.setString(2, stringSplitVisits);
                     loComando.setString(3, stringSplitSales);
-                    //loComando.setString(4, stringSplitChanges);
-                    //loComando.setString(5, stringSplitDevolutions);
-                    loComando.setString(4, stringSplitPayments);
-                    //loComando.setString(7, stringSplitSeparateds);
-                    loComando.setString(5, stringSplitReturns);
-                    loComando.setString(6, stringSplitDomiciles);
-                    //loComando.setString(10, stringSplitChangesInventories);
-                    loComando.setString(7, stringSplitPendingPayments);
-                    //loComando.setString(12, stringSplitLogs);
+                    loComando.setString(4, stringSplitChanges);
+                    loComando.setString(5, stringSplitDevolutions);
+                    loComando.setString(6, stringSplitPayments);
+                    loComando.setString(7, stringSplitReturns);
+                    loComando.setString(8, stringSplitDomiciles);
+                    loComando.setString(9, stringSplitPendingPayments);
 
                     baseApp.showLog("SQL PARAMETERS 1: " + nUser);
                     baseApp.showLog("SQL PARAMETERS 2: " + stringSplitVisits);
                     baseApp.showLog("SQL PARAMETERS 3: " + stringSplitSales);
-                    //baseApp.showLog("SQL PARAMETERS 4: " + stringSplitChanges);
-                    //baseApp.showLog("SQL PARAMETERS 5: " + stringSplitDevolutions);
-                    baseApp.showLog("SQL PARAMETERS 4: " + stringSplitPayments);
-                    //baseApp.showLog("SQL PARAMETERS 7: " + stringSplitSeparateds);
-                    baseApp.showLog("SQL PARAMETERS 5: " + stringSplitReturns);
-                    baseApp.showLog("SQL PARAMETERS 6: " + stringSplitDomiciles);
-                    //baseApp.showLog("SQL PARAMETERS 10: " + stringSplitChangesInventories);
-                    baseApp.showLog("SQL PARAMETERS 7: " + stringSplitPendingPayments);
-                    //baseApp.showLog("SQL PARAMETERS 12: " + stringSplitLogs);
+                    baseApp.showLog("SQL PARAMETERS 4: " + stringSplitChanges);
+                    baseApp.showLog("SQL PARAMETERS 5: " + stringSplitDevolutions);
+                    baseApp.showLog("SQL PARAMETERS 6: " + stringSplitPayments);
+                    baseApp.showLog("SQL PARAMETERS 7: " + stringSplitReturns);
+                    baseApp.showLog("SQL PARAMETERS 8: " + stringSplitDomiciles);
+                    baseApp.showLog("SQL PARAMETERS 9: " + stringSplitPendingPayments);
 
                     isResultSet = loComando.execute();
 
@@ -1387,8 +1377,9 @@ public class FunctionsApp extends Application {
                     stringSplit += visit.getVisita() + "|"; // folio interno visita
                     stringSplit += (isCharged.equals("0") ? visit.getImporte()-visit.getImporte_saldado() : visit.getImporte()) + "|"; // 2 importe
                     stringSplit += visit.getMetodo_pago() + "|"; // 3 metodo pago
-                    stringSplit += isCharged + "|"; // 4 es cobrado
-                    stringSplit += ((visit.getFecha_cobrado() == null) ? "" : visit.getFecha_cobrado()) + "Ç"; // 5 fecha cobrado
+                    stringSplit += visit.getUltimos_4_tarjeta() + "|"; // 4 metodo pago
+                    stringSplit += isCharged + "|"; // 5 es cobrado
+                    stringSplit += ((visit.getFecha_cobrado() == null) ? "" : visit.getFecha_cobrado()) + "Ç"; // 6 fecha cobrado
                 }
             }
         }
@@ -1788,8 +1779,8 @@ public class FunctionsApp extends Application {
         }
     }
 
-    public void changeMovementsArticle(int route, int visit, int article, int amountDevolution,
-                                       int amountChange, int amountSeparated, String dateSeparated){
+    public void changeMovementsArticle(int route, int visit, int article, double amountDevolution,
+                                       double amountChange, double amountSeparated, String dateSeparated){
 
         BaseApp baseApp = new BaseApp(context);
         double pieces;

@@ -103,7 +103,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Cantidad Devolución"
+                android:text="C. Devolución"
                 android:textColor="@android:color/black"
                 android:textSize="17sp" />
 
@@ -115,7 +115,7 @@
                 android:background="@null"
                 android:ems="10"
                 android:hint="0"
-                android:inputType="number"
+                android:inputType="number|numberDecimal"
                 android:text="0"
                 android:textAlignment="center"
                 android:textSize="17sp" />
@@ -126,7 +126,8 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/txtViewChanges"
@@ -157,7 +158,8 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/txtViewSeparated"
@@ -189,7 +191,8 @@
             android:layout_height="match_parent"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/txtViewDateSeparated"

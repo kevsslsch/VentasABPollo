@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -17,12 +18,15 @@ import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
@@ -82,7 +86,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
     CheckBox chkBoxFiscalInvoice;
     LinearLayout layoutSwitchTypeSale;
 
-    CardView cardExact, card20, card50, card100, card200, card500, cardReset, cardSPEI;
+    CardView cardExact, card20, card50, card100, card200, card500, cardReset, cardSPEI, cardCreditCard;
 
     int nUser, nClient, nVisit, nList, idRoute, nPedido, totalDetails;
     boolean bAlertDetailsSale;
@@ -102,7 +106,8 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
     private static final float MIN_DISTANCE = 1000;
     RealmResults<VisitsClasifications> listClasifications;
 
-    boolean isSPEI = false;
+    boolean isSPEI = false, isCreditCard = false;
+    String cCreditCard = "", cLast4 = "";
 
     @SuppressLint("RestrictedApi")
     @Override
@@ -169,6 +174,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
         card500 = findViewById(R.id.card500);
         cardReset = findViewById(R.id.cardReset);
         cardSPEI = findViewById(R.id.cardSPEI);
+        cardCreditCard = findViewById(R.id.cardCreditCard);
 
         scrollViewDetailsSale = findViewById(R.id.scrollViewDetailsSale);
 
@@ -193,6 +199,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
         card500.setOnClickListener(v-> updateTotalImport(500));
         cardReset.setOnClickListener(v->updateTotalImport(0));
         cardSPEI.setOnClickListener(v->askSPEI());
+        cardCreditCard.setOnClickListener(v->alertCreditCard());
 
         if(!bAlertDetailsSale && !functionsapp.getIsVisitFinished(nVisit)){
             //showAlertHelp();
@@ -501,6 +508,9 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
             });
             btnCancel.setOnClickListener(v -> {
                 isSPEI = false;
+                isCreditCard = false;
+                cCreditCard = "";
+                cLast4 = "";
                 updateTotalImport(0);
                 menuBottomSheet.dismiss();
             });
@@ -719,7 +729,59 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
                     isSPEI = false;
                 })
                 .show();
+    }
 
+    public void alertCreditCard(){
+        try{
+            View popupInputDialogView;
+            androidx.appcompat.app.AlertDialog alert;
+            RadioButton radioBtnDebit, radioBtnCredit;
+            EditText editTxtLast4;
+            Button btnDialogSave, btnDialogCancel;
+
+            alert = new androidx.appcompat.app.AlertDialog.Builder(this).create();
+            LayoutInflater layoutInflater = LayoutInflater.from(this);
+            popupInputDialogView = layoutInflater.inflate(R.layout.dialog_credit_card, null);
+
+            radioBtnDebit = popupInputDialogView.findViewById(R.id.radioBtnDebit);
+            radioBtnCredit = popupInputDialogView.findViewById(R.id.radioBtnCredit);
+
+            editTxtLast4 = popupInputDialogView.findViewById(R.id.editTxtLast4);
+
+            btnDialogSave = popupInputDialogView.findViewById(R.id.btnDialogSave);
+            btnDialogCancel = popupInputDialogView.findViewById(R.id.btnDialogCancel);
+
+            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            alert.setView(popupInputDialogView);
+
+            alert.show();
+
+            btnDialogSave.setOnClickListener(v -> {
+                String valueEditTxtLast4 = editTxtLast4.getText().toString();
+
+                if(valueEditTxtLast4.length() != 4){
+                    baseApp.showToast("Escribe los últimos 4 digitos de la tarjeta.");
+                }else if(!radioBtnDebit.isChecked() && !radioBtnCredit.isChecked()) {
+                    baseApp.showToast("Seleccione el tipo de tarjeta.");
+                }else{
+                    isCreditCard = true;
+                    cCreditCard = (radioBtnDebit.isChecked() ? "debit" : "credit");
+                    cLast4 = editTxtLast4.getText().toString();
+
+                    updateTotalImport(-1);
+                    finishSale(true);
+
+                    alert.cancel();
+                }
+            });
+
+            btnDialogCancel.setOnClickListener(view -> {
+                alert.cancel();
+            });
+
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error interno.");
+        }
     }
 
     public void showMenuBottomFinishSale(boolean withDetails) {
@@ -764,14 +826,12 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
 
                 RealmResults<Clients> client = realm.where(Clients.class).equalTo("cliente", nClient).findAll();
 
-                // TODO: Se habilita temporalmente para todos la venta a crédito
-
                 if (client.size() > 0) {
-                    /*if (spClass.strGetSP("sTypeSale").equals("credit") && functionsapp.getCurrentCustomerBalance(nClient) == 0) {
+                    if (spClass.strGetSP("sTypeSale").equals("credit") && functionsapp.getCurrentCustomerBalance(nClient) == 0) {
                         baseApp.showSnackBar("El cliente no tiene crédito en este momento.");
                     } else if (spClass.strGetSP("sTypeSale").equals("credit") && functionsapp.getTotalSale(nVisit, "totalImport") > functionsapp.getCurrentCustomerBalance(nClient)) {
                         baseApp.showSnackBar("El total de la venta supera al saldo actual del cliente.");
-                    } else */ if(true){
+                    } else{
                         RealmResults<VisitsClients> visitsClients = realm.where(VisitsClients.class).equalTo("id", nVisit).findAll();
 
                         visits = visitsClients.get(0);
@@ -799,14 +859,22 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
                         if (spClass.strGetSP("sTypeSale").equals("credit")) {
                             visitsPayments.setCobrado(false);
                             visitsPayments.setFecha_cobrado("");
-                            visitsPayments.setMetodo_pago("Crédito");
+                            visitsPayments.setMetodo_pago("");
                             visits.setEs_credito(true);
                         } else if (spClass.strGetSP("sTypeSale").equals("counted")) {
 
                             if(isSPEI){
-                                visitsPayments.setMetodo_pago("Transferencia");
+                                visitsPayments.setMetodo_pago("Transferencia Electrónica");
+                            }else if(isCreditCard) {
+                                if(cCreditCard.equals("debit")){
+                                    visitsPayments.setMetodo_pago("Tarjeta de Débito");
+                                }else{
+                                    visitsPayments.setMetodo_pago("Tarjeta de Crédito");
+                                }
+
+                                visitsPayments.setUltimos_4_tarjeta(Integer.parseInt(cLast4));
                             }else{
-                                visitsPayments.setMetodo_pago("Contado");
+                                visitsPayments.setMetodo_pago("Efectivo MXP");
                             }
 
                             visitsPayments.setCobrado(true);
@@ -822,19 +890,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
 
                         listDetails = realm.where(DetailsSales.class).equalTo("visita", nVisit).findAll();
 
-                        /*for (DetailsSales detail : listDetails) {
-
-                            realm.beginTransaction();
-                            Logs log = new Logs("DetailsSalesActivity", "functionsapp.changeMovementsSalesArticle con parámetros: idRoute:" + idRoute + ", nVisit: " + nVisit + ", clave_articulo: " + detail.getClave_articulo() + ", cantidad: " + (int) detail.getCantidad(), baseApp.getCurrentDateFormated());
-                            realm.insertOrUpdate(log);
-                            realm.commitTransaction();
-
-                            //functionsapp.changeMovementsSalesArticle(idRoute, nVisit, detail.getClave_articulo(), (int) detail.getCantidad());
-                        }*/
-
                         baseApp.showToast("Venta dada por pagada");
-                        //menuBottomSheet.dismiss();
-
                     }
                 }
             }
