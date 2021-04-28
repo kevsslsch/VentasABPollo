@@ -221,6 +221,7 @@ public class LoginActivity extends AppCompatActivity {
                         booleanSuccess = Datos.getBoolean("exito");
                         messageServer  = Datos.getString("mensaje");
                         spClass.strSetSP("name", Datos.getString("nombre_persona").trim());
+                        spClass.intSetSP("sucursal", Datos.getInt("sucursal"));
                         spClass.boolSetSP("isSupervisor", Datos.getBoolean("es_supervisor"));
                     }
                 } catch (Exception ex) {

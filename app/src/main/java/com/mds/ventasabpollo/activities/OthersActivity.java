@@ -512,12 +512,12 @@ public class OthersActivity extends AppCompatActivity implements RealmChangeList
 
                     if(spClass.boolGetSP("onlineConnection")){
                         backgroundProcess("uploadData");
+                    }else{
+                        functionsapp.printTicket(nVisit);
                     }
 
                     functionsapp.goListClientsActivity(nList, true);
                     baseApp.showToast("Visita dada por terminada");
-
-                    functionsapp.printTicket(nVisit);
 
                     if(functionsapp.getIsCredit(nVisit)) {
                         new androidx.appcompat.app.AlertDialog.Builder(this)
@@ -690,6 +690,7 @@ public class OthersActivity extends AppCompatActivity implements RealmChangeList
                         switch (process){
                             case "uploadData":
                                 functionsApp.uploadData();
+                                functionsApp.printTicket(nVisit);
                                 break;
                             default:
                                 return;

@@ -161,9 +161,12 @@ public class ListClientsActivity extends AppCompatActivity implements LocationLi
 
         fbtnBack.setOnClickListener(v -> backFunction());
         fbtnPrintLastVisit.setOnClickListener(v->{
-            int nLastVisit;
+            int nLastVisit = 0;
+            VisitsClients visitsClients = realm.where(VisitsClients.class).sort("id", Sort.DESCENDING).findFirst();
 
-            nLastVisit = realm.where(VisitsClients.class).sort("id", Sort.DESCENDING).findFirst().getId();
+            if(visitsClients != null){
+                nLastVisit = visitsClients.getId();
+            }
 
             if(nLastVisit != 0){
                 functionsapp.printTicket(nLastVisit);

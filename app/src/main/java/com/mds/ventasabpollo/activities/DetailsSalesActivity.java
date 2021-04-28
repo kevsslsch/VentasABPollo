@@ -568,13 +568,13 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
 
                     if (spClass.boolGetSP("onlineConnection")) {
                         backgroundProcess("uploadData");
+                    }else{
+                        functionsapp.printTicket(nVisit);
                     }
 
                     baseApp.showToast("Visita dada por terminada");
 
                     functionsapp.goListClientsActivity(nList, true);
-
-                    functionsapp.printTicket(nVisit);
 
                     if(functionsapp.getIsCredit(nVisit)) {
                         new androidx.appcompat.app.AlertDialog.Builder(this)
@@ -937,6 +937,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
                         switch (process){
                             case "uploadData":
                                 functionsApp.uploadData();
+                                functionsApp.printTicket(nVisit);
                                 break;
                             default:
                                 return;

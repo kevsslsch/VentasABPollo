@@ -45,6 +45,7 @@ import com.mds.ventasabpollo.activities.RoutesActivity;
 import com.mds.ventasabpollo.activities.SalesActivity;
 import com.mds.ventasabpollo.activities.VisitsActivity;
 import com.mds.ventasabpollo.models.Articles;
+import com.mds.ventasabpollo.models.BranchOffices;
 import com.mds.ventasabpollo.models.ChangesInventories;
 import com.mds.ventasabpollo.models.Clients;
 import com.mds.ventasabpollo.models.DetailsDepartures;
@@ -54,6 +55,7 @@ import com.mds.ventasabpollo.models.Inventories;
 import com.mds.ventasabpollo.models.NewClients;
 import com.mds.ventasabpollo.models.PrepareDeparture;
 import com.mds.ventasabpollo.models.Prices;
+import com.mds.ventasabpollo.models.RechargeInventories;
 import com.mds.ventasabpollo.models.Routes;
 import com.mds.ventasabpollo.models.VisitsClasifications;
 import com.mds.ventasabpollo.models.VisitsClients;
@@ -406,7 +408,7 @@ public class FunctionsApp extends Application {
 
             RealmResults<VisitsPayments> visitsPayments = realm.where(VisitsPayments.class)
                     .equalTo("ruta", route)
-                    .equalTo("metodo_pago", "Contado")
+                    .equalTo("metodo_pago", "Efectivo MXP")
                     .findAll();
 
             baseApp.showLog("visitsPayments" + visitsPayments.size());
@@ -556,7 +558,7 @@ public class FunctionsApp extends Application {
         BaseApp baseApp = new BaseApp(context);
 
         int nVisit;
-        double amountSales = 0, amountDevolutions = 0, countChanges = 0;
+        double amountSales = 0, amountDevolutions = 0, countChanges = 0, countRecharges = 0;
 
         try{
             realm = Realm.getDefaultInstance();
@@ -581,6 +583,13 @@ public class FunctionsApp extends Application {
                     .equalTo("ruta", route)
                     .notEqualTo("fecha_visita_fin", "")
                     .findAll();
+
+            countRecharges = realm.where(RechargeInventories.class)
+                    .equalTo("ruta", route)
+                    .equalTo("clave_articulo", article)
+                    .findAll()
+                    .sum("cantidad")
+                    .doubleValue();
 
             for(ChangesInventories changes: changesInventories){
                 countChanges += (changes.getCantidad_nueva()-changes.getCantidad_anterior());
@@ -648,7 +657,8 @@ public class FunctionsApp extends Application {
                 baseApp.showLog("sales: " + amountSales);
                 baseApp.showLog("devolutions: " + amountDevolutions);
 
-                return (inventories.get(0).getCantidad_inicial() + countChanges) - amountSales - amountDevolutions;
+                return (inventories.get(0).getCantidad_inicial() + countRecharges) - amountSales;
+                //return (inventories.get(0).getCantidad_inicial() + countChanges) - amountSales - amountDevolutions;
             }else{
                 return 0;
             }
@@ -1141,10 +1151,13 @@ public class FunctionsApp extends Application {
 
                                 while (Datos1.next()) {
 
-                                    VisitsClients visit = realm.where(VisitsClients.class).equalTo("id", Datos1.getInt("folio_interno")).findFirst();
+                                    VisitsClients visit = realm.where(VisitsClients.class)
+                                            .equalTo("id", Datos1.getInt("folio_interno"))
+                                            .findFirst();
                                     if(visit != null){
                                         realm.beginTransaction();
                                         visit.setId_db(Datos1.getInt("visita"));
+                                        visit.setFactura(Datos1.getInt("factura"));
                                         realm.commitTransaction();
                                     }
                                 }
@@ -2365,7 +2378,8 @@ public class FunctionsApp extends Application {
             VisitsClients visit = null;
             Clients client = null;
             RealmResults<DetailsSales> detailsSales;
-            String details = "";
+            BranchOffices branchOffice;
+            String details = "", header = "";
 
             realm = Realm.getDefaultInstance();
 
@@ -2374,142 +2388,178 @@ public class FunctionsApp extends Application {
                     .findFirst();
 
             if(visit != null){
-                client = realm.where(Clients.class).equalTo("cliente", visit.getCliente()).findFirst();
 
-                detailsSales = realm.where(DetailsSales.class)
-                        .equalTo("visita", nVisit)
-                        .findAll();
+                branchOffice = getBranchOffice(spClass.intGetSP("sucursal"));
 
-                if(detailsSales.size() > 0){
-                    if (Printooth.INSTANCE.hasPairedPrinter()) {
-                        printing = Printooth.INSTANCE.printer();
+                //baseApp.showLog("x" + visit.getFactura());
 
-                        initListeners();
+                if(branchOffice != null) {
+                    client = realm.where(Clients.class).equalTo("cliente", visit.getCliente()).findFirst();
 
-                        if (!Printooth.INSTANCE.hasPairedPrinter()) {
-                            baseApp.showToast("Sin impresora, vincule una impresora en la sección de Configuraciones.");
-                            //startActivityForResult(new Intent(this, ScanningActivity.class ),ScanningActivity.SCANNING_FOR_PRINTER);
-                        } else {
-                            if (printing != null) {
-                                ArrayList<Printable> al = new ArrayList<>();
-                                Resources resources = context.getResources();
+                    detailsSales = realm.where(DetailsSales.class)
+                            .equalTo("visita", nVisit)
+                            .findAll();
 
-                                al.add(new ImagePrintable.Builder(R.drawable.logo_nudito_microsmall, resources)
-                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
-                                        .setNewLinesAfter(1)
-                                        .build());
+                    header = branchOffice.getDireccion() + "\n" +
+                            branchOffice.getColonia() + "\n" +
+                            branchOffice.getMunicipio() + "\n" +
+                            "RFC: " + branchOffice.getRfc() + "\n" +
+                            "Tel: " + branchOffice.getArea() + " " + branchOffice.getTelefono() +"\n" +
+                            branchOffice.getEmail() + "\n" +
+                            "VENTA A " + (getIsCredit(nVisit) ? "CRÉDITO" : "CONTADO") + "\n";
 
-                                al.add((new TextPrintable.Builder())
-                                        .setText("Poseidon 7107\n" +
-                                                "Fracc. Miramar \n" +
-                                                "CP 31104 Chihuahua, Chih.\n" +
-                                                "RFC: PECR8507099X7\n" +
-                                                "Tel: 614-189-4202\n" +
-                                                "contacto@elnudito.com\n" +
-                                                "VENTA A " + (getIsCredit(nVisit) ? "CRÉDITO" : "CONTADO") + "\n")
-                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
-                                        .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
-                                        .setNewLinesAfter(1)
-                                        .build());
+                    if (detailsSales.size() > 0) {
+                        if (Printooth.INSTANCE.hasPairedPrinter()) {
+                            printing = Printooth.INSTANCE.printer();
 
-                                al.add((new TextPrintable.Builder())
-                                        .setText(baseApp.getCurrentDateFormated2() + "\n" +
-                                                "Vendedor: " + spClass.strGetSP("name").trim() + "\n" +
-                                                "Cliente: " + (client != null ? client.getNombre_cliente().trim() : "Sin nombre de cliente."))
-                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
-                                        .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
-                                        .setNewLinesAfter(1)
-                                        .build());
+                            initListeners();
 
-                                al.add((new TextPrintable.Builder())
-                                        .setText("Artículos: \n" +
-                                                "Desc.    Cant.  Precio SubTotal" + newline +
-                                                "-------------------------------" + newline)
-                                        .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
-                                        .setNewLinesAfter(0)
-                                        .build());
+                            if (!Printooth.INSTANCE.hasPairedPrinter()) {
+                                baseApp.showToast("Sin impresora, vincule una impresora en la sección de Configuraciones.");
+                                //startActivityForResult(new Intent(this, ScanningActivity.class ),ScanningActivity.SCANNING_FOR_PRINTER);
+                            } else {
+                                if (printing != null) {
+                                    ArrayList<Printable> al = new ArrayList<>();
+                                    Resources resources = context.getResources();
 
-                                for (DetailsSales detail : detailsSales) {
-                                    String article, amount, price, subtotal;
-
-                                    details = "";
-
-                                    article = detail.getNombre_articulo();
-                                    amount = String.valueOf(detail.getCantidad());
-                                    price = String.valueOf(detail.getPrecio());
-                                    subtotal = String.valueOf(detail.getCantidad() * detail.getPrecio());
-
-                                    if (article.length() > 9) {
-                                        article = article.substring(0, 9);
-                                    } else {
-                                        article = String.format("%-9s", article);
-                                    }
-
-                                    if (amount.length() > 7) {
-                                        amount = amount.substring(0, 7);
-                                    } else {
-                                        amount = String.format("%-7s", amount);
-                                    }
-
-                                    if (price.length() > 6) {
-                                        price = price.substring(0, 6);
-                                    } else {
-                                        price = String.format("%-6s", price);
-                                    }
-
-                                    if (subtotal.length() > 7) {
-                                        subtotal = subtotal.substring(0, 7);
-                                    } else {
-                                        subtotal = String.format("%-6s", subtotal);
-                                    }
-
-                                    details = article + " " + amount + "$ " + price + "$" + subtotal;
+                                    al.add(new ImagePrintable.Builder(R.drawable.logo_abpollo_microsmall, resources)
+                                            .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                            .setNewLinesAfter(1)
+                                            .build());
 
                                     al.add((new TextPrintable.Builder())
-                                            .setText(details)
+                                            .setText(header)
                                             .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                            .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                            .setNewLinesAfter(1)
+                                            .build());
+
+                                    al.add((new TextPrintable.Builder())
+                                            .setText(baseApp.getCurrentDateFormated2() + "\n" +
+                                            "Factura: #" + visit.getFactura() + "\n" +
+                                            "Vendedor: " + spClass.strGetSP("name").trim() + "\n" +
+                                            "Cliente: " + (client != null ? client.getNombre_cliente().trim() : "Sin nombre de cliente."))
+                                            .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                            .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                            .setNewLinesAfter(1)
+                                            .build());
+
+                                    al.add((new TextPrintable.Builder())
+                                            .setText("Artículos: \n" +
+                                                    "Desc.    Cant.  Precio SubTotal" + newline +
+                                                    "-------------------------------" + newline)
+                                            .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
                                             .setNewLinesAfter(0)
                                             .build());
 
+                                    for (DetailsSales detail : detailsSales) {
+                                        String article, amount, price, subtotal;
+
+                                        details = "";
+
+                                        article = detail.getNombre_articulo();
+                                        amount = String.valueOf(detail.getCantidad());
+                                        price = String.valueOf(detail.getPrecio());
+                                        subtotal = String.valueOf(detail.getCantidad() * detail.getPrecio());
+
+                                        if (article.length() > 9) {
+                                            article = article.substring(0, 9);
+                                        } else {
+                                            article = String.format("%-9s", article);
+                                        }
+
+                                        if (amount.length() > 7) {
+                                            amount = amount.substring(0, 7);
+                                        } else {
+                                            amount = String.format("%-7s", amount);
+                                        }
+
+                                        if (price.length() > 6) {
+                                            price = price.substring(0, 6);
+                                        } else {
+                                            price = String.format("%-6s", price);
+                                        }
+
+                                        if (subtotal.length() > 7) {
+                                            subtotal = subtotal.substring(0, 7);
+                                        } else {
+                                            subtotal = String.format("%-6s", subtotal);
+                                        }
+
+                                        details = article + " " + amount + "$ " + price + "$" + subtotal;
+
+                                        al.add((new TextPrintable.Builder())
+                                                .setText(details)
+                                                .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                                .setNewLinesAfter(0)
+                                                .build());
+
+                                    }
+
+                                    al.add((new TextPrintable.Builder())
+                                            .setText("TOTAL: $" + baseApp.formattedNumber(getTotalSale(nVisit, "totalImport")))
+                                            .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                            .setAlignment(DefaultPrinter.Companion.getALIGNMENT_RIGHT())
+                                            .setNewLinesAfter(4)
+                                            .build());
+
+                                    al.add((new TextPrintable.Builder())
+                                            .setText("________________________")
+                                            .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                            .setNewLinesAfter(1)
+                                            .build());
+
+                                    al.add((new TextPrintable.Builder())
+                                            .setText("Firma")
+                                            .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                            .setNewLinesAfter(1)
+                                            .build());
+
+                                    al.add((new TextPrintable.Builder())
+                                            .setText("GRACIAS POR SU COMPRA")
+                                            .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                            .setNewLinesAfter(2)
+                                            .build());
+
+                                    al.add((new TextPrintable.Builder())
+                                            .setText(branchOffice.getSitio_web())
+                                            .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                            .setNewLinesAfter(3)
+                                            .build());
+
+                                    if(getIsCredit(nVisit)){
+                                        al.add((new TextPrintable.Builder())
+                                                .setText("PAGARE\n" +
+                                                        "DEBEMOS Y PAGAREMOS EN FORMA INCONDICIONAL POR ESTE PAGARE A LA ORDEN DE AB POLLO SA DE CV EN CHIHUAHUA CHIHUAHUA LA CANTIDAD DE $ " + baseApp.formattedNumber(getTotalSale(nVisit, "totalImport")) + "PESOS IMPORTE EN LETRA ( 00/100 M.N).\n" +
+                                                        "ASI COMO LOS INTERESES MORATORIOS DEL 5% MENSUAL SOBRE SALDOS INSOLUTOS A PARTIR DEL VENCIMIENTO. PAGARE QUE ACEPTO(AMOS) A LA VISTA DE EN LA INTELIGENCIA DEL QUE SUSCRIBE ESTA, AUTORIZO A SUSCRIBIR TITULOS DE CREDITO EN LOS TERMINOS DEL ARTICULO 11 DE LA LEY GRAL. DE TITULOS Y OPERACIONES.\n" +
+                                                        "LA FIRMA QUE APAREZCA EN CUALQUIER LUGAR DEL CUERPO DE ESTE TITULO DE CREDITO, IMPLICA SU ACEPTACION POR EL TOTAL DE LA SUMA QUE EXPRESA.\n")
+                                                .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                                .setNewLinesAfter(1)
+                                                .build());
+
+                                        al.add((new TextPrintable.Builder())
+                                                .setText("NOMBRE Y FIRMA: _____________________________")
+                                                .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                                .setNewLinesAfter(1)
+                                                .build());
+
+                                        al.add((new TextPrintable.Builder())
+                                                .setText("LUGAR Y FECHA: _________________________")
+                                                .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                                .setNewLinesAfter(1)
+                                                .build());
+                                    }
+
+                                    baseApp.showLog(al.toString());
+                                    printing.print(al);
+                                } else {
+                                    baseApp.showToast("No hay nada que imprimir.");
                                 }
-
-                                al.add((new TextPrintable.Builder())
-                                        .setText("TOTAL: $" + baseApp.formattedNumber(getTotalSale(nVisit, "totalImport")))
-                                        .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
-                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_RIGHT())
-                                        .setNewLinesAfter(4)
-                                        .build());
-
-                                al.add((new TextPrintable.Builder())
-                                        .setText("________________________")
-                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
-                                        .setNewLinesAfter(1)
-                                        .build());
-
-                                al.add((new TextPrintable.Builder())
-                                        .setText("Firma")
-                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
-                                        .setNewLinesAfter(1)
-                                        .build());
-
-                                al.add((new TextPrintable.Builder())
-                                        .setText("GRACIAS POR SU COMPRA")
-                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
-                                        .setNewLinesAfter(2)
-                                        .build());
-
-                                al.add((new TextPrintable.Builder())
-                                        .setText("www.elnudito.com")
-                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
-                                        .setNewLinesAfter(3)
-                                        .build());
-
-                                printing.print(al);
-                            } else {
-                                baseApp.showToast("No hay nada que imprimir.");
                             }
                         }
                     }
+                }else{
+                    baseApp.showToast("Cargue los datos antes de imprimir tickets.");
                 }
             }
         }catch (Exception ex){
@@ -2563,6 +2613,20 @@ public class FunctionsApp extends Application {
             baseApp.showToast("Ocurrió un error interno.");
 
             return false;
+        }
+    }
+
+    public BranchOffices getBranchOffice(int nId){
+        BaseApp baseApp = new BaseApp(context);
+
+        try{
+            realm = Realm.getDefaultInstance();
+
+            return realm.where(BranchOffices.class).equalTo("sucursal", nId).findFirst();
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error interno.");
+
+            return null;
         }
     }
 }

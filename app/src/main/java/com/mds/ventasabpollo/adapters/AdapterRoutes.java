@@ -64,11 +64,11 @@ public class AdapterRoutes extends RecyclerView.Adapter<AdapterRoutes.RoutesView
         holder.txtDeparture.setText("Salida: " + routesList.get(position).getSalida());
 
         if(routesList.get(position).getFecha_fin().equals("")){
-            holder.txtStatus.setText("Status: En proceso");
+            holder.txtStatus.setText("Estado Actual: En proceso");
             holder.btnViewReport.setVisibility(View.GONE);
             holder.txtDateEnd.setVisibility(View.GONE);
         }else{
-            holder.txtStatus.setText("Status: Terminada");
+            holder.txtStatus.setText("Estado Actual: Terminada");
             holder.btnViewReport.setVisibility(View.VISIBLE);
             holder.txtDateEnd.setVisibility(View.VISIBLE);
         }

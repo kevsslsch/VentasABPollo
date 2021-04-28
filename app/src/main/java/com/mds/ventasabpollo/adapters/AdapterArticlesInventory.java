@@ -15,6 +15,7 @@ import com.mds.ventasabpollo.application.FunctionsApp;
 import com.mds.ventasabpollo.application.SPClass;
 import com.mds.ventasabpollo.models.ChangesInventories;
 import com.mds.ventasabpollo.models.Inventories;
+import com.mds.ventasabpollo.models.RechargeInventories;
 
 import java.util.List;
 
@@ -65,12 +66,20 @@ public class AdapterArticlesInventory extends RecyclerView.Adapter<AdapterArticl
                 .equalTo("clave_articulo", listArticles.get(position).getClave_articulo())
                 .findAll();
 
+        double rechargesInventories = realm.where(RechargeInventories.class)
+                .equalTo("ruta", idRoute)
+                .equalTo("clave_articulo", listArticles.get(position).getClave_articulo())
+                .findAll()
+                .sum("cantidad")
+                .doubleValue();
+
         for(ChangesInventories changes: changesInventories){
             countChanges += (changes.getCantidad_nueva()-changes.getCantidad_anterior());
         }
 
         holder.txtArticle.setText(listArticles.get(position).getNombre_articulo().trim());
         holder.txtViewAmount.setText(baseApp.formattedNumber(listArticles.get(position).getCantidad_inicial() + countChanges));
+        holder.txtViewAmountRecharges.setText(Double.toString(rechargesInventories));
         //holder.txtViewAmount2.setText(Integer.toString(listArticles.get(position).getCantidad()));
         holder.txtViewAmount2.setText(baseApp.formattedNumber(functionsapp.getAmountArticleRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), false, true)));
 
@@ -97,13 +106,14 @@ public class AdapterArticlesInventory extends RecyclerView.Adapter<AdapterArticl
 
     public class ArticlesViewHolder extends RecyclerView.ViewHolder {
 
-        TextView txtArticle, txtViewAmount, txtViewAmount2, txtViewSalesAmount, txtViewDevolutionsAmount, txtViewSeparatedAmount, txtViewChangesAmount;
+        TextView txtArticle, txtViewAmount, txtViewAmountRecharges, txtViewAmount2, txtViewSalesAmount, txtViewDevolutionsAmount, txtViewSeparatedAmount, txtViewChangesAmount;
 
         public ArticlesViewHolder(View itemView) {
             super(itemView);
 
             txtArticle         = itemView.findViewById(R.id.txtArticle);
             txtViewAmount      = itemView.findViewById(R.id.txtViewAmount);
+            txtViewAmountRecharges = itemView.findViewById(R.id.txtViewAmountRecharges);
             txtViewAmount2     = itemView.findViewById(R.id.txtViewAmount2);
             txtViewSalesAmount       = itemView.findViewById(R.id.txtViewSalesAmount);
             txtViewDevolutionsAmount = itemView.findViewById(R.id.txtViewDevolutionsAmount);

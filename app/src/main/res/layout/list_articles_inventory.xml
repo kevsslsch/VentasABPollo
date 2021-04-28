@@ -34,6 +34,17 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/txtViewAmountRecharges"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="0"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/txtViewAmount2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -51,7 +62,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/layoutInfo"
-        android:layout_marginLeft="20dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -73,7 +83,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="0"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -96,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="0"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -119,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="0"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textSize="18sp" />
 
         </LinearLayout>

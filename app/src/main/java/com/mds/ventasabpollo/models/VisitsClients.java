@@ -27,6 +27,7 @@ public class VisitsClients extends RealmObject {
     private boolean finalizado_forzado;
     private boolean estado_ventas;
     private int     id_db;
+    private int     factura;
     private int     user_id;
 
     public VisitsClients() {
@@ -66,6 +67,14 @@ public class VisitsClients extends RealmObject {
         this.long_visita_fin = long_visita_fin;
         this.id_db = id_db;
         this.user_id = user_id;
+    }
+
+    public int getFactura() {
+        return factura;
+    }
+
+    public void setFactura(int factura) {
+        this.factura = factura;
     }
 
     public boolean isEs_remision() {

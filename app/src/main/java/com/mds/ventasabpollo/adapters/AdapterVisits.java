@@ -92,9 +92,9 @@ public class AdapterVisits extends RecyclerView.Adapter<AdapterVisits.VisitsView
         }
 
         if(visitsList.get(position).getFecha_visita_fin() == null){
-            holder.txtStatus.setText("Status: Aún sin terminar");
+            holder.txtStatus.setText("Estado Actual: Aún sin terminar");
         }else{
-            holder.txtStatus.setText("Status: Terminada");
+            holder.txtStatus.setText("Estado Actual: Terminada");
             holder.txtDuration.setText("Duración:" + baseApp.getDifferenceTime(baseApp.convertDate(visitsList.get(position).getFecha_visita_inicio()), baseApp.convertDate(visitsList.get(position).getFecha_visita_fin())));
         }
 

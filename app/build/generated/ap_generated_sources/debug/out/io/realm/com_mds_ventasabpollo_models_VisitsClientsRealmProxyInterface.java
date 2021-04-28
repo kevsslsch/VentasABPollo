@@ -42,6 +42,8 @@ public interface com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface {
     public void realmSet$estado_ventas(boolean value);
     public int realmGet$id_db();
     public void realmSet$id_db(int value);
+    public int realmGet$factura();
+    public void realmSet$factura(int value);
     public int realmGet$user_id();
     public void realmSet$user_id(int value);
 }

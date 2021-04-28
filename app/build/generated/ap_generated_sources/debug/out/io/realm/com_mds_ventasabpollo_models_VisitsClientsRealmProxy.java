@@ -59,10 +59,11 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         long finalizado_forzadoIndex;
         long estado_ventasIndex;
         long id_dbIndex;
+        long facturaIndex;
         long user_idIndex;
 
         VisitsClientsColumnInfo(OsSchemaInfo schemaInfo) {
-            super(21);
+            super(22);
             OsObjectSchemaInfo objectSchemaInfo = schemaInfo.getObjectSchemaInfo("VisitsClients");
             this.idIndex = addColumnDetails("id", "id", objectSchemaInfo);
             this.rutaIndex = addColumnDetails("ruta", "ruta", objectSchemaInfo);
@@ -84,6 +85,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
             this.finalizado_forzadoIndex = addColumnDetails("finalizado_forzado", "finalizado_forzado", objectSchemaInfo);
             this.estado_ventasIndex = addColumnDetails("estado_ventas", "estado_ventas", objectSchemaInfo);
             this.id_dbIndex = addColumnDetails("id_db", "id_db", objectSchemaInfo);
+            this.facturaIndex = addColumnDetails("factura", "factura", objectSchemaInfo);
             this.user_idIndex = addColumnDetails("user_id", "user_id", objectSchemaInfo);
             this.maxColumnIndexValue = objectSchemaInfo.getMaxColumnIndex();
         }
@@ -122,6 +124,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
             dst.finalizado_forzadoIndex = src.finalizado_forzadoIndex;
             dst.estado_ventasIndex = src.estado_ventasIndex;
             dst.id_dbIndex = src.id_dbIndex;
+            dst.facturaIndex = src.facturaIndex;
             dst.user_idIndex = src.user_idIndex;
             dst.maxColumnIndexValue = src.maxColumnIndexValue;
         }
@@ -612,6 +615,28 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
 
     @Override
     @SuppressWarnings("cast")
+    public int realmGet$factura() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (int) proxyState.getRow$realm().getLong(columnInfo.facturaIndex);
+    }
+
+    @Override
+    public void realmSet$factura(int value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setLong(columnInfo.facturaIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setLong(columnInfo.facturaIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
     public int realmGet$user_id() {
         proxyState.getRealm$realm().checkIfValid();
         return (int) proxyState.getRow$realm().getLong(columnInfo.user_idIndex);
@@ -633,7 +658,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
     }
 
     private static OsObjectSchemaInfo createExpectedObjectSchemaInfo() {
-        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("VisitsClients", 21, 0);
+        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("VisitsClients", 22, 0);
         builder.addPersistedProperty("id", RealmFieldType.INTEGER, Property.PRIMARY_KEY, Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("ruta", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("cliente", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
@@ -654,6 +679,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         builder.addPersistedProperty("finalizado_forzado", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("estado_ventas", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("id_db", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("factura", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("user_id", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         return builder.build();
     }
@@ -843,6 +869,13 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
                 objProxy.realmSet$id_db((int) json.getInt("id_db"));
             }
         }
+        if (json.has("factura")) {
+            if (json.isNull("factura")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'factura' to null.");
+            } else {
+                objProxy.realmSet$factura((int) json.getInt("factura"));
+            }
+        }
         if (json.has("user_id")) {
             if (json.isNull("user_id")) {
                 throw new IllegalArgumentException("Trying to set non-nullable field 'user_id' to null.");
@@ -1005,6 +1038,13 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
                     reader.skipValue();
                     throw new IllegalArgumentException("Trying to set non-nullable field 'id_db' to null.");
                 }
+            } else if (name.equals("factura")) {
+                if (reader.peek() != JsonToken.NULL) {
+                    objProxy.realmSet$factura((int) reader.nextInt());
+                } else {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'factura' to null.");
+                }
             } else if (name.equals("user_id")) {
                 if (reader.peek() != JsonToken.NULL) {
                     objProxy.realmSet$user_id((int) reader.nextInt());
@@ -1102,6 +1142,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         builder.addBoolean(columnInfo.finalizado_forzadoIndex, realmObjectSource.realmGet$finalizado_forzado());
         builder.addBoolean(columnInfo.estado_ventasIndex, realmObjectSource.realmGet$estado_ventas());
         builder.addInteger(columnInfo.id_dbIndex, realmObjectSource.realmGet$id_db());
+        builder.addInteger(columnInfo.facturaIndex, realmObjectSource.realmGet$factura());
         builder.addInteger(columnInfo.user_idIndex, realmObjectSource.realmGet$user_id());
 
         // Create the underlying object and cache it before setting any object/objectlist references
@@ -1160,6 +1201,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         Table.nativeSetBoolean(tableNativePtr, columnInfo.finalizado_forzadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$finalizado_forzado(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.estado_ventasIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$estado_ventas(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.id_dbIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$id_db(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.facturaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$factura(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$user_id(), false);
         return rowIndex;
     }
@@ -1218,6 +1260,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
             Table.nativeSetBoolean(tableNativePtr, columnInfo.finalizado_forzadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$finalizado_forzado(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.estado_ventasIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$estado_ventas(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.id_dbIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$id_db(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.facturaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$factura(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$user_id(), false);
         }
     }
@@ -1273,6 +1316,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         Table.nativeSetBoolean(tableNativePtr, columnInfo.finalizado_forzadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$finalizado_forzado(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.estado_ventasIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$estado_ventas(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.id_dbIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$id_db(), false);
+        Table.nativeSetLong(tableNativePtr, columnInfo.facturaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$factura(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$user_id(), false);
         return rowIndex;
     }
@@ -1335,6 +1379,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
             Table.nativeSetBoolean(tableNativePtr, columnInfo.finalizado_forzadoIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$finalizado_forzado(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.estado_ventasIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$estado_ventas(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.id_dbIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$id_db(), false);
+            Table.nativeSetLong(tableNativePtr, columnInfo.facturaIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$factura(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_VisitsClientsRealmProxyInterface) object).realmGet$user_id(), false);
         }
     }
@@ -1378,6 +1423,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         unmanagedCopy.realmSet$finalizado_forzado(realmSource.realmGet$finalizado_forzado());
         unmanagedCopy.realmSet$estado_ventas(realmSource.realmGet$estado_ventas());
         unmanagedCopy.realmSet$id_db(realmSource.realmGet$id_db());
+        unmanagedCopy.realmSet$factura(realmSource.realmGet$factura());
         unmanagedCopy.realmSet$user_id(realmSource.realmGet$user_id());
 
         return unmanagedObject;
@@ -1408,6 +1454,7 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         builder.addBoolean(columnInfo.finalizado_forzadoIndex, realmObjectSource.realmGet$finalizado_forzado());
         builder.addBoolean(columnInfo.estado_ventasIndex, realmObjectSource.realmGet$estado_ventas());
         builder.addInteger(columnInfo.id_dbIndex, realmObjectSource.realmGet$id_db());
+        builder.addInteger(columnInfo.facturaIndex, realmObjectSource.realmGet$factura());
         builder.addInteger(columnInfo.user_idIndex, realmObjectSource.realmGet$user_id());
 
         builder.updateExistingObject();
@@ -1499,6 +1546,10 @@ public class com_mds_ventasabpollo_models_VisitsClientsRealmProxy extends com.md
         stringBuilder.append(",");
         stringBuilder.append("{id_db:");
         stringBuilder.append(realmGet$id_db());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{factura:");
+        stringBuilder.append(realmGet$factura());
         stringBuilder.append("}");
         stringBuilder.append(",");
         stringBuilder.append("{user_id:");

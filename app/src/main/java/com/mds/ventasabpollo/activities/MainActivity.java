@@ -47,6 +47,7 @@ import com.mds.ventasabpollo.application.SPClass;
 import com.mds.ventasabpollo.classes.MyDividerItemDecoration;
 import com.mds.ventasabpollo.classes.ShakeDetector;
 import com.mds.ventasabpollo.models.Articles;
+import com.mds.ventasabpollo.models.BranchOffices;
 import com.mds.ventasabpollo.models.Cities;
 import com.mds.ventasabpollo.models.Clients;
 import com.mds.ventasabpollo.models.ClientsLists;
@@ -269,6 +270,7 @@ public class MainActivity extends AppCompatActivity
 
                 realm.delete(Articles.class);
                 realm.delete(MapRoutes.class);
+                realm.delete(BranchOffices.class);
                 realm.delete(VisitsClasifications.class);
 
                 //realm.delete(Alarms.class);
@@ -546,6 +548,7 @@ public class MainActivity extends AppCompatActivity
         Articles articles;
         Prices prices;
         Images images;
+        BranchOffices branchOffice;
         //Alarms alarms;
         //VisitsPayments visitsPayments;
 
@@ -752,6 +755,35 @@ public class MainActivity extends AppCompatActivity
                                     baseApp.showLog("Imagen del artículo " + Datos.getInt("clave_integer") + " cargada");
 
                                     realm.copyToRealm(images);
+                                    realm.commitTransaction();
+                                }
+
+                                Datos.close();
+                            }
+
+                            if (countResults == 7) {
+                                ResultSet Datos = loComando.getResultSet();
+
+                                baseApp.showLog("Descargando sucursales...");
+
+                                while (Datos.next()) {
+
+                                    realm.beginTransaction();
+                                    branchOffice = new BranchOffices(
+                                            Datos.getInt("sucursal"),
+                                            Datos.getString("nombre_sucursal").trim(),
+                                            Datos.getString("rfc").trim(),
+                                            Datos.getString("direccion").trim(),
+                                            Datos.getString("colonia").trim(),
+                                            Datos.getString("municipio").trim(),
+                                            Datos.getInt("area"),
+                                            Datos.getInt("telefono"),
+                                            Datos.getString("email").trim(),
+                                            Datos.getString("sitio_web").trim());
+
+                                    baseApp.showLog("Sucursal " + Datos.getInt("sucursal") + " cargada");
+
+                                    realm.copyToRealm(branchOffice);
                                     realm.commitTransaction();
                                 }
 
