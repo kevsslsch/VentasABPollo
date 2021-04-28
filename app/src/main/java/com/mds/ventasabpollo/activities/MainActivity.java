@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity
 
     private Realm realm;
 
-    int nUser, idRoute, totaLists;
+    int nUser, idRoute, totalLists, nDeparture;
     String messagesSync = "";
     String stringSplitVisits, stringSplitSales, stringSplitChanges, stringSplitDevolutions, stringSplitPayments, stringSplitSeparateds, stringSplitClients, stringSplitDomiciles, stringSplitReturns, stringSplitChangesInventories, stringSplitPendingPayments, stringSplitLogs;
 
@@ -95,7 +95,6 @@ public class MainActivity extends AppCompatActivity
     Button btnStartRoute, btnFinishRoute;
     Spinner spinnerDays;
 
-    int nDeparture;
     boolean updateGlobalList, goToFinalReport = false;;
 
     ProgressDialog barSyncData;
@@ -219,7 +218,6 @@ public class MainActivity extends AppCompatActivity
         spClass.boolSetSP("inventoryLoaded", true);
         spClass.intSetSP("idRoute", 42);
         /**/
-
     }
 
     private class syncDataTask extends AsyncTask<Void, String, Void> {
@@ -360,7 +358,7 @@ public class MainActivity extends AppCompatActivity
             realm = Realm.getDefaultInstance();
             listLists2 = realm.where(Lists.class).equalTo("user_id", nUser).findAll();
             listLists = realm.where(Lists.class).equalTo("dia_semana", day).equalTo("dia_semana", day).or().equalTo("dia_semana", 0).equalTo("user_id", nUser).sort("dia_semana", Sort.DESCENDING).findAll();
-            totaLists = listLists.size();
+            totalLists = listLists.size();
 
             /*if (listLists.size() > 0) {
                 layoutList.setVisibility(View.VISIBLE);
@@ -921,7 +919,7 @@ public class MainActivity extends AppCompatActivity
             if(countClients > 0) {
 
                 for (NewClients client : newClients) {
-                    PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Guarda_Cliente_Android ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
+                    PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Guarda_Cliente_Android ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, " +
                             "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?");
                     if (loComando == null) {
                         baseApp.showLog("Error al Crear SP Guarda_Cliente_Android");
@@ -961,10 +959,12 @@ public class MainActivity extends AppCompatActivity
                             loComando.setString(29, client.getMunicipio());
                             loComando.setString(30, client.getDescripcion());
                             loComando.setString(31, client.getNombre_calle() + " No. " + client.getNo_exterior() + " Int. " + client.getNo_exterior());
-                            loComando.setString(32, ""); // area
-                            loComando.setString(33, client.getTelefono());
-                            loComando.setBoolean(34, false);
-                            loComando.setBoolean(35, false);
+                            loComando.setDouble(32, client.getLatitud()); // latitud
+                            loComando.setDouble(33, client.getLongitud()); // longitud
+                            loComando.setString(34, ""); // area
+                            loComando.setString(35, client.getTelefono());
+                            loComando.setBoolean(36, false);
+                            loComando.setBoolean(37, false);
 
                             ResultSet Datos = loComando.executeQuery();
 

@@ -34,8 +34,8 @@ public class AdapterArticlesPrepareDeparture extends RecyclerView.Adapter<Adapte
     private View.OnClickListener listener;
 
     private List<Articles> listArticles;
-    private HashMap<Integer, ArticlesViewHolder> holderlist;
 
+    private HashMap<Integer, ArticlesViewHolder> holderlist;
     private static List<Double> mEditTextValues = new ArrayList<>();
 
     Realm realm;
@@ -88,7 +88,6 @@ public class AdapterArticlesPrepareDeparture extends RecyclerView.Adapter<Adapte
         }else{
             holder.editTxtViewAmount.setText(Double.toString(mEditTextValues.get(position)));
         }
-
 
         holder.editTxtViewAmount.addTextChangedListener(new TextWatcher() {
 

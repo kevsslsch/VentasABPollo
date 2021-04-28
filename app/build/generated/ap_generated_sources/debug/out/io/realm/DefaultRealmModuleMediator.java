@@ -26,10 +26,11 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
 
     private static final Set<Class<? extends RealmModel>> MODEL_CLASSES;
     static {
-        Set<Class<? extends RealmModel>> modelClasses = new HashSet<Class<? extends RealmModel>>(26);
+        Set<Class<? extends RealmModel>> modelClasses = new HashSet<Class<? extends RealmModel>>(27);
         modelClasses.add(com.mds.ventasabpollo.models.MapRoutes.class);
         modelClasses.add(com.mds.ventasabpollo.models.TopArticles.class);
         modelClasses.add(com.mds.ventasabpollo.models.DetailsSales.class);
+        modelClasses.add(com.mds.ventasabpollo.models.RechargeInventories.class);
         modelClasses.add(com.mds.ventasabpollo.models.Prices.class);
         modelClasses.add(com.mds.ventasabpollo.models.Cities.class);
         modelClasses.add(com.mds.ventasabpollo.models.Images.class);
@@ -58,10 +59,11 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
 
     @Override
     public Map<Class<? extends RealmModel>, OsObjectSchemaInfo> getExpectedObjectSchemaInfoMap() {
-        Map<Class<? extends RealmModel>, OsObjectSchemaInfo> infoMap = new HashMap<Class<? extends RealmModel>, OsObjectSchemaInfo>(26);
+        Map<Class<? extends RealmModel>, OsObjectSchemaInfo> infoMap = new HashMap<Class<? extends RealmModel>, OsObjectSchemaInfo>(27);
         infoMap.put(com.mds.ventasabpollo.models.MapRoutes.class, io.realm.com_mds_ventasabpollo_models_MapRoutesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.TopArticles.class, io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.DetailsSales.class, io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.getExpectedObjectSchemaInfo());
+        infoMap.put(com.mds.ventasabpollo.models.RechargeInventories.class, io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.Prices.class, io.realm.com_mds_ventasabpollo_models_PricesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.Cities.class, io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.Images.class, io.realm.com_mds_ventasabpollo_models_ImagesRealmProxy.getExpectedObjectSchemaInfo());
@@ -100,6 +102,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
             return io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.createColumnInfo(schemaInfo);
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+            return io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.createColumnInfo(schemaInfo);
         }
         if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
             return io.realm.com_mds_ventasabpollo_models_PricesRealmProxy.createColumnInfo(schemaInfo);
@@ -185,6 +190,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
             return "DetailsSales";
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+            return "RechargeInventories";
         }
         if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
             return "Prices";
@@ -273,6 +281,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             }
             if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
                 return clazz.cast(new io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy());
+            }
+            if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+                return clazz.cast(new io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy());
             }
             if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
                 return clazz.cast(new io.realm.com_mds_ventasabpollo_models_PricesRealmProxy());
@@ -371,6 +382,10 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
             com_mds_ventasabpollo_models_DetailsSalesRealmProxy.DetailsSalesColumnInfo columnInfo = (com_mds_ventasabpollo_models_DetailsSalesRealmProxy.DetailsSalesColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.DetailsSales.class);
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.copyOrUpdate(realm, columnInfo, (com.mds.ventasabpollo.models.DetailsSales) obj, update, cache, flags));
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+            com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.RechargeInventoriesColumnInfo columnInfo = (com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.RechargeInventoriesColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.RechargeInventories.class);
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.copyOrUpdate(realm, columnInfo, (com.mds.ventasabpollo.models.RechargeInventories) obj, update, cache, flags));
         }
         if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
             com_mds_ventasabpollo_models_PricesRealmProxy.PricesColumnInfo columnInfo = (com_mds_ventasabpollo_models_PricesRealmProxy.PricesColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.Prices.class);
@@ -479,6 +494,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.TopArticles) object, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
             io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.DetailsSales) object, cache);
+        } else if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+            io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.RechargeInventories) object, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
             io.realm.com_mds_ventasabpollo_models_PricesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.Prices) object, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
@@ -548,6 +565,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                 io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.TopArticles) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
                 io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.DetailsSales) object, cache);
+            } else if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+                io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.RechargeInventories) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
                 io.realm.com_mds_ventasabpollo_models_PricesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.Prices) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
@@ -604,6 +623,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                     io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insert(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
                     io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.insert(realm, iterator, cache);
+                } else if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+                    io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.insert(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
                     io.realm.com_mds_ventasabpollo_models_PricesRealmProxy.insert(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
@@ -669,6 +690,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.TopArticles) obj, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
             io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.DetailsSales) obj, cache);
+        } else if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+            io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.RechargeInventories) obj, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
             io.realm.com_mds_ventasabpollo_models_PricesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.Prices) obj, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
@@ -738,6 +761,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                 io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.TopArticles) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
                 io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.DetailsSales) object, cache);
+            } else if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+                io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.RechargeInventories) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
                 io.realm.com_mds_ventasabpollo_models_PricesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.Prices) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
@@ -794,6 +819,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                     io.realm.com_mds_ventasabpollo_models_TopArticlesRealmProxy.insertOrUpdate(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
                     io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.insertOrUpdate(realm, iterator, cache);
+                } else if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+                    io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.insertOrUpdate(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
                     io.realm.com_mds_ventasabpollo_models_PricesRealmProxy.insertOrUpdate(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
@@ -860,6 +887,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.createOrUpdateUsingJsonObject(realm, json, update));
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.createOrUpdateUsingJsonObject(realm, json, update));
         }
         if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_PricesRealmProxy.createOrUpdateUsingJsonObject(realm, json, update));
@@ -947,6 +977,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.createUsingJsonStream(realm, reader));
         }
+        if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.createUsingJsonStream(realm, reader));
+        }
         if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_PricesRealmProxy.createUsingJsonStream(realm, reader));
         }
@@ -1033,6 +1066,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.DetailsSales.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_DetailsSalesRealmProxy.createDetachedCopy((com.mds.ventasabpollo.models.DetailsSales) realmObject, 0, maxDepth, cache));
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.RechargeInventories.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_RechargeInventoriesRealmProxy.createDetachedCopy((com.mds.ventasabpollo.models.RechargeInventories) realmObject, 0, maxDepth, cache));
         }
         if (clazz.equals(com.mds.ventasabpollo.models.Prices.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_PricesRealmProxy.createDetachedCopy((com.mds.ventasabpollo.models.Prices) realmObject, 0, maxDepth, cache));

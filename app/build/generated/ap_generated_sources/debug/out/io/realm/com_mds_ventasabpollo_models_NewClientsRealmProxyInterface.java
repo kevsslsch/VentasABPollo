@@ -48,6 +48,10 @@ public interface com_mds_ventasabpollo_models_NewClientsRealmProxyInterface {
     public void realmSet$municipio(String value);
     public String realmGet$fecha_registro();
     public void realmSet$fecha_registro(String value);
+    public double realmGet$latitud();
+    public void realmSet$latitud(double value);
+    public double realmGet$longitud();
+    public void realmSet$longitud(double value);
     public int realmGet$id_db();
     public void realmSet$id_db(int value);
     public boolean realmGet$borrador();

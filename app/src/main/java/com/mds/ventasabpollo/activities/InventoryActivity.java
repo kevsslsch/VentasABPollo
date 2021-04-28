@@ -83,7 +83,10 @@ public class InventoryActivity extends AppCompatActivity implements RealmChangeL
             baseApp.showToast("No hay una Ruta en proceso.");
         }
 
-        fbtnUpdate.setOnClickListener(v-> functionsApp.goChangeInventoryActivity());
+        fbtnUpdate.setOnClickListener(v-> {
+            functionsApp.goReChargeInventoryActivity();
+            //functionsApp.goChangeInventoryActivity();
+        });
         fbtnBack.setOnClickListener(v -> backFunction());
         btnPrepareDeparture.setOnClickListener(v->functionsApp.goPrepareDepartureActivity());
 

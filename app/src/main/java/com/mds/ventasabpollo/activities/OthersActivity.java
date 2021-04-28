@@ -154,7 +154,11 @@ public class OthersActivity extends AppCompatActivity implements RealmChangeList
             if(functionsapp.getIsVisitFinished(nVisit)){
                 finish();
             }else{
-                showBottomClasificationVisit();
+                if(functionsapp.visitHaveSale(nVisit)){
+                    finishVisit(0);
+                }else{
+                    showBottomClasificationVisit();
+                }
             }
         });
 
@@ -443,15 +447,7 @@ public class OthersActivity extends AppCompatActivity implements RealmChangeList
                         position = spinnerClasifications.getSelectedItemPosition();
                     }
 
-                    if (baseApp.statusPermissionUbication()) {
-                        if (!locationDisabled) {
-                            finishVisit(position);
-                        }else{
-                            baseApp.showAlertDialog("warning", "Ubicación desactivada", "Por favor, activa el GPS y el Internet y vuelve a intentarlo.", true);
-                        }
-                    }else{
-                        baseApp.showToast("No está activado el permiso de Ubicación");
-                    }
+                    finishVisit(position);
 
                     ultimoClick = SystemClock.elapsedRealtime();
                 }
@@ -475,60 +471,82 @@ public class OthersActivity extends AppCompatActivity implements RealmChangeList
 
             RealmResults<VisitsClients> visitsClients = realm.where(VisitsClients.class).equalTo("id", nVisit).findAll();
 
-            if (realm.where(VisitsClasifications.class).findAll().size() > 0) {
-                try {
-                    //RealmResults<VisitsClasifications> visitsClasifications = realm.where(VisitsClasifications.class).equalTo("position", spinnerClasifications.getSelectedItemPosition()).findAll();
-                    RealmResults<VisitsClasifications> visitsClasifications = realm.where(VisitsClasifications.class).equalTo("position", clasification).findAll();
-                    clasificationValue = visitsClasifications.get(0).getClasificacion();
-                } catch (Exception ex) {
-                    clasificationValue = 1;
-                    baseApp.showLog("Ocurrió el error:: " + ex);
+            if (baseApp.statusPermissionUbication()) {
+                if (!locationDisabled) {
+
+                    if (realm.where(VisitsClasifications.class).findAll().size() > 0) {
+                        try {
+                            //RealmResults<VisitsClasifications> visitsClasifications = realm.where(VisitsClasifications.class).equalTo("position", spinnerClasifications.getSelectedItemPosition()).findAll();
+                            RealmResults<VisitsClasifications> visitsClasifications = realm.where(VisitsClasifications.class).findAll();
+                            clasificationValue = visitsClasifications.get(clasification).getClasificacion();
+                        } catch (Exception ex) {
+                            clasificationValue = 1;
+                            baseApp.showLog("Ocurrió el error:: " + ex);
+                        }
+                    } else {
+                        clasificationValue = 0;
+                    }
+
+                    RealmResults<VisitsMovements> movements = realm.where(VisitsMovements.class).equalTo("ruta", idRoute).equalTo("visita", nVisit).findAll();
+
+                    /*for (VisitsMovements movement : movements) {
+                        functionsapp.changeMovementsSalesArticle(idRoute, nVisit, movement.getClave_articulo(), movement.getPiezas_devolucion());
+                    }*/
+
+                    visits = visitsClients.get(0);
+                    realm.beginTransaction();
+                    visits.setEs_credito(functionsapp.getIsCredit(nVisit));
+                    visits.setVisitada(true);
+                    visits.setFecha_visita_fin(baseApp.getCurrentDateFormated());
+                    visits.setClasificacion_visita(clasificationValue);
+                    visits.setLat_visita_fin(latitudeUser);
+                    visits.setLong_visita_fin(longitudeUser);
+                    realm.insertOrUpdate(visits);
+                    realm.commitTransaction();
+
+                    spClass.deleteSP("inVisit");
+                    spClass.deleteSP("nClient");
+                    spClass.deleteSP("nList");
+                    spClass.deleteSP("nVisit");
+                    spClass.deleteSP("sPaymentMethod");
+
+                    if(spClass.boolGetSP("onlineConnection")){
+                        backgroundProcess("uploadData");
+                    }
+
+                    functionsapp.goListClientsActivity(nList, true);
+                    baseApp.showToast("Visita dada por terminada");
+
+                    functionsapp.printTicket(nVisit);
+
+                    if(functionsapp.getIsCredit(nVisit)) {
+                        new androidx.appcompat.app.AlertDialog.Builder(this)
+                                .setTitle("Venta a crédito")
+                                .setMessage("¿Desea imprimir una copia del ticket?")
+                                .setCancelable(false)
+                                .setPositiveButton("Sí", (dialog, id) -> {
+                                    functionsapp.printTicket(nVisit);
+                                    functionsapp.goListClientsActivity(nList, true);
+                                })
+                                .setNegativeButton("No", (dialog, id) -> {
+                                    functionsapp.goListClientsActivity(nList, true);
+                                })
+                                .show();
+                    }else{
+                        functionsapp.goListClientsActivity(nList, true);
+                    }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        if (notificationManager != null) {
+                            notificationManager.cancel(1);
+                        }
+                    }
+                }else{
+                    baseApp.showAlertDialog("warning", "Ubicación desactivada", "Por favor, activa el GPS y el Internet y vuelve a intentarlo.", true);
                 }
-            } else {
-                clasificationValue = 0;
-            }
-
-            RealmResults<VisitsMovements> movements = realm.where(VisitsMovements.class).equalTo("ruta", idRoute).equalTo("visita", nVisit).findAll();
-
-            /*for (VisitsMovements movement : movements) {
-                functionsapp.changeMovementsSalesArticle(idRoute, nVisit, movement.getClave_articulo(), movement.getPiezas_devolucion());
-            }*/
-
-            visits = visitsClients.get(0);
-            realm.beginTransaction();
-            visits.setEs_credito(functionsapp.getIsCredit(nVisit));
-            visits.setVisitada(true);
-            visits.setFecha_visita_fin(baseApp.getCurrentDateFormated());
-            visits.setClasificacion_visita(clasificationValue);
-            visits.setLat_visita_fin(latitudeUser);
-            visits.setLong_visita_fin(longitudeUser);
-            realm.insertOrUpdate(visits);
-            realm.commitTransaction();
-
-            spClass.deleteSP("inVisit");
-            spClass.deleteSP("nClient");
-            spClass.deleteSP("nList");
-            spClass.deleteSP("nVisit");
-            spClass.deleteSP("sPaymentMethod");
-
-            if(spClass.boolGetSP("onlineConnection")){
-                backgroundProcess("uploadData");
-            }
-
-            functionsapp.goListClientsActivity(nList, true);
-            baseApp.showToast("Visita dada por terminada");
-
-            /*if(functionsapp.getIsCredit(nVisit)){
-                functionsapp.printTicket(nVisit);
             }else{
-                functionsapp.printTicket(nVisit);
-            }*/
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                final NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                if (notificationManager != null) {
-                    notificationManager.cancel(1);
-                }
+                baseApp.showToast("No está activado el permiso de Ubicación");
             }
 
         }catch(Exception ex){

@@ -1,5 +1,9 @@
 package com.mds.ventasabpollo.activities;
 
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,7 +25,7 @@ import com.mds.ventasabpollo.models.NewClients;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class AddClientActivity extends AppCompatActivity {
+public class AddClientActivity extends AppCompatActivity implements LocationListener {
 
     Realm realm;
 
@@ -31,6 +35,12 @@ public class AddClientActivity extends AppCompatActivity {
 
     int idNewClient;
     boolean finishActivity;
+
+    double latitudeUser = 0.0, longitudeUser = 0.0;
+    LocationManager locationManager;
+    private static final long MIN_TIME = 400;
+    private static final float MIN_DISTANCE = 1000;
+    boolean locationDisabled = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +79,7 @@ public class AddClientActivity extends AppCompatActivity {
             }
         });
 
+        getLocation();
         baseApp.darkenStatusBar(this, ContextCompat.getColor(this, R.color.colorPrimary));
     }
 
@@ -91,18 +102,48 @@ public class AddClientActivity extends AppCompatActivity {
                 }else if(newClients.get(0).getNo_exterior().equals("")){
                     baseApp.showToast("Falta el número exterior del domicilio del cliente");
                 }else{
-                    realm.beginTransaction();
-                    newClients.get(0).setBorrador(false);
-                    realm.commitTransaction();
-
-                    spClass.deleteSP("idNewClient");
-                    baseApp.showToast("Cliente guardado con éxito.");
-                    finishActivity = true;
-                    finish();
+                    askSaveCoordinates(newClients.get(0));
                 }
             }
         }catch (Exception ex){
             baseApp.showToast("Ocurrió el error: " + ex);
+        }
+    }
+
+    public void askSaveCoordinates(NewClients newClients){
+        try{
+            new AlertDialog.Builder(this)
+                    .setMessage("¿Deseas guardar las coordenadas del cliente con tu ubicación actual?")
+                    .setCancelable(true)
+                    .setPositiveButton("Sí", (dialog, id2) -> {
+                        realm.beginTransaction();
+                        newClients.setLatitud(latitudeUser);
+                        newClients.setLongitud(longitudeUser);
+                        realm.commitTransaction();
+
+                        saveClient(newClients);
+                    })
+                    .setNegativeButton("No", (dialog, id2) -> {
+                        saveClient(newClients);
+                      })
+                    .show();
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error interno.");
+        }
+    }
+
+    public void saveClient(NewClients newClients){
+        try{
+            realm.beginTransaction();
+            newClients.setBorrador(false);
+            realm.commitTransaction();
+
+            spClass.deleteSP("idNewClient");
+            baseApp.showToast("Cliente guardado con éxito.");
+            finishActivity = true;
+            finish();
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error interno.");
         }
     }
 
@@ -117,6 +158,43 @@ public class AddClientActivity extends AppCompatActivity {
 
         if(!finishActivity){
             baseApp.showToast("Registro de cliente guardado en borrador.");
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        latitudeUser = location.getLatitude();
+        longitudeUser = location.getLongitude();
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        //Toast.makeText(ListClientsActivity.this, "Por favor, activa el GPS y el Internet", Toast.LENGTH_SHORT).show();
+        baseApp.showToast("GPS desactivado. Por favor, actívalo.");
+        locationDisabled = true;
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        //Toast.makeText(this, "Se ha activado un proveedor de Ubicación " + provider, Toast.LENGTH_SHORT).show();
+        locationDisabled = false;
+    }
+
+    public void getLocation() {
+        try {
+            if(baseApp.statusPermissionUbication()) {
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, MIN_TIME, MIN_DISTANCE, this);
+            }else{
+                baseApp.showToast("Por favor, activa el permiso de ubicación.");
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
         }
     }
 

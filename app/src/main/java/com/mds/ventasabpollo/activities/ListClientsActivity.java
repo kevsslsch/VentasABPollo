@@ -166,7 +166,7 @@ public class ListClientsActivity extends AppCompatActivity implements LocationLi
             nLastVisit = realm.where(VisitsClients.class).sort("id", Sort.DESCENDING).findFirst().getId();
 
             if(nLastVisit != 0){
-                //functionsapp.printTicket(nLastVisit);
+                functionsapp.printTicket(nLastVisit);
             }
         });
 

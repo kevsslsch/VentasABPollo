@@ -23,7 +23,9 @@ import com.mds.ventasabpollo.models.Articles;
 import com.mds.ventasabpollo.models.VisitsMovements;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -33,18 +35,34 @@ import io.realm.RealmResults;
 public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesOthers.ArticlesViewHolder>{
 
     private Context context;
-    private List<Articles> articlesList;
+    private List<Articles> listArticles;
     int nClient, nVisit, idRoute;
     double initialAmountSale, initialAmountDevolution, initialAmountChanges, initialAmountSeparated;
 
     final Calendar myCalendar = Calendar.getInstance();
 
-    RealmResults<VisitsMovements> movements;
+    VisitsMovements movements;
     Realm realm;
 
-    public AdapterArticlesOthers(Context context, List<Articles> articlesList) {
+    private static List<Double> mEditTextValuesDevolutions = new ArrayList<>();
+    private static List<Double> mEditTextValuesChanges = new ArrayList<>();
+
+    public AdapterArticlesOthers(Context context, List<Articles> listArticles) {
         this.context = context;
-        this.articlesList = articlesList;
+        this.listArticles = listArticles;
+
+        if (mEditTextValuesDevolutions != null) {
+            mEditTextValuesDevolutions.clear();
+        }
+
+        if (mEditTextValuesChanges != null) {
+            mEditTextValuesChanges.clear();
+        }
+
+        for (int i = 1; i <= listArticles.size(); i++) {
+            mEditTextValuesDevolutions.add(0.0);
+            mEditTextValuesChanges.add(0.0);
+        }
     }
 
     @Override
@@ -58,39 +76,60 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
         final BaseApp baseApp = new BaseApp(context);
         final FunctionsApp functionsapp = new FunctionsApp(context);
         final SPClass spClass = new SPClass(context);
-
-        idRoute = spClass.intGetSP("idRoute");
-        nVisit  = spClass.intGetSP("nVisit");
+        double amountDevolution, amountChanges;
 
         realm = Realm.getDefaultInstance();
 
-        try{
-            movements = realm.where(VisitsMovements.class).equalTo("ruta", idRoute).equalTo("visita", nVisit).equalTo("clave_articulo", articlesList.get(position).getClave_articulo()).findAll();
-        }catch (Exception ex){
-            baseApp.showToast("Ocurrió un error");
-        }
-
-        initialiteAmounts(position);
-
-        //holder.editTxtAmountSale.setText(Double.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "venta")));
-        holder.editTxtAmountDevolution.setText(Double.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "devolucion")));
-        holder.editTxtAmountChanges.setText(Double.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "cambio")));
-        holder.editTxtAmountSeparated.setText(Double.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "apartado")));
-
-        holder.editTxtAmountDevolution.setSelectAllOnFocus(true);
-        holder.editTxtAmountChanges.setSelectAllOnFocus(true);
-        holder.editTxtAmountSeparated.setSelectAllOnFocus(true);
-
-        holder.txtName_Article.setText(articlesList.get(position).getNombre_articulo().trim());
-
-        refreshFlags(holder, position);
-        verifyChanges(holder, position);
+        idRoute = spClass.intGetSP("idRoute");
+        nVisit  = spClass.intGetSP("nVisit");
 
         if(spClass.intGetSP("nClient") != 0) {
             nClient = spClass.intGetSP("nClient");
         }else{
             nClient = 0;
         }
+
+        try{
+            movements = realm.where(VisitsMovements.class).equalTo("ruta", idRoute)
+                    .equalTo("visita", nVisit)
+                    .equalTo("clave_articulo", listArticles.get(position).getClave_articulo())
+                    .findFirst();
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error");
+        }
+
+        //initialiteAmounts(position);
+
+        amountDevolution = movements.getPiezas_devolucion();
+        amountChanges = movements.getPiezas_cambio();
+
+        holder.editTxtAmountDevolution.setTag(position);
+        holder.editTxtAmountChanges.setTag(position);
+
+        holder.editTxtAmountDevolution.setSelectAllOnFocus(true);
+        holder.editTxtAmountChanges.setSelectAllOnFocus(true);
+        holder.editTxtAmountSeparated.setSelectAllOnFocus(true);
+
+        holder.txtName_Article.setText(listArticles.get(position).getNombre_articulo().trim());
+
+        if(mEditTextValuesDevolutions.get(position) == 0 && amountDevolution != 0){
+            mEditTextValuesDevolutions.set(position, amountDevolution);
+            holder.editTxtAmountDevolution.setText(Double.toString(amountDevolution));
+        }else{
+            holder.editTxtAmountDevolution.setText(Double.toString(mEditTextValuesDevolutions.get(position)));
+        }
+
+        if(mEditTextValuesChanges.get(position) == 0 && amountChanges != 0){
+            mEditTextValuesChanges.set(position, amountChanges);
+            holder.editTxtAmountChanges.setText(Double.toString(amountChanges));
+        }else{
+            holder.editTxtAmountChanges.setText(Double.toString(mEditTextValuesChanges.get(position)));
+        }
+
+        //holder.editTxtAmountSeparated.setText(Double.toString(functionsapp.getDataInventoryVisit(idRoute, nVisit, listArticles.get(position).getClave_articulo(), "apartado")));
+
+        //refreshFlags(holder, position);
+        //verifyChanges(holder, position);
 
         holder.editTxtAmountDevolution.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
@@ -102,9 +141,9 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if(holder.editTxtAmountDevolution.getText().length() > 0){
-                    if(!functionsapp.checkAmountDevolution(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), Double.parseDouble(holder.editTxtAmountDevolution.getText().toString()))){
+                    if(!functionsapp.checkAmountDevolution(idRoute, listArticles.get(holder.getAdapterPosition()).getClave_articulo(), Double.parseDouble(holder.editTxtAmountDevolution.getText().toString()))){
                         baseApp.showToast("La cantidad supera a la existente en inventario, se remplazará a la máxima posible.");
-                        holder.editTxtAmountDevolution.setText(Double.toString(functionsapp.getAmountArticleRoute(idRoute, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), true, false)));
+                        holder.editTxtAmountDevolution.setText(Double.toString(functionsapp.getAmountArticleRoute(idRoute, listArticles.get(holder.getAdapterPosition()).getClave_articulo(), true, false)));
                         holder.editTxtAmountDevolution.setSelection(holder.editTxtAmountDevolution.getText().length());
                     }
                 }
@@ -112,6 +151,8 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
                 saveInfo(holder, position);
             }
         });
+
+
         holder.editTxtAmountChanges.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
             }
@@ -120,9 +161,19 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(holder.editTxtAmountChanges.getText().length() > 0){
+                    if(!functionsapp.checkAmountDevolution(idRoute, listArticles.get(holder.getAdapterPosition()).getClave_articulo(), Double.parseDouble(holder.editTxtAmountChanges.getText().toString()))){
+                        baseApp.showToast("La cantidad supera a la existente en inventario, se remplazará a la máxima posible.");
+                        holder.editTxtAmountChanges.setText(Double.toString(functionsapp.getAmountArticleRoute(idRoute, listArticles.get(holder.getAdapterPosition()).getClave_articulo(), true, false)));
+                        holder.editTxtAmountChanges.setSelection(holder.editTxtAmountChanges.getText().length());
+                    }
+                }
                 saveInfo(holder, position);
             }
         });
+
+        /*
         holder.editTxtAmountSeparated.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
             }
@@ -139,7 +190,7 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
             if(!functionsapp.getIsVisitFinished(nVisit)){
                 showCalendar(holder, position);
             }
-        });
+        });*/
 
         if(functionsapp.getIsVisitFinished(nVisit)){
             holder.editTxtAmountDevolution.setEnabled(false);
@@ -174,7 +225,7 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
 
             holder.editDateValue.setText(sdf.format(myCalendar.getTime()));
 
-            RealmResults<VisitsMovements> movements = realm.where(VisitsMovements.class).equalTo("ruta", idRoute).equalTo("visita", nVisit).equalTo("clave_articulo", articlesList.get(position).getClave_articulo()).findAll();
+            RealmResults<VisitsMovements> movements = realm.where(VisitsMovements.class).equalTo("ruta", idRoute).equalTo("visita", nVisit).equalTo("clave_articulo", listArticles.get(position).getClave_articulo()).findAll();
             realm.beginTransaction();
             movements.get(0).setFecha_apartado(sdf.format(myCalendar.getTime()));
             realm.commitTransaction();
@@ -214,8 +265,8 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
                 amountSeparated = Double.valueOf(holder.editTxtAmountSeparated.getText().toString());
             }
 
-            if(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "apartado") != amountSeparated) {
-                RealmResults<VisitsMovements> visitMovements = realm.where(VisitsMovements.class).equalTo("ruta", idRoute).equalTo("visita", nVisit).equalTo("clave_articulo", articlesList.get(position).getClave_articulo()).findAll();
+            /*if(functionsapp.getDataInventoryVisit(idRoute, nVisit, listArticles.get(position).getClave_articulo(), "apartado") != amountSeparated) {
+                RealmResults<VisitsMovements> visitMovements = realm.where(VisitsMovements.class).equalTo("ruta", idRoute).equalTo("visita", nVisit).equalTo("clave_articulo", listArticles.get(position).getClave_articulo()).findAll();
 
                 if(visitMovements.get(0).getFecha_apartado().equals("")){
                     realm.beginTransaction();
@@ -223,16 +274,16 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
                     realm.commitTransaction();
                 }
 
-                /*if(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "apartado") == 0){
+                /*if(functionsapp.getDataInventoryVisit(idRoute, nVisit, listArticles.get(position).getClave_articulo(), "apartado") == 0){
                         holder.layoutDate.setVisibility(View.GONE);
                 }else{
                         holder.layoutDate.setVisibility(View.VISIBLE);
-                }*/
-            }
+                }* /
+            }*/
 
-            functionsapp.changeMovementsArticle(idRoute, nVisit, articlesList.get(position).getClave_articulo(), amountDevolution, amountChanges, amountSeparated, "");
-            refreshFlags(holder, position);
-            initialiteAmounts(position);
+            functionsapp.changeMovementsArticle(idRoute, nVisit, listArticles.get(holder.getAdapterPosition()).getClave_articulo(), amountDevolution, amountChanges, amountSeparated, "");
+            //refreshFlags(holder, position);
+            //initialiteAmounts(position);
             //verifyChanges(holder, position);
         }catch (Exception ex){
             baseApp.showToast("Ocurrió el error: " + ex);
@@ -245,10 +296,10 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
         final SPClass spClass = new SPClass(context);
 
         try{
-            initialAmountSale = functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "venta");
-            initialAmountDevolution = functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "devolucion");
-            initialAmountChanges = functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "cambio");
-            initialAmountSeparated = functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "apartado");
+            /*initialAmountSale = functionsapp.getDataInventoryVisit(idRoute, nVisit, listArticles.get(position).getClave_articulo(), "venta");
+            initialAmountDevolution = functionsapp.getDataInventoryVisit(idRoute, nVisit, listArticles.get(position).getClave_articulo(), "devolucion");
+            initialAmountChanges = functionsapp.getDataInventoryVisit(idRoute, nVisit, listArticles.get(position).getClave_articulo(), "cambio");
+            initialAmountSeparated = functionsapp.getDataInventoryVisit(idRoute, nVisit, listArticles.get(position).getClave_articulo(), "apartado");*/
         }catch (Exception ex){
             baseApp.showToast("Ocurrió el error: " + ex);
         }
@@ -302,29 +353,29 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
         final SPClass spClass = new SPClass(context);
 
         try{
-            if(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "devolucion") > 0){
+            /*if(functionsapp.getDataInventoryVisit(idRoute, nVisit, listArticles.get(position).getClave_articulo(), "devolucion") > 0){
                 holder.txtDevolutions.setVisibility(View.VISIBLE);
             }else{
                 holder.txtDevolutions.setVisibility(View.GONE);
             }
 
-            if(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "cambio") > 0){
+            if(functionsapp.getDataInventoryVisit(idRoute, nVisit, listArticles.get(position).getClave_articulo(), "cambio") > 0){
                 holder.txtChanges.setVisibility(View.VISIBLE);
             }else{
                 holder.txtChanges.setVisibility(View.GONE);
             }
 
-            if(functionsapp.getDataInventoryVisit(idRoute, nVisit, articlesList.get(position).getClave_articulo(), "apartado") > 0){
+            if(functionsapp.getDataInventoryVisit(idRoute, nVisit, listArticles.get(position).getClave_articulo(), "apartado") > 0){
                 holder.txtSeparated.setVisibility(View.VISIBLE);
             }else{
                 holder.txtSeparated.setVisibility(View.GONE);
-            }
+            }*/
 
-            RealmResults<VisitsMovements> movements = realm.where(VisitsMovements.class).equalTo("ruta", idRoute).equalTo("visita", nVisit).equalTo("clave_articulo", articlesList.get(position).getClave_articulo()).findAll();
+            /*RealmResults<VisitsMovements> movements = realm.where(VisitsMovements.class).equalTo("ruta", idRoute).equalTo("visita", nVisit).equalTo("clave_articulo", listArticles.get(position).getClave_articulo()).findAll();
 
             if(movements.size() > 0 && !movements.get(0).getFecha_apartado().equals("")){
                 holder.editDateValue.setText(movements.get(0).getFecha_apartado());
-            }
+            }*/
 
         }catch (Exception ex){
             baseApp.showToast("Ocurrió el error: " + ex);
@@ -334,11 +385,11 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
 
     @Override
     public int getItemCount() {
-        return articlesList.size();
+        return listArticles.size();
     }
 
     public class ArticlesViewHolder extends RecyclerView.ViewHolder {
-
+        final BaseApp baseApp = new BaseApp(context);
         TextView txtName_Article, txtDialogUM, txtDialogDescription, txtDevolutions, txtChanges, txtSeparated;
         EditText editTxtAmountDevolution, editTxtAmountChanges, editTxtAmountSeparated, editDateValue;
         FloatingActionButton fbtnSave;
@@ -362,6 +413,40 @@ public class AdapterArticlesOthers extends RecyclerView.Adapter<AdapterArticlesO
             editTxtAmountSeparated = itemView.findViewById(R.id.editTxtAmountSeparated);
 
             fbtnSave = itemView.findViewById(R.id.fbtnSave);
+
+            editTxtAmountDevolution.addTextChangedListener(new TextWatcher() {
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+                public void afterTextChanged(Editable editable) {}
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if(editTxtAmountDevolution.getTag()!=null) {
+
+                        if (charSequence.length() == 0) {
+                            mEditTextValuesDevolutions.set((int) editTxtAmountDevolution.getTag(), 0.0);
+                        } else if (charSequence.length() > 9) {
+                            mEditTextValuesDevolutions.set((int) editTxtAmountDevolution.getTag(), Double.valueOf(charSequence.toString().substring(0, 9)));
+                        } else {
+                            mEditTextValuesDevolutions.set((int) editTxtAmountDevolution.getTag(), Double.valueOf(charSequence.toString()));
+                        }
+                    }
+                }
+            });
+
+            editTxtAmountChanges.addTextChangedListener(new TextWatcher() {
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+                public void afterTextChanged(Editable editable) {}
+                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                    if(editTxtAmountChanges.getTag()!=null) {
+
+                        if (charSequence.length() == 0) {
+                            mEditTextValuesChanges.set((int) editTxtAmountChanges.getTag(), 0.0);
+                        } else if (charSequence.length() > 9) {
+                            mEditTextValuesChanges.set((int) editTxtAmountChanges.getTag(), Double.valueOf(charSequence.toString().substring(0, 9)));
+                        } else {
+                            mEditTextValuesChanges.set((int) editTxtAmountChanges.getTag(), Double.valueOf(charSequence.toString()));
+                        }
+                    }
+                }
+            });
         }
     }
 }

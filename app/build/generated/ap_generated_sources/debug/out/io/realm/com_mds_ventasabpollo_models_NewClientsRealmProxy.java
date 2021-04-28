@@ -62,13 +62,15 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
         long localidadIndex;
         long municipioIndex;
         long fecha_registroIndex;
+        long latitudIndex;
+        long longitudIndex;
         long id_dbIndex;
         long borradorIndex;
         long sincronizadoIndex;
         long fecha_sincronizadoIndex;
 
         NewClientsColumnInfo(OsSchemaInfo schemaInfo) {
-            super(27);
+            super(29);
             OsObjectSchemaInfo objectSchemaInfo = schemaInfo.getObjectSchemaInfo("NewClients");
             this.idIndex = addColumnDetails("id", "id", objectSchemaInfo);
             this.nombre_clienteIndex = addColumnDetails("nombre_cliente", "nombre_cliente", objectSchemaInfo);
@@ -93,6 +95,8 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
             this.localidadIndex = addColumnDetails("localidad", "localidad", objectSchemaInfo);
             this.municipioIndex = addColumnDetails("municipio", "municipio", objectSchemaInfo);
             this.fecha_registroIndex = addColumnDetails("fecha_registro", "fecha_registro", objectSchemaInfo);
+            this.latitudIndex = addColumnDetails("latitud", "latitud", objectSchemaInfo);
+            this.longitudIndex = addColumnDetails("longitud", "longitud", objectSchemaInfo);
             this.id_dbIndex = addColumnDetails("id_db", "id_db", objectSchemaInfo);
             this.borradorIndex = addColumnDetails("borrador", "borrador", objectSchemaInfo);
             this.sincronizadoIndex = addColumnDetails("sincronizado", "sincronizado", objectSchemaInfo);
@@ -137,6 +141,8 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
             dst.localidadIndex = src.localidadIndex;
             dst.municipioIndex = src.municipioIndex;
             dst.fecha_registroIndex = src.fecha_registroIndex;
+            dst.latitudIndex = src.latitudIndex;
+            dst.longitudIndex = src.longitudIndex;
             dst.id_dbIndex = src.id_dbIndex;
             dst.borradorIndex = src.borradorIndex;
             dst.sincronizadoIndex = src.sincronizadoIndex;
@@ -844,6 +850,50 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
 
     @Override
     @SuppressWarnings("cast")
+    public double realmGet$latitud() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (double) proxyState.getRow$realm().getDouble(columnInfo.latitudIndex);
+    }
+
+    @Override
+    public void realmSet$latitud(double value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setDouble(columnInfo.latitudIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setDouble(columnInfo.latitudIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
+    public double realmGet$longitud() {
+        proxyState.getRealm$realm().checkIfValid();
+        return (double) proxyState.getRow$realm().getDouble(columnInfo.longitudIndex);
+    }
+
+    @Override
+    public void realmSet$longitud(double value) {
+        if (proxyState.isUnderConstruction()) {
+            if (!proxyState.getAcceptDefaultValue$realm()) {
+                return;
+            }
+            final Row row = proxyState.getRow$realm();
+            row.getTable().setDouble(columnInfo.longitudIndex, row.getIndex(), value, true);
+            return;
+        }
+
+        proxyState.getRealm$realm().checkIfValid();
+        proxyState.getRow$realm().setDouble(columnInfo.longitudIndex, value);
+    }
+
+    @Override
+    @SuppressWarnings("cast")
     public int realmGet$id_db() {
         proxyState.getRealm$realm().checkIfValid();
         return (int) proxyState.getRow$realm().getLong(columnInfo.id_dbIndex);
@@ -939,7 +989,7 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
     }
 
     private static OsObjectSchemaInfo createExpectedObjectSchemaInfo() {
-        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("NewClients", 27, 0);
+        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("NewClients", 29, 0);
         builder.addPersistedProperty("id", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("nombre_cliente", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
         builder.addPersistedProperty("nombre_comercial", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
@@ -963,6 +1013,8 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
         builder.addPersistedProperty("localidad", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
         builder.addPersistedProperty("municipio", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
         builder.addPersistedProperty("fecha_registro", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        builder.addPersistedProperty("latitud", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
+        builder.addPersistedProperty("longitud", RealmFieldType.DOUBLE, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("id_db", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("borrador", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("sincronizado", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
@@ -1152,6 +1204,20 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
                 objProxy.realmSet$fecha_registro(null);
             } else {
                 objProxy.realmSet$fecha_registro((String) json.getString("fecha_registro"));
+            }
+        }
+        if (json.has("latitud")) {
+            if (json.isNull("latitud")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'latitud' to null.");
+            } else {
+                objProxy.realmSet$latitud((double) json.getDouble("latitud"));
+            }
+        }
+        if (json.has("longitud")) {
+            if (json.isNull("longitud")) {
+                throw new IllegalArgumentException("Trying to set non-nullable field 'longitud' to null.");
+            } else {
+                objProxy.realmSet$longitud((double) json.getDouble("longitud"));
             }
         }
         if (json.has("id_db")) {
@@ -1356,6 +1422,20 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
                     reader.skipValue();
                     objProxy.realmSet$fecha_registro(null);
                 }
+            } else if (name.equals("latitud")) {
+                if (reader.peek() != JsonToken.NULL) {
+                    objProxy.realmSet$latitud((double) reader.nextDouble());
+                } else {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'latitud' to null.");
+                }
+            } else if (name.equals("longitud")) {
+                if (reader.peek() != JsonToken.NULL) {
+                    objProxy.realmSet$longitud((double) reader.nextDouble());
+                } else {
+                    reader.skipValue();
+                    throw new IllegalArgumentException("Trying to set non-nullable field 'longitud' to null.");
+                }
             } else if (name.equals("id_db")) {
                 if (reader.peek() != JsonToken.NULL) {
                     objProxy.realmSet$id_db((int) reader.nextInt());
@@ -1455,6 +1535,8 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
         builder.addString(columnInfo.localidadIndex, realmObjectSource.realmGet$localidad());
         builder.addString(columnInfo.municipioIndex, realmObjectSource.realmGet$municipio());
         builder.addString(columnInfo.fecha_registroIndex, realmObjectSource.realmGet$fecha_registro());
+        builder.addDouble(columnInfo.latitudIndex, realmObjectSource.realmGet$latitud());
+        builder.addDouble(columnInfo.longitudIndex, realmObjectSource.realmGet$longitud());
         builder.addInteger(columnInfo.id_dbIndex, realmObjectSource.realmGet$id_db());
         builder.addBoolean(columnInfo.borradorIndex, realmObjectSource.realmGet$borrador());
         builder.addBoolean(columnInfo.sincronizadoIndex, realmObjectSource.realmGet$sincronizado());
@@ -1564,6 +1646,8 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
         if (realmGet$fecha_registro != null) {
             Table.nativeSetString(tableNativePtr, columnInfo.fecha_registroIndex, rowIndex, realmGet$fecha_registro, false);
         }
+        Table.nativeSetDouble(tableNativePtr, columnInfo.latitudIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$latitud(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.longitudIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$longitud(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.id_dbIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$id_db(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.borradorIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$borrador(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.sincronizadoIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$sincronizado(), false);
@@ -1676,6 +1760,8 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
             if (realmGet$fecha_registro != null) {
                 Table.nativeSetString(tableNativePtr, columnInfo.fecha_registroIndex, rowIndex, realmGet$fecha_registro, false);
             }
+            Table.nativeSetDouble(tableNativePtr, columnInfo.latitudIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$latitud(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.longitudIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$longitud(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.id_dbIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$id_db(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.borradorIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$borrador(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.sincronizadoIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$sincronizado(), false);
@@ -1823,6 +1909,8 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
         } else {
             Table.nativeSetNull(tableNativePtr, columnInfo.fecha_registroIndex, rowIndex, false);
         }
+        Table.nativeSetDouble(tableNativePtr, columnInfo.latitudIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$latitud(), false);
+        Table.nativeSetDouble(tableNativePtr, columnInfo.longitudIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$longitud(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.id_dbIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$id_db(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.borradorIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$borrador(), false);
         Table.nativeSetBoolean(tableNativePtr, columnInfo.sincronizadoIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$sincronizado(), false);
@@ -1979,6 +2067,8 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
             } else {
                 Table.nativeSetNull(tableNativePtr, columnInfo.fecha_registroIndex, rowIndex, false);
             }
+            Table.nativeSetDouble(tableNativePtr, columnInfo.latitudIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$latitud(), false);
+            Table.nativeSetDouble(tableNativePtr, columnInfo.longitudIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$longitud(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.id_dbIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$id_db(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.borradorIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$borrador(), false);
             Table.nativeSetBoolean(tableNativePtr, columnInfo.sincronizadoIndex, rowIndex, ((com_mds_ventasabpollo_models_NewClientsRealmProxyInterface) object).realmGet$sincronizado(), false);
@@ -2033,6 +2123,8 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
         unmanagedCopy.realmSet$localidad(realmSource.realmGet$localidad());
         unmanagedCopy.realmSet$municipio(realmSource.realmGet$municipio());
         unmanagedCopy.realmSet$fecha_registro(realmSource.realmGet$fecha_registro());
+        unmanagedCopy.realmSet$latitud(realmSource.realmGet$latitud());
+        unmanagedCopy.realmSet$longitud(realmSource.realmGet$longitud());
         unmanagedCopy.realmSet$id_db(realmSource.realmGet$id_db());
         unmanagedCopy.realmSet$borrador(realmSource.realmGet$borrador());
         unmanagedCopy.realmSet$sincronizado(realmSource.realmGet$sincronizado());
@@ -2138,6 +2230,14 @@ public class com_mds_ventasabpollo_models_NewClientsRealmProxy extends com.mds.v
         stringBuilder.append(",");
         stringBuilder.append("{fecha_registro:");
         stringBuilder.append(realmGet$fecha_registro() != null ? realmGet$fecha_registro() : "null");
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{latitud:");
+        stringBuilder.append(realmGet$latitud());
+        stringBuilder.append("}");
+        stringBuilder.append(",");
+        stringBuilder.append("{longitud:");
+        stringBuilder.append(realmGet$longitud());
         stringBuilder.append("}");
         stringBuilder.append(",");
         stringBuilder.append("{id_db:");

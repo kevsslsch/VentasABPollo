@@ -76,8 +76,8 @@ public class AdapterArticlesInventory extends RecyclerView.Adapter<AdapterArticl
 
         holder.txtViewSalesAmount.setText(baseApp.formattedNumber(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "venta")));
         holder.txtViewDevolutionsAmount.setText(baseApp.formattedNumber(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "devolucion")));
-        holder.txtViewSeparatedAmount.setText(baseApp.formattedNumber(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "cambio")));
-        holder.txtViewChangesAmount.setText(baseApp.formattedNumber(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "apartado")));
+        holder.txtViewSeparatedAmount.setText(baseApp.formattedNumber(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "apartado")));
+        holder.txtViewChangesAmount.setText(baseApp.formattedNumber(functionsapp.getDataInventoryRoute(listArticles.get(position).getRuta(), listArticles.get(position).getClave_articulo(), "cambio")));
     }
 
     @Override

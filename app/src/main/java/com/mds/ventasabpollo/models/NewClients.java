@@ -28,6 +28,8 @@ public class NewClients extends RealmObject {
     private String localidad;
     private String municipio;
     private String fecha_registro;
+    private double latitud;
+    private double longitud;
     private int id_db;
     private boolean borrador;
     private boolean sincronizado;
@@ -92,6 +94,22 @@ public class NewClients extends RealmObject {
             this.borrador = borrador;
             this.sincronizado = sincronizado;
             this.fecha_sincronizado = fecha_sincronizado;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
     }
 
     public String getNombre_comercial() {

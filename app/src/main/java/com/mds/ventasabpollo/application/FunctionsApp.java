@@ -11,6 +11,13 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import com.mazenrashed.printooth.Printooth;
+import com.mazenrashed.printooth.data.printable.ImagePrintable;
+import com.mazenrashed.printooth.data.printable.Printable;
+import com.mazenrashed.printooth.data.printable.TextPrintable;
+import com.mazenrashed.printooth.data.printer.DefaultPrinter;
+import com.mazenrashed.printooth.utilities.Printing;
+import com.mazenrashed.printooth.utilities.PrintingCallback;
 import com.mds.ventasabpollo.R;
 import com.mds.ventasabpollo.activities.AboutActivity;
 import com.mds.ventasabpollo.activities.AccountActivity;
@@ -32,6 +39,7 @@ import com.mds.ventasabpollo.activities.MapsRouteActivity;
 import com.mds.ventasabpollo.activities.OthersActivity;
 import com.mds.ventasabpollo.activities.PayOffActivity;
 import com.mds.ventasabpollo.activities.PrepareDepartureActivity;
+import com.mds.ventasabpollo.activities.ReChargeInventoryActivity;
 import com.mds.ventasabpollo.activities.RestoreDBActivity;
 import com.mds.ventasabpollo.activities.RoutesActivity;
 import com.mds.ventasabpollo.activities.SalesActivity;
@@ -67,6 +75,9 @@ public class FunctionsApp extends Application {
 
     int nextID;
     String messagesSync = "";
+
+    private Printing printing = null;
+    PrintingCallback printingCallback=null;
 
     public FunctionsApp(Context context) {
         this.context = context;
@@ -193,6 +204,13 @@ public class FunctionsApp extends Application {
         Intent iChangeInventoryActivity = new Intent(context, ChangeInventoryActivity.class);
         iChangeInventoryActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         context.startActivity(iChangeInventoryActivity);
+        ((Activity) (context)).overridePendingTransition(0, 0);
+    }
+
+    public void goReChargeInventoryActivity() {
+        Intent iRechargeInventoryActivity = new Intent(context, ReChargeInventoryActivity.class);
+        iRechargeInventoryActivity.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        context.startActivity(iRechargeInventoryActivity);
         ((Activity) (context)).overridePendingTransition(0, 0);
     }
 
@@ -1315,10 +1333,10 @@ public class FunctionsApp extends Application {
 
             if(countVisits > 0){
                 for(VisitsMovements movement: visitMovements){
-                    if(movement.getPiezas_apartado() != 0){
+                    if(movement.getPiezas_cambio() != 0){
                         stringSplit += movement.getVisita() + "|"; // folio interno visita
                         stringSplit += movement.getClave_articulo() + "|"; // 2 articulo
-                        stringSplit += movement.getPiezas_apartado() + "Ç"; // 3 cantidad
+                        stringSplit += movement.getPiezas_cambio() + "Ç"; // 3 cantidad
                     }
                 }
             }
@@ -2332,6 +2350,219 @@ public class FunctionsApp extends Application {
             ex.printStackTrace();
 
             return 0;
+        }
+    }
+
+    public void printTicket(int nVisit){
+        BaseApp baseApp = new BaseApp(context);
+        SPClass spClass = new SPClass(context);
+
+        String newline = "\n";
+
+        try {
+            Printooth.INSTANCE.init(context);
+
+            VisitsClients visit = null;
+            Clients client = null;
+            RealmResults<DetailsSales> detailsSales;
+            String details = "";
+
+            realm = Realm.getDefaultInstance();
+
+            visit = realm.where(VisitsClients.class)
+                    .equalTo("id", nVisit)
+                    .findFirst();
+
+            if(visit != null){
+                client = realm.where(Clients.class).equalTo("cliente", visit.getCliente()).findFirst();
+
+                detailsSales = realm.where(DetailsSales.class)
+                        .equalTo("visita", nVisit)
+                        .findAll();
+
+                if(detailsSales.size() > 0){
+                    if (Printooth.INSTANCE.hasPairedPrinter()) {
+                        printing = Printooth.INSTANCE.printer();
+
+                        initListeners();
+
+                        if (!Printooth.INSTANCE.hasPairedPrinter()) {
+                            baseApp.showToast("Sin impresora, vincule una impresora en la sección de Configuraciones.");
+                            //startActivityForResult(new Intent(this, ScanningActivity.class ),ScanningActivity.SCANNING_FOR_PRINTER);
+                        } else {
+                            if (printing != null) {
+                                ArrayList<Printable> al = new ArrayList<>();
+                                Resources resources = context.getResources();
+
+                                al.add(new ImagePrintable.Builder(R.drawable.logo_nudito_microsmall, resources)
+                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                        .setNewLinesAfter(1)
+                                        .build());
+
+                                al.add((new TextPrintable.Builder())
+                                        .setText("Poseidon 7107\n" +
+                                                "Fracc. Miramar \n" +
+                                                "CP 31104 Chihuahua, Chih.\n" +
+                                                "RFC: PECR8507099X7\n" +
+                                                "Tel: 614-189-4202\n" +
+                                                "contacto@elnudito.com\n" +
+                                                "VENTA A " + (getIsCredit(nVisit) ? "CRÉDITO" : "CONTADO") + "\n")
+                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                        .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                        .setNewLinesAfter(1)
+                                        .build());
+
+                                al.add((new TextPrintable.Builder())
+                                        .setText(baseApp.getCurrentDateFormated2() + "\n" +
+                                                "Vendedor: " + spClass.strGetSP("name").trim() + "\n" +
+                                                "Cliente: " + (client != null ? client.getNombre_cliente().trim() : "Sin nombre de cliente."))
+                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                        .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                        .setNewLinesAfter(1)
+                                        .build());
+
+                                al.add((new TextPrintable.Builder())
+                                        .setText("Artículos: \n" +
+                                                "Desc.    Cant.  Precio SubTotal" + newline +
+                                                "-------------------------------" + newline)
+                                        .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                        .setNewLinesAfter(0)
+                                        .build());
+
+                                for (DetailsSales detail : detailsSales) {
+                                    String article, amount, price, subtotal;
+
+                                    details = "";
+
+                                    article = detail.getNombre_articulo();
+                                    amount = String.valueOf(detail.getCantidad());
+                                    price = String.valueOf(detail.getPrecio());
+                                    subtotal = String.valueOf(detail.getCantidad() * detail.getPrecio());
+
+                                    if (article.length() > 9) {
+                                        article = article.substring(0, 9);
+                                    } else {
+                                        article = String.format("%-9s", article);
+                                    }
+
+                                    if (amount.length() > 7) {
+                                        amount = amount.substring(0, 7);
+                                    } else {
+                                        amount = String.format("%-7s", amount);
+                                    }
+
+                                    if (price.length() > 6) {
+                                        price = price.substring(0, 6);
+                                    } else {
+                                        price = String.format("%-6s", price);
+                                    }
+
+                                    if (subtotal.length() > 7) {
+                                        subtotal = subtotal.substring(0, 7);
+                                    } else {
+                                        subtotal = String.format("%-6s", subtotal);
+                                    }
+
+                                    details = article + " " + amount + "$ " + price + "$" + subtotal;
+
+                                    al.add((new TextPrintable.Builder())
+                                            .setText(details)
+                                            .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                            .setNewLinesAfter(0)
+                                            .build());
+
+                                }
+
+                                al.add((new TextPrintable.Builder())
+                                        .setText("TOTAL: $" + baseApp.formattedNumber(getTotalSale(nVisit, "totalImport")))
+                                        .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_RIGHT())
+                                        .setNewLinesAfter(4)
+                                        .build());
+
+                                al.add((new TextPrintable.Builder())
+                                        .setText("________________________")
+                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                        .setNewLinesAfter(1)
+                                        .build());
+
+                                al.add((new TextPrintable.Builder())
+                                        .setText("Firma")
+                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                        .setNewLinesAfter(1)
+                                        .build());
+
+                                al.add((new TextPrintable.Builder())
+                                        .setText("GRACIAS POR SU COMPRA")
+                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                        .setNewLinesAfter(2)
+                                        .build());
+
+                                al.add((new TextPrintable.Builder())
+                                        .setText("www.elnudito.com")
+                                        .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                        .setNewLinesAfter(3)
+                                        .build());
+
+                                printing.print(al);
+                            } else {
+                                baseApp.showToast("No hay nada que imprimir.");
+                            }
+                        }
+                    }
+                }
+            }
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error al imprimir el ticket.");
+            baseApp.showLog( "Error en la impresión del ticket: " + ex);
+            ex.printStackTrace();
+        }
+    }
+
+    private void initListeners() {
+        BaseApp baseApp = new BaseApp(context);
+
+        if (printing!=null && printingCallback==null) {
+            Log.d("xxx", "initListeners ");
+            printingCallback = new PrintingCallback() {
+
+                public void connectingWithPrinter() {
+                    baseApp.showToast("Conectando con la impresora...");
+                    Log.d("xxx", "Connecting");
+                }
+                public void printingOrderSentSuccessfully() {
+                    baseApp.showToast("Ticket impreso con éxito.");
+                    Log.d("xxx", "printingOrderSentSuccessfully");
+                }
+                public void connectionFailed(@NonNull String error) {
+                    baseApp.showToast("Error de conexión con la impresora: " + error);
+                    Log.d("xxx", "connectionFailed : "+error);
+                }
+                public void onError(@NonNull String error) {
+                    baseApp.showToast("Error en la impresora: " + error);
+                    Log.d("xxx", "onError : "+error);
+                }
+                public void onMessage(@NonNull String message) {
+                    baseApp.showToast("Mensaje de la impresora: " + message);
+                    Log.d("xxx", "onMessage : "+message);
+                }
+            };
+
+            Printooth.INSTANCE.printer().setPrintingCallback(printingCallback);
+        }
+    }
+
+    public boolean visitHaveSale(int nVisit){
+        BaseApp baseApp = new BaseApp(context);
+
+        try{
+            realm = Realm.getDefaultInstance();
+
+            return realm.where(DetailsSales.class).equalTo("visita", nVisit).findAll().size() > 0;
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error interno.");
+
+            return false;
         }
     }
 }
