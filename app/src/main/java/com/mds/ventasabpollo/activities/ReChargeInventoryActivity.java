@@ -304,7 +304,6 @@ public class ReChargeInventoryActivity extends AppCompatActivity implements Real
         }, 1000);
     }
 
-
     public void backFunction(){
         finish();
     }
