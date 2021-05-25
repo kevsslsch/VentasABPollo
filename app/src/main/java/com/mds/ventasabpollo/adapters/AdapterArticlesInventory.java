@@ -61,10 +61,10 @@ public class AdapterArticlesInventory extends RecyclerView.Adapter<AdapterArticl
 
         realm = Realm.getDefaultInstance();
 
-        RealmResults<ChangesInventories> changesInventories = realm.where(ChangesInventories.class)
+        /*RealmResults<ChangesInventories> changesInventories = realm.where(ChangesInventories.class)
                 .equalTo("ruta", idRoute)
                 .equalTo("clave_articulo", listArticles.get(position).getClave_articulo())
-                .findAll();
+                .findAll();*/
 
         double rechargesInventories = realm.where(RechargeInventories.class)
                 .equalTo("ruta", idRoute)
@@ -73,9 +73,9 @@ public class AdapterArticlesInventory extends RecyclerView.Adapter<AdapterArticl
                 .sum("cantidad")
                 .doubleValue();
 
-        for(ChangesInventories changes: changesInventories){
+        /*for(ChangesInventories changes: changesInventories){
             countChanges += (changes.getCantidad_nueva()-changes.getCantidad_anterior());
-        }
+        }*/
 
         holder.txtArticle.setText(listArticles.get(position).getNombre_articulo().trim());
         holder.txtViewAmount.setText(baseApp.formattedNumber(listArticles.get(position).getCantidad_inicial() + countChanges));

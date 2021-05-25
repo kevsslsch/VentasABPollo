@@ -25,7 +25,9 @@ import com.mds.ventasabpollo.application.ConnectionClass;
 import com.mds.ventasabpollo.application.FunctionsApp;
 import com.mds.ventasabpollo.application.SPClass;
 import com.mds.ventasabpollo.classes.MyDividerItemDecoration;
+import com.mds.ventasabpollo.models.Articles;
 import com.mds.ventasabpollo.models.DetailsDepartures;
+import com.mds.ventasabpollo.models.Inventories;
 import com.mds.ventasabpollo.models.RechargeInventories;
 import com.mds.ventasabpollo.models.Routes;
 
@@ -226,6 +228,25 @@ public class ReChargeInventoryActivity extends AppCompatActivity implements Real
                         if (Datos.getInt("exito") == 1) {
                             baseApp.showToast("Recarga de Mercancia aceptada con éxito");
 
+                            for(RechargeInventories rechargeInventories1: rechargeInventoriesArrayList){
+                                if(realm.where(Inventories.class)
+                                        .equalTo("ruta", idRoute)
+                                        .equalTo("clave_articulo", rechargeInventories1.getClave_articulo())
+                                        .findAll().size() == 0){
+
+                                    Articles article = realm.where(Articles.class).equalTo("clave_articulo", rechargeInventories1.getClave_articulo()).findFirst();
+
+                                    realm.beginTransaction();
+                                    realm.copyToRealm(new Inventories(
+                                            idRoute,
+                                            rechargeInventories1.getClave_articulo(),
+                                            article.getNombre_articulo(),
+                                            0,
+                                            nUser));
+                                    realm.commitTransaction();
+                                }
+                            }
+
                             realm.beginTransaction();
                             realm.copyToRealm(rechargeInventoriesArrayList);
                             realm.commitTransaction();
@@ -233,7 +254,7 @@ public class ReChargeInventoryActivity extends AppCompatActivity implements Real
                             finish();
 
                         }else{
-                            baseApp.showAlert("Error", "Ocurrió un error, lo más probable es que la recarga de mercancia dejó de estar dispoible.");
+                            baseApp.showAlert("Error", "Ocurrió un error, lo más probable es que la recarga de mercancia dejó de estar disponible.");
                         }
                     }
                 } catch (Exception ex) {

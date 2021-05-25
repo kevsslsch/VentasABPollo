@@ -23,6 +23,9 @@ import com.mds.ventasabpollo.application.FunctionsApp;
 import com.mds.ventasabpollo.application.SPClass;
 import com.mds.ventasabpollo.classes.MyDividerItemDecoration;
 import com.mds.ventasabpollo.models.Inventories;
+import com.mds.ventasabpollo.models.RechargeInventories;
+
+import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
@@ -98,12 +101,23 @@ public class InventoryActivity extends AppCompatActivity implements RealmChangeL
 
         try {
             realm = Realm.getDefaultInstance();
+
+            ArrayList<Inventories> inventoriesArrayList = new ArrayList<>();
+
+            RealmResults<RechargeInventories> rechargeInventories = realm.where(RechargeInventories.class)
+                    .equalTo("ruta", idRoute)
+                    .distinct("clave_articulo")
+                    .findAll();
+
             listArticles = realm.where(Inventories.class)
                     .equalTo("ruta", idRoute)
                     .sort("clave_articulo", Sort.ASCENDING)
                     .findAll();
-            totalArticles = listArticles.size();
-            listArticles.addChangeListener(this);
+
+            inventoriesArrayList.addAll(listArticles);
+
+
+            totalArticles = inventoriesArrayList.size();
 
             if(totalArticles > 0){
                 layoutList.setVisibility(View.VISIBLE);

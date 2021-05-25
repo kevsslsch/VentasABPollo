@@ -219,6 +219,7 @@ public class MainActivity extends AppCompatActivity
         spClass.boolSetSP("inventoryLoaded", true);
         spClass.intSetSP("idRoute", 42);
         /**/
+
     }
 
     private class syncDataTask extends AsyncTask<Void, String, Void> {

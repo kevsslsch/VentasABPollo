@@ -2459,8 +2459,8 @@ public class FunctionsApp extends Application {
 
                                         article = detail.getNombre_articulo();
                                         amount = String.valueOf(detail.getCantidad());
-                                        price = String.valueOf(detail.getPrecio());
-                                        subtotal = String.valueOf(detail.getCantidad() * detail.getPrecio());
+                                        price = String.valueOf(baseApp.formattedNumber(detail.getPrecio()));
+                                        subtotal = String.valueOf(baseApp.formattedNumber(detail.getCantidad() * detail.getPrecio()));
 
                                         if (article.length() > 9) {
                                             article = article.substring(0, 9);

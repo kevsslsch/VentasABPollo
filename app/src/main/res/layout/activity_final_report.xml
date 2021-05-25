@@ -201,39 +201,25 @@
             <LinearLayout
                 android:id="@+id/layoutTitles"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginEnd="1dp"
-                    android:layout_marginRight="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:layout_weight="10"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/txtArticle"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="Artículo"
-                        android:textColor="@android:color/black"
-                        android:textSize="17sp"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/txtArticle"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:layout_weight="13"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:text="Artículo"
+                    android:textColor="@android:color/black"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
                     android:gravity="center|right|center_horizontal"
                     android:orientation="vertical">
 
@@ -243,26 +229,51 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/txtViewAmount"
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
-                            android:text="C. Inicial"
+                            android:text="Cantidades"
                             android:textAlignment="center"
                             android:textColor="@android:color/black"
                             android:textSize="17sp"
                             android:textStyle="bold" />
 
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
                         <TextView
-                            android:id="@+id/txtViewAmount2"
+                            android:id="@+id/txtViewAmount"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="Inicial"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="17sp" />
+
+                        <TextView
+                            android:id="@+id/txtViewAmountRecharges"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="C. Actual"
+                            android:text="Recarg."
                             android:textAlignment="center"
                             android:textColor="@android:color/black"
-                            android:textSize="17sp"
-                            android:textStyle="bold" />
+                            android:textSize="17sp" />
+
+                        <TextView
+                            android:id="@+id/txtViewAmount2"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:text="Actual"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="17sp" />
 
                     </LinearLayout>
 
