@@ -65,7 +65,7 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/no_foto" />
+                    app:srcCompat="@drawable/no_photo" />
 
             </LinearLayout>
 

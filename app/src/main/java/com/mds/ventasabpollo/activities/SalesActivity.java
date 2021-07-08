@@ -331,6 +331,7 @@ public class SalesActivity extends AppCompatActivity {
                                             Articles.get(i).getNombre_articulo(),
                                             Articles.get(i).getNombre_unidad(),
                                             Articles.get(i).getDescripcion_extendida(),
+                                            Articles.get(i).getUbicacion_URL(),
                                             false,
                                             Articles.get(i).getUser_id()));
                                     temporalFlag(Articles.get(i).getClave_articulo());
@@ -344,7 +345,9 @@ public class SalesActivity extends AppCompatActivity {
 
                 // Si aún falta artículos de poner con limitArticlesTop, trae los que tengan más clics
                 if(listArticlesToShow < limitArticlesTop) {
+
                     if(TopArticlesClicks.size() > 0) {
+
                         for (int i = 0; i < TopArticlesClicks.size(); i++) {
 
                             nArticle = TopArticlesClicks.get(i).getClave_articulo();
@@ -360,6 +363,7 @@ public class SalesActivity extends AppCompatActivity {
                                             Articles.get(i).getNombre_articulo(),
                                             Articles.get(i).getNombre_unidad(),
                                             Articles.get(i).getDescripcion_extendida(),
+                                            Articles.get(i).getUbicacion_URL(),
                                             false,
                                             Articles.get(i).getUser_id()));
                                     temporalFlag(Articles.get(i).getClave_articulo());
@@ -372,7 +376,12 @@ public class SalesActivity extends AppCompatActivity {
 
                 // Si aún falta artículos de poner con limitArticlesTop, trae los últimos artículos agregados
                 if(listArticlesToShow < limitArticlesTop) {
-                    RealmResults<Articles> articles = realm.where(Articles.class).sort("clave_articulo", Sort.ASCENDING).equalTo("temporal_flag", false).limit(limitArticlesTop - listArticlesToShow).findAll();
+
+                    RealmResults<Articles> articles = realm.where(Articles.class)
+                            .sort("clave_articulo", Sort.ASCENDING)
+                            .equalTo("temporal_flag", false)
+                            //.limit(limitArticlesTop - listArticlesToShow) bug, si no tiene inventario, descuento del número a mostrar
+                            .findAll();
 
                     if(articles.size() > 0) {
                         for (Articles article: articles) {
@@ -386,6 +395,7 @@ public class SalesActivity extends AppCompatActivity {
                                         article.getNombre_articulo(),
                                         article.getNombre_unidad(),
                                         article.getDescripcion_extendida(),
+                                        article.getUbicacion_URL(),
                                         false,
                                         article.getUser_id()));
                                 temporalFlag(article.getClave_articulo());

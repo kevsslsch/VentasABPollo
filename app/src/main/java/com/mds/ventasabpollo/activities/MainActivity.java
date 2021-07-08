@@ -681,7 +681,8 @@ public class MainActivity extends AppCompatActivity
                                             Datos.getString("articulo").trim(),
                                             Datos.getString("nombre_articulo").trim(),
                                             Datos.getString("nombre_unidad"),
-                                            Datos.getString("descripcion_extendida"));
+                                            Datos.getString("descripcion_extendida"),
+                                            Datos.getString("ubicacion_URL"));
 
                                     realm.copyToRealm(articles);
                                     realm.commitTransaction();
@@ -739,7 +740,7 @@ public class MainActivity extends AppCompatActivity
                                 Datos.close();
                             }
 
-                            if (countResults == 6) {
+                            /*if (countResults == 6) {
                                 ResultSet Datos = loComando.getResultSet();
 
                                 baseApp.showLog("Descargando fotos de artículos...");
@@ -760,9 +761,9 @@ public class MainActivity extends AppCompatActivity
                                 }
 
                                 Datos.close();
-                            }
+                            }*/
 
-                            if (countResults == 7) {
+                            if (countResults == 6) {
                                 ResultSet Datos = loComando.getResultSet();
 
                                 baseApp.showLog("Descargando sucursales...");

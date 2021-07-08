@@ -2530,7 +2530,7 @@ public class FunctionsApp extends Application {
                                     if(getIsCredit(nVisit)){
                                         al.add((new TextPrintable.Builder())
                                                 .setText("PAGARE\n" +
-                                                        "DEBEMOS Y PAGAREMOS EN FORMA INCONDICIONAL POR ESTE PAGARE A LA ORDEN DE AB POLLO SA DE CV EN CHIHUAHUA CHIHUAHUA LA CANTIDAD DE $ " + baseApp.formattedNumber(getTotalSale(nVisit, "totalImport")) + "PESOS IMPORTE EN LETRA ( 00/100 M.N).\n" +
+                                                        "DEBEMOS Y PAGAREMOS EN FORMA INCONDICIONAL POR ESTE PAGARE A LA ORDEN DE AB POLLO SA DE CV EN CHIHUAHUA CHIHUAHUA LA CANTIDAD DE $ " + baseApp.formattedNumber(getTotalSale(nVisit, "totalImport")) + " PESOS IMPORTE EN LETRA ( " + baseApp.numberToText(Double.toString(getTotalSale(nVisit, "totalImport")), true) + ").\n" +
                                                         "ASI COMO LOS INTERESES MORATORIOS DEL 5% MENSUAL SOBRE SALDOS INSOLUTOS A PARTIR DEL VENCIMIENTO. PAGARE QUE ACEPTO(AMOS) A LA VISTA DE EN LA INTELIGENCIA DEL QUE SUSCRIBE ESTA, AUTORIZO A SUSCRIBIR TITULOS DE CREDITO EN LOS TERMINOS DEL ARTICULO 11 DE LA LEY GRAL. DE TITULOS Y OPERACIONES.\n" +
                                                         "LA FIRMA QUE APAREZCA EN CUALQUIER LUGAR DEL CUERPO DE ESTE TITULO DE CREDITO, IMPLICA SU ACEPTACION POR EL TOTAL DE LA SUMA QUE EXPRESA.\n")
                                                 .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
@@ -2538,15 +2538,15 @@ public class FunctionsApp extends Application {
                                                 .build());
 
                                         al.add((new TextPrintable.Builder())
-                                                .setText("NOMBRE Y FIRMA: _____________________________")
+                                                .setText("NOMBRE Y FIRMA:\n _____________________________")
                                                 .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
                                                 .setNewLinesAfter(1)
                                                 .build());
 
                                         al.add((new TextPrintable.Builder())
-                                                .setText("LUGAR Y FECHA: _________________________")
+                                                .setText("LUGAR Y FECHA:\n _____________________________")
                                                 .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
-                                                .setNewLinesAfter(1)
+                                                .setNewLinesAfter(2)
                                                 .build());
                                     }
 

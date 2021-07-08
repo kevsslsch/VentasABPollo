@@ -247,7 +247,7 @@ public class AdapterDetailsSales extends RecyclerView.Adapter<AdapterDetailsSale
 
             Bitmap bitmap;
             if (functionsapp.getBase64(DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "articles").isEmpty()) {
-                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_foto);
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_photo);
             } else {
                 byte[] decodedString = Base64.decode(functionsapp.getBase64(DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "articles"), Base64.DEFAULT);
                 bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);

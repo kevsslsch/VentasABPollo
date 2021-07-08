@@ -11,15 +11,14 @@ public class Articles extends RealmObject {
     private String nombre_articulo;
     private String nombre_unidad;
     private String descripcion_extendida;
-    private boolean image_loaded;
-    private String image_loaded_date;
+    private String ubicacion_URL;
     private boolean temporal_flag;
     private int     user_id;
 
     public Articles() {
     }
 
-    public Articles(int clave_articulo, int familia, int sublinea, String articulo, String nombre_articulo, String nombre_unidad, String descripcion_extendida) {
+    public Articles(int clave_articulo, int familia, int sublinea, String articulo, String nombre_articulo, String nombre_unidad, String descripcion_extendida, String ubicacion_URL) {
         this.clave_articulo = clave_articulo;
         this.familia = familia;
         this.sublinea = sublinea;
@@ -27,6 +26,8 @@ public class Articles extends RealmObject {
         this.nombre_articulo = nombre_articulo;
         this.nombre_unidad = nombre_unidad;
         this.descripcion_extendida = descripcion_extendida;
+        this.ubicacion_URL = ubicacion_URL;
+        this.temporal_flag = false;
     }
 
     public Articles(
@@ -37,6 +38,7 @@ public class Articles extends RealmObject {
             String nombre_articulo,
             String nombre_unidad,
             String descripcion_extendida,
+            String ubicacion_URL,
             boolean temporal_flag,
             int user_id
             ){
@@ -48,6 +50,7 @@ public class Articles extends RealmObject {
         this.nombre_articulo = nombre_articulo;
         this.nombre_unidad = nombre_unidad;
         this.descripcion_extendida = descripcion_extendida;
+        this.ubicacion_URL = ubicacion_URL;
         this.temporal_flag = temporal_flag;
         this.user_id = user_id;
 
@@ -109,20 +112,12 @@ public class Articles extends RealmObject {
         this.descripcion_extendida = descripcion_extendida;
     }
 
-    public boolean isImage_loaded() {
-        return image_loaded;
+    public String getUbicacion_URL() {
+        return ubicacion_URL;
     }
 
-    public String getImage_loaded_date() {
-        return image_loaded_date;
-    }
-
-    public void setImage_loaded_date(String image_loaded_date) {
-        this.image_loaded_date = image_loaded_date;
-    }
-
-    public void setImage_loaded(boolean image_loaded) {
-        this.image_loaded = image_loaded;
+    public void setUbicacion_URL(String ubicacion_URL) {
+        this.ubicacion_URL = ubicacion_URL;
     }
 
     public boolean isTemporal_flag() {

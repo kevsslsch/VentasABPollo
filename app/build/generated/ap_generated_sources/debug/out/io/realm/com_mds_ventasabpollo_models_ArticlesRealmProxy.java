@@ -46,13 +46,12 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
         long nombre_articuloIndex;
         long nombre_unidadIndex;
         long descripcion_extendidaIndex;
-        long image_loadedIndex;
-        long image_loaded_dateIndex;
+        long ubicacion_URLIndex;
         long temporal_flagIndex;
         long user_idIndex;
 
         ArticlesColumnInfo(OsSchemaInfo schemaInfo) {
-            super(11);
+            super(10);
             OsObjectSchemaInfo objectSchemaInfo = schemaInfo.getObjectSchemaInfo("Articles");
             this.clave_articuloIndex = addColumnDetails("clave_articulo", "clave_articulo", objectSchemaInfo);
             this.familiaIndex = addColumnDetails("familia", "familia", objectSchemaInfo);
@@ -61,8 +60,7 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
             this.nombre_articuloIndex = addColumnDetails("nombre_articulo", "nombre_articulo", objectSchemaInfo);
             this.nombre_unidadIndex = addColumnDetails("nombre_unidad", "nombre_unidad", objectSchemaInfo);
             this.descripcion_extendidaIndex = addColumnDetails("descripcion_extendida", "descripcion_extendida", objectSchemaInfo);
-            this.image_loadedIndex = addColumnDetails("image_loaded", "image_loaded", objectSchemaInfo);
-            this.image_loaded_dateIndex = addColumnDetails("image_loaded_date", "image_loaded_date", objectSchemaInfo);
+            this.ubicacion_URLIndex = addColumnDetails("ubicacion_URL", "ubicacion_URL", objectSchemaInfo);
             this.temporal_flagIndex = addColumnDetails("temporal_flag", "temporal_flag", objectSchemaInfo);
             this.user_idIndex = addColumnDetails("user_id", "user_id", objectSchemaInfo);
             this.maxColumnIndexValue = objectSchemaInfo.getMaxColumnIndex();
@@ -89,8 +87,7 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
             dst.nombre_articuloIndex = src.nombre_articuloIndex;
             dst.nombre_unidadIndex = src.nombre_unidadIndex;
             dst.descripcion_extendidaIndex = src.descripcion_extendidaIndex;
-            dst.image_loadedIndex = src.image_loadedIndex;
-            dst.image_loaded_dateIndex = src.image_loaded_dateIndex;
+            dst.ubicacion_URLIndex = src.ubicacion_URLIndex;
             dst.temporal_flagIndex = src.temporal_flagIndex;
             dst.user_idIndex = src.user_idIndex;
             dst.maxColumnIndexValue = src.maxColumnIndexValue;
@@ -308,54 +305,32 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
 
     @Override
     @SuppressWarnings("cast")
-    public boolean realmGet$image_loaded() {
+    public String realmGet$ubicacion_URL() {
         proxyState.getRealm$realm().checkIfValid();
-        return (boolean) proxyState.getRow$realm().getBoolean(columnInfo.image_loadedIndex);
+        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.ubicacion_URLIndex);
     }
 
     @Override
-    public void realmSet$image_loaded(boolean value) {
-        if (proxyState.isUnderConstruction()) {
-            if (!proxyState.getAcceptDefaultValue$realm()) {
-                return;
-            }
-            final Row row = proxyState.getRow$realm();
-            row.getTable().setBoolean(columnInfo.image_loadedIndex, row.getIndex(), value, true);
-            return;
-        }
-
-        proxyState.getRealm$realm().checkIfValid();
-        proxyState.getRow$realm().setBoolean(columnInfo.image_loadedIndex, value);
-    }
-
-    @Override
-    @SuppressWarnings("cast")
-    public String realmGet$image_loaded_date() {
-        proxyState.getRealm$realm().checkIfValid();
-        return (java.lang.String) proxyState.getRow$realm().getString(columnInfo.image_loaded_dateIndex);
-    }
-
-    @Override
-    public void realmSet$image_loaded_date(String value) {
+    public void realmSet$ubicacion_URL(String value) {
         if (proxyState.isUnderConstruction()) {
             if (!proxyState.getAcceptDefaultValue$realm()) {
                 return;
             }
             final Row row = proxyState.getRow$realm();
             if (value == null) {
-                row.getTable().setNull(columnInfo.image_loaded_dateIndex, row.getIndex(), true);
+                row.getTable().setNull(columnInfo.ubicacion_URLIndex, row.getIndex(), true);
                 return;
             }
-            row.getTable().setString(columnInfo.image_loaded_dateIndex, row.getIndex(), value, true);
+            row.getTable().setString(columnInfo.ubicacion_URLIndex, row.getIndex(), value, true);
             return;
         }
 
         proxyState.getRealm$realm().checkIfValid();
         if (value == null) {
-            proxyState.getRow$realm().setNull(columnInfo.image_loaded_dateIndex);
+            proxyState.getRow$realm().setNull(columnInfo.ubicacion_URLIndex);
             return;
         }
-        proxyState.getRow$realm().setString(columnInfo.image_loaded_dateIndex, value);
+        proxyState.getRow$realm().setString(columnInfo.ubicacion_URLIndex, value);
     }
 
     @Override
@@ -403,7 +378,7 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
     }
 
     private static OsObjectSchemaInfo createExpectedObjectSchemaInfo() {
-        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("Articles", 11, 0);
+        OsObjectSchemaInfo.Builder builder = new OsObjectSchemaInfo.Builder("Articles", 10, 0);
         builder.addPersistedProperty("clave_articulo", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("familia", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("sublinea", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
@@ -411,8 +386,7 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
         builder.addPersistedProperty("nombre_articulo", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
         builder.addPersistedProperty("nombre_unidad", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
         builder.addPersistedProperty("descripcion_extendida", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
-        builder.addPersistedProperty("image_loaded", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
-        builder.addPersistedProperty("image_loaded_date", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
+        builder.addPersistedProperty("ubicacion_URL", RealmFieldType.STRING, !Property.PRIMARY_KEY, !Property.INDEXED, !Property.REQUIRED);
         builder.addPersistedProperty("temporal_flag", RealmFieldType.BOOLEAN, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         builder.addPersistedProperty("user_id", RealmFieldType.INTEGER, !Property.PRIMARY_KEY, !Property.INDEXED, Property.REQUIRED);
         return builder.build();
@@ -490,18 +464,11 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
                 objProxy.realmSet$descripcion_extendida((String) json.getString("descripcion_extendida"));
             }
         }
-        if (json.has("image_loaded")) {
-            if (json.isNull("image_loaded")) {
-                throw new IllegalArgumentException("Trying to set non-nullable field 'image_loaded' to null.");
+        if (json.has("ubicacion_URL")) {
+            if (json.isNull("ubicacion_URL")) {
+                objProxy.realmSet$ubicacion_URL(null);
             } else {
-                objProxy.realmSet$image_loaded((boolean) json.getBoolean("image_loaded"));
-            }
-        }
-        if (json.has("image_loaded_date")) {
-            if (json.isNull("image_loaded_date")) {
-                objProxy.realmSet$image_loaded_date(null);
-            } else {
-                objProxy.realmSet$image_loaded_date((String) json.getString("image_loaded_date"));
+                objProxy.realmSet$ubicacion_URL((String) json.getString("ubicacion_URL"));
             }
         }
         if (json.has("temporal_flag")) {
@@ -580,19 +547,12 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
                     reader.skipValue();
                     objProxy.realmSet$descripcion_extendida(null);
                 }
-            } else if (name.equals("image_loaded")) {
+            } else if (name.equals("ubicacion_URL")) {
                 if (reader.peek() != JsonToken.NULL) {
-                    objProxy.realmSet$image_loaded((boolean) reader.nextBoolean());
+                    objProxy.realmSet$ubicacion_URL((String) reader.nextString());
                 } else {
                     reader.skipValue();
-                    throw new IllegalArgumentException("Trying to set non-nullable field 'image_loaded' to null.");
-                }
-            } else if (name.equals("image_loaded_date")) {
-                if (reader.peek() != JsonToken.NULL) {
-                    objProxy.realmSet$image_loaded_date((String) reader.nextString());
-                } else {
-                    reader.skipValue();
-                    objProxy.realmSet$image_loaded_date(null);
+                    objProxy.realmSet$ubicacion_URL(null);
                 }
             } else if (name.equals("temporal_flag")) {
                 if (reader.peek() != JsonToken.NULL) {
@@ -663,8 +623,7 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
         builder.addString(columnInfo.nombre_articuloIndex, realmObjectSource.realmGet$nombre_articulo());
         builder.addString(columnInfo.nombre_unidadIndex, realmObjectSource.realmGet$nombre_unidad());
         builder.addString(columnInfo.descripcion_extendidaIndex, realmObjectSource.realmGet$descripcion_extendida());
-        builder.addBoolean(columnInfo.image_loadedIndex, realmObjectSource.realmGet$image_loaded());
-        builder.addString(columnInfo.image_loaded_dateIndex, realmObjectSource.realmGet$image_loaded_date());
+        builder.addString(columnInfo.ubicacion_URLIndex, realmObjectSource.realmGet$ubicacion_URL());
         builder.addBoolean(columnInfo.temporal_flagIndex, realmObjectSource.realmGet$temporal_flag());
         builder.addInteger(columnInfo.user_idIndex, realmObjectSource.realmGet$user_id());
 
@@ -705,10 +664,9 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
         if (realmGet$descripcion_extendida != null) {
             Table.nativeSetString(tableNativePtr, columnInfo.descripcion_extendidaIndex, rowIndex, realmGet$descripcion_extendida, false);
         }
-        Table.nativeSetBoolean(tableNativePtr, columnInfo.image_loadedIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$image_loaded(), false);
-        String realmGet$image_loaded_date = ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$image_loaded_date();
-        if (realmGet$image_loaded_date != null) {
-            Table.nativeSetString(tableNativePtr, columnInfo.image_loaded_dateIndex, rowIndex, realmGet$image_loaded_date, false);
+        String realmGet$ubicacion_URL = ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$ubicacion_URL();
+        if (realmGet$ubicacion_URL != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.ubicacion_URLIndex, rowIndex, realmGet$ubicacion_URL, false);
         }
         Table.nativeSetBoolean(tableNativePtr, columnInfo.temporal_flagIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$temporal_flag(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$user_id(), false);
@@ -750,10 +708,9 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
             if (realmGet$descripcion_extendida != null) {
                 Table.nativeSetString(tableNativePtr, columnInfo.descripcion_extendidaIndex, rowIndex, realmGet$descripcion_extendida, false);
             }
-            Table.nativeSetBoolean(tableNativePtr, columnInfo.image_loadedIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$image_loaded(), false);
-            String realmGet$image_loaded_date = ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$image_loaded_date();
-            if (realmGet$image_loaded_date != null) {
-                Table.nativeSetString(tableNativePtr, columnInfo.image_loaded_dateIndex, rowIndex, realmGet$image_loaded_date, false);
+            String realmGet$ubicacion_URL = ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$ubicacion_URL();
+            if (realmGet$ubicacion_URL != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.ubicacion_URLIndex, rowIndex, realmGet$ubicacion_URL, false);
             }
             Table.nativeSetBoolean(tableNativePtr, columnInfo.temporal_flagIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$temporal_flag(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$user_id(), false);
@@ -796,12 +753,11 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
         } else {
             Table.nativeSetNull(tableNativePtr, columnInfo.descripcion_extendidaIndex, rowIndex, false);
         }
-        Table.nativeSetBoolean(tableNativePtr, columnInfo.image_loadedIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$image_loaded(), false);
-        String realmGet$image_loaded_date = ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$image_loaded_date();
-        if (realmGet$image_loaded_date != null) {
-            Table.nativeSetString(tableNativePtr, columnInfo.image_loaded_dateIndex, rowIndex, realmGet$image_loaded_date, false);
+        String realmGet$ubicacion_URL = ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$ubicacion_URL();
+        if (realmGet$ubicacion_URL != null) {
+            Table.nativeSetString(tableNativePtr, columnInfo.ubicacion_URLIndex, rowIndex, realmGet$ubicacion_URL, false);
         } else {
-            Table.nativeSetNull(tableNativePtr, columnInfo.image_loaded_dateIndex, rowIndex, false);
+            Table.nativeSetNull(tableNativePtr, columnInfo.ubicacion_URLIndex, rowIndex, false);
         }
         Table.nativeSetBoolean(tableNativePtr, columnInfo.temporal_flagIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$temporal_flag(), false);
         Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$user_id(), false);
@@ -851,12 +807,11 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
             } else {
                 Table.nativeSetNull(tableNativePtr, columnInfo.descripcion_extendidaIndex, rowIndex, false);
             }
-            Table.nativeSetBoolean(tableNativePtr, columnInfo.image_loadedIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$image_loaded(), false);
-            String realmGet$image_loaded_date = ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$image_loaded_date();
-            if (realmGet$image_loaded_date != null) {
-                Table.nativeSetString(tableNativePtr, columnInfo.image_loaded_dateIndex, rowIndex, realmGet$image_loaded_date, false);
+            String realmGet$ubicacion_URL = ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$ubicacion_URL();
+            if (realmGet$ubicacion_URL != null) {
+                Table.nativeSetString(tableNativePtr, columnInfo.ubicacion_URLIndex, rowIndex, realmGet$ubicacion_URL, false);
             } else {
-                Table.nativeSetNull(tableNativePtr, columnInfo.image_loaded_dateIndex, rowIndex, false);
+                Table.nativeSetNull(tableNativePtr, columnInfo.ubicacion_URLIndex, rowIndex, false);
             }
             Table.nativeSetBoolean(tableNativePtr, columnInfo.temporal_flagIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$temporal_flag(), false);
             Table.nativeSetLong(tableNativePtr, columnInfo.user_idIndex, rowIndex, ((com_mds_ventasabpollo_models_ArticlesRealmProxyInterface) object).realmGet$user_id(), false);
@@ -889,8 +844,7 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
         unmanagedCopy.realmSet$nombre_articulo(realmSource.realmGet$nombre_articulo());
         unmanagedCopy.realmSet$nombre_unidad(realmSource.realmGet$nombre_unidad());
         unmanagedCopy.realmSet$descripcion_extendida(realmSource.realmGet$descripcion_extendida());
-        unmanagedCopy.realmSet$image_loaded(realmSource.realmGet$image_loaded());
-        unmanagedCopy.realmSet$image_loaded_date(realmSource.realmGet$image_loaded_date());
+        unmanagedCopy.realmSet$ubicacion_URL(realmSource.realmGet$ubicacion_URL());
         unmanagedCopy.realmSet$temporal_flag(realmSource.realmGet$temporal_flag());
         unmanagedCopy.realmSet$user_id(realmSource.realmGet$user_id());
 
@@ -932,12 +886,8 @@ public class com_mds_ventasabpollo_models_ArticlesRealmProxy extends com.mds.ven
         stringBuilder.append(realmGet$descripcion_extendida() != null ? realmGet$descripcion_extendida() : "null");
         stringBuilder.append("}");
         stringBuilder.append(",");
-        stringBuilder.append("{image_loaded:");
-        stringBuilder.append(realmGet$image_loaded());
-        stringBuilder.append("}");
-        stringBuilder.append(",");
-        stringBuilder.append("{image_loaded_date:");
-        stringBuilder.append(realmGet$image_loaded_date() != null ? realmGet$image_loaded_date() : "null");
+        stringBuilder.append("{ubicacion_URL:");
+        stringBuilder.append(realmGet$ubicacion_URL() != null ? realmGet$ubicacion_URL() : "null");
         stringBuilder.append("}");
         stringBuilder.append(",");
         stringBuilder.append("{temporal_flag:");

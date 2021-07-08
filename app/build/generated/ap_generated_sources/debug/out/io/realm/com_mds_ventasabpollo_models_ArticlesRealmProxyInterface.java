@@ -16,10 +16,8 @@ public interface com_mds_ventasabpollo_models_ArticlesRealmProxyInterface {
     public void realmSet$nombre_unidad(String value);
     public String realmGet$descripcion_extendida();
     public void realmSet$descripcion_extendida(String value);
-    public boolean realmGet$image_loaded();
-    public void realmSet$image_loaded(boolean value);
-    public String realmGet$image_loaded_date();
-    public void realmSet$image_loaded_date(String value);
+    public String realmGet$ubicacion_URL();
+    public void realmSet$ubicacion_URL(String value);
     public boolean realmGet$temporal_flag();
     public void realmSet$temporal_flag(boolean value);
     public int realmGet$user_id();

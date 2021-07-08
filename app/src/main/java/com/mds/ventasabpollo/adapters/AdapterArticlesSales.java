@@ -29,6 +29,7 @@ import com.mds.ventasabpollo.application.FunctionsApp;
 import com.mds.ventasabpollo.application.SPClass;
 import com.mds.ventasabpollo.models.Articles;
 import com.mds.ventasabpollo.models.DetailsSales;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -87,16 +88,15 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
             nClient = 0;
         }
 
-        Bitmap bitmap;
-        if (functionsapp.getBase64(articlesList.get(position).getClave_articulo(), "articles").isEmpty()) {
-            bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_foto);
-        } else {
-            byte[] decodedString = Base64.decode(functionsapp.getBase64(articlesList.get(position).getClave_articulo(), "articles"), Base64.DEFAULT);
-            bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        }
+        String url_img = articlesList.get(position).getUbicacion_URL();
 
-        BitmapDrawable mDrawable = new BitmapDrawable(context.getResources(), Bitmap.createScaledBitmap(bitmap, 150, 150, true));
-        holder.imgArticle.setImageDrawable(mDrawable);
+        if(url_img != null){
+            if(url_img.isEmpty()){
+                Picasso.get().load(R.drawable.no_photo).into(holder.imgArticle);
+            }else{
+                Picasso.get().load(url_img).into(holder.imgArticle);
+            }
+        }
 
         holder.txtName_Article.setText(articlesList.get(position).getNombre_articulo().trim());
         holder.txtViewPrice.setText(baseApp.formattedNumber(functionsapp.getFinalPrice(nClient, articlesList.get(position).getClave_articulo(), "precio_contado")));
@@ -229,7 +229,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
             Bitmap bitmap;
             if (functionsapp.getBase64(articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "articles").isEmpty()) {
-                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_foto);
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.no_photo);
             } else {
                 byte[] decodedString = Base64.decode(functionsapp.getBase64(articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "articles"), Base64.DEFAULT);
                 bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);

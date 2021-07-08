@@ -282,6 +282,7 @@ public class OthersActivity extends AppCompatActivity implements RealmChangeList
                                         Articles.get(i).getNombre_articulo(),
                                         Articles.get(i).getNombre_unidad(),
                                         Articles.get(i).getDescripcion_extendida(),
+                                        Articles.get(i).getUbicacion_URL(),
                                         false,
                                         Articles.get(i).getUser_id()));
                                 temporalFlag(Articles.get(i).getClave_articulo());
@@ -309,6 +310,7 @@ public class OthersActivity extends AppCompatActivity implements RealmChangeList
                                         Articles.get(i).getNombre_articulo(),
                                         Articles.get(i).getNombre_unidad(),
                                         Articles.get(i).getDescripcion_extendida(),
+                                        Articles.get(i).getUbicacion_URL(),
                                         false,
                                         Articles.get(i).getUser_id()));
                                 temporalFlag(Articles.get(i).getClave_articulo());
@@ -333,6 +335,7 @@ public class OthersActivity extends AppCompatActivity implements RealmChangeList
                                     article.getNombre_articulo(),
                                     article.getNombre_unidad(),
                                     article.getDescripcion_extendida(),
+                                    article.getUbicacion_URL(),
                                     false,
                                     article.getUser_id()));
                             temporalFlag(article.getClave_articulo());
