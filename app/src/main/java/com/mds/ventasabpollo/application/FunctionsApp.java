@@ -48,6 +48,7 @@ import com.mds.ventasabpollo.models.Articles;
 import com.mds.ventasabpollo.models.BranchOffices;
 import com.mds.ventasabpollo.models.ChangesInventories;
 import com.mds.ventasabpollo.models.Clients;
+import com.mds.ventasabpollo.models.Departures;
 import com.mds.ventasabpollo.models.DetailsDepartures;
 import com.mds.ventasabpollo.models.DetailsSales;
 import com.mds.ventasabpollo.models.Images;
@@ -990,7 +991,7 @@ public class FunctionsApp extends Application {
                     moneyPaidOff = moneyPaidOff + visitsPayments1.getImporte_saldado();
                 }
 
-                return client.get(0).getSaldo_actual() - creditVisits + moneyPaidOff;
+                return client.get(0).getLimite_credito() - (client.get(0).getSaldo_actual() - creditVisits + moneyPaidOff);
                 //return client.get(0).getLimite_credito() + moneyPaidOff - getCurrentCustomerDebt(nClient);
             }else{
                 return 0.0;
@@ -1011,16 +1012,16 @@ public class FunctionsApp extends Application {
 
             if (visitsPayments.size() > 0) {
                 if (visitsPayments.get(0).getMetodo_pago().equals("Crédito")) {
-                    return true;
+                    isCredit = true;
                 } else {
-                    return false;
+                    isCredit = false;
                 }
             }
         }else{
             if(spClass.strGetSP("sTypeSale").equals("credit")){
-                return true;
+                isCredit = true;
             }else{
-                return false;
+                isCredit = false;
             }
         }
 
@@ -1714,6 +1715,8 @@ public class FunctionsApp extends Application {
                     .equalTo("metodo_pago", "Crédito")
                     .findAll();
             int countVisits = visitsPayments.size();
+
+            baseApp.showLog(visitsPayments.size() +"t");
 
             if(countVisits > 0){
                 for(VisitsPayments visit: visitsPayments){
@@ -2521,13 +2524,14 @@ public class FunctionsApp extends Application {
                                             .setNewLinesAfter(2)
                                             .build());
 
-                                    al.add((new TextPrintable.Builder())
-                                            .setText(branchOffice.getSitio_web())
-                                            .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
-                                            .setNewLinesAfter(3)
-                                            .build());
-
                                     if(getIsCredit(nVisit)){
+
+                                        al.add((new TextPrintable.Builder())
+                                                .setText(branchOffice.getSitio_web())
+                                                .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                                .setNewLinesAfter(2)
+                                                .build());
+
                                         al.add((new TextPrintable.Builder())
                                                 .setText("PAGARE\n" +
                                                         "DEBEMOS Y PAGAREMOS EN FORMA INCONDICIONAL POR ESTE PAGARE A LA ORDEN DE AB POLLO SA DE CV EN CHIHUAHUA CHIHUAHUA LA CANTIDAD DE $ " + baseApp.formattedNumber(getTotalSale(nVisit, "totalImport")) + " PESOS IMPORTE EN LETRA ( " + baseApp.numberToText(Double.toString(getTotalSale(nVisit, "totalImport")), true) + ").\n" +
@@ -2627,6 +2631,274 @@ public class FunctionsApp extends Application {
             baseApp.showToast("Ocurrió un error interno.");
 
             return null;
+        }
+    }
+
+    public void printRoute(int idRoute){
+        BaseApp baseApp = new BaseApp(context);
+        SPClass spClass = new SPClass(context);
+
+        Routes route;
+        Departures departure;
+        RealmResults<Inventories> listArticles;
+        RealmResults<VisitsClients> listVisits;
+        RealmResults<VisitsPayments> listsPayments;
+
+        String details = "";
+        String newline = "\n";
+
+        try {
+            Printooth.INSTANCE.init(context);
+
+            realm = Realm.getDefaultInstance();
+
+            route = realm.where(Routes.class)
+                    .equalTo("ruta", idRoute)
+                    .findFirst();
+
+            departure = realm.where(Departures.class)
+                    .equalTo("salida", route.getSalida())
+                    .findFirst();
+
+            listArticles = realm.where(Inventories.class)
+                    .equalTo("ruta", idRoute)
+                    .findAll();
+
+            if (Printooth.INSTANCE.hasPairedPrinter()) {
+                printing = Printooth.INSTANCE.printer();
+
+                initListeners();
+
+                if (!Printooth.INSTANCE.hasPairedPrinter()) {
+                    baseApp.showToast("Sin impresora, vincule una impresora en la sección de Configuraciones.");
+                } else {
+                    if (printing != null) {
+                        ArrayList<Printable> al = new ArrayList<>();
+                        //ArrayList<Printable> alTemp = getSpecialClients(idRoute);
+
+                        Resources resources = context.getResources();
+
+                        al.add(new ImagePrintable.Builder(R.drawable.logo_abpollo_microsmall, resources)
+                                .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                .setNewLinesAfter(1)
+                                .build());
+
+                        al.add((new TextPrintable.Builder())
+                                .setText("REPORTE FINAL DE RUTA\n" +
+                                        "Ruta: " + route.getRuta() + "\n" +
+                                        "Salida: " + route.getSalida() + "\n" +
+                                        "F. inicio: " + route.getFecha_inicio() + "\n" +
+                                        "F. fin: " + route.getFecha_fin() + "\n" +
+                                        "Duración: " + baseApp.dateFormatTwoDates(baseApp.convertDate(route.getFecha_inicio()), baseApp.convertDate(route.getFecha_fin())) + "\n\n")
+                                //.setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                .setNewLinesAfter(1)
+                                .build());
+
+                        al.add((new TextPrintable.Builder())
+                                .setText("INVENTARIO\n" +
+                                        "Artículo   Cant. Ini.  Cant. Fin" + newline +
+                                        "-------------------------------" + newline)
+                                .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                .setNewLinesAfter(0)
+                                .build());
+
+
+                        for (Inventories detail : listArticles) {
+                            String article, initialAmount, finishAmount;
+                            int countChanges = 0;
+                            details = "";
+
+                            RealmResults<ChangesInventories> changesInventories = realm.where(ChangesInventories.class)
+                                    .equalTo("ruta", idRoute)
+                                    .equalTo("clave_articulo", detail.getClave_articulo())
+                                    .findAll();
+
+                            for (ChangesInventories changes : changesInventories) {
+                                countChanges += (changes.getCantidad_nueva() - changes.getCantidad_anterior());
+                            }
+
+
+                            double rechargesInventories = realm.where(RechargeInventories.class)
+                                    .equalTo("ruta", idRoute)
+                                    .equalTo("clave_articulo", detail.getClave_articulo())
+                                    .findAll()
+                                    .sum("cantidad")
+                                    .doubleValue();
+
+                            article = detail.getNombre_articulo();
+                            initialAmount = Double.toString(detail.getCantidad_inicial() + countChanges + rechargesInventories);
+                            finishAmount = Double.toString(getAmountArticleRoute(detail.getRuta(), detail.getClave_articulo(), false, true));
+
+                            if (article.length() > 10) {
+                                article = article.substring(0, 10);
+                            } else {
+                                article = String.format("%-10s", article);
+                            }
+
+                            if (initialAmount.length() > 9) {
+                                initialAmount = initialAmount.substring(0, 9);
+                            } else {
+                                initialAmount = String.format("%-9s", initialAmount);
+                            }
+
+                            if (finishAmount.length() > 9) {
+                                finishAmount = finishAmount.substring(0, 9);
+                            } else {
+                                finishAmount = String.format("%-9s", finishAmount);
+                            }
+
+                            details = article + "    " + initialAmount + finishAmount;
+                            details += "  Ventas      : " + getDataInventoryRoute(detail.getRuta(), detail.getClave_articulo(), "venta") + newline;
+                            details += "  Devoluciones: " + getDataInventoryRoute(detail.getRuta(), detail.getClave_articulo(), "devolucion") + newline;
+                            details += "  Cambios     : " + getDataInventoryRoute(detail.getRuta(), detail.getClave_articulo(), "cambio") + newline;
+                            //details += "  Apartados   : " + getDataInventoryRoute(detail.getRuta(), detail.getClave_articulo(), "apartado") + newline;
+
+                            al.add((new TextPrintable.Builder())
+                                    .setText(details)
+                                    .setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                    .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                    .setNewLinesAfter(0)
+                                    .build());
+                        }
+
+
+                        /*ArrayList<VisitsClients> listVisitsArray = new ArrayList<>();
+
+                        listVisits = realm.where(VisitsClients.class)
+                                .notEqualTo("clasificacion_visita", 1)
+                                .equalTo("ruta", idRoute)
+                                .findAll();
+                        int totalVisits = listVisits.size();
+
+                        if (totalVisits > 0) {
+                            for (VisitsClients visit : listVisits) {
+                                if (realm.where(VisitsClients.class)
+                                        .equalTo("ruta", idRoute)
+                                        .equalTo("cliente", visit.getCliente())
+                                        .equalTo("clasificacion_visita", 1)
+                                        .count() == 0) {
+                                    listVisitsArray.add(visit);
+                                }
+                            }
+
+                            if (listVisitsArray.size() > 0) {
+                                al.add((new TextPrintable.Builder())
+                                        .setText("\n\nCLIENTES NO VISITADOS\n" +
+                                                "-------------------------------" + newline)
+                                        .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                        .setNewLinesAfter(0)
+                                        .build());
+
+                                for (VisitsClients visit : listVisitsArray) {
+                                    ListClients client = realm.where(ListClients.class)
+                                            .equalTo("cliente", visit.getCliente())
+                                            .findFirst();
+
+                                    al.add((new TextPrintable.Builder())
+                                            .setText(client.getNombre_cliente().trim() + newline +
+                                                    "   " + getNameClasification(visit.getClasificacion_visita()) + newline)
+                                            .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                            .setNewLinesAfter(0)
+                                            .build());
+                                }
+                            }
+                        }
+
+                        listsPayments = realm.where(VisitsPayments.class)
+                                .equalTo("ruta", idRoute)
+                                .equalTo("metodo_pago", "Crédito")
+                                .equalTo("cobrado", true)
+                                .findAll();
+
+                        if (listsPayments.size() > 0) {
+                            al.add((new TextPrintable.Builder())
+                                    .setText("\n\nCRÉDITO LIQUIDADO\n" +
+                                            "-------------------------------" + newline)
+                                    .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                    .setNewLinesAfter(0)
+                                    .build());
+
+                            for (VisitsPayments payments : listsPayments) {
+                                ListClients client = realm.where(ListClients.class)
+                                        .equalTo("cliente", payments.getCliente())
+                                        .findFirst();
+
+                                al.add((new TextPrintable.Builder())
+                                        .setText(client.getNombre_cliente().trim() + newline +
+                                                "  Venta total: $" + payments.getImporte() + newline +
+                                                "  Abono: $" + payments.getImporte_saldado() + newline +
+                                                "  Restante: $" + (payments.getImporte() - payments.getImporte_saldado() + newline))
+                                        .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                        .setNewLinesAfter(0)
+                                        .build());
+                            }
+                        }
+
+                        ArrayList<VisitsPayments> visitsPayments = new ArrayList<>();
+
+                        listsPayments = realm.where(VisitsPayments.class)
+                                .equalTo("ruta", idRoute)
+                                .equalTo("metodo_pago", "Crédito")
+                                .findAll();
+                        totalVisits = listsPayments.size();
+
+                        if (totalVisits > 0) {
+
+                            for (VisitsPayments visitsPayments1 : listsPayments) {
+                                if (visitsPayments1.getImporte() > visitsPayments1.getImporte_saldado()) {
+                                    visitsPayments.add(visitsPayments1);
+                                }
+                            }
+
+                            if (visitsPayments.size() > 0) {
+                                al.add((new TextPrintable.Builder())
+                                        .setText("\n\nCRÉDITO CONCEDIDO\n" +
+                                                "-------------------------------" + newline)
+                                        .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                        .setNewLinesAfter(0)
+                                        .build());
+
+                                for (VisitsPayments visitsPayments1 : visitsPayments) {
+                                    ListClients client = realm.where(ListClients.class)
+                                            .equalTo("cliente", visitsPayments1.getCliente())
+                                            .findFirst();
+
+                                    al.add((new TextPrintable.Builder())
+                                            .setText(client.getNombre_cliente().trim() + newline +
+                                                    "  Venta total: $" + visitsPayments1.getImporte() + newline)
+                                            .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                            .setNewLinesAfter(0)
+                                            .build());
+                                }
+                            }
+                        }*/
+
+                        al.add((new TextPrintable.Builder())
+                                .setText("\n\nTOTALES\n" +
+                                        "T. Ventas Contado: $" + baseApp.formattedNumber(getTotalSaleRoute(idRoute)) + "\n" +
+                                        "T. Ventas Créd. Saldado: $" + baseApp.formattedNumber(getTotalSaleRouteCreditPayed(idRoute)) + "\n" +
+                                        "T. Efectivo: $" + baseApp.formattedNumber(((getTotalRoute(idRoute, "Efectivo MXP") + getTotalSaleRouteCreditPayed(idRoute)))) + "\n\n" +
+
+                                        "T. Transferencias: $" + baseApp.formattedNumber(getTotalRoute(idRoute, "Transferencia Electrónica")) + "\n" +
+                                        "T. Tarjetas: $" + baseApp.formattedNumber(getTotalRoute(idRoute, "Tarjeta de Débito") + getTotalRoute(idRoute, "Tarjeta de Crédito")) + "\n" +
+                                        "T. Ventas Crédito: $" + baseApp.formattedNumber(getTotalSaleRouteCredit(idRoute)) + "\n")
+
+                                //.setAlignment(DefaultPrinter.Companion.getALIGNMENT_CENTER())
+                                .setCharacterCode(DefaultPrinter.Companion.getCHARCODE_PC1252())
+                                .setNewLinesAfter(2)
+                                .build());
+
+                        printing.print(al);
+                    } else {
+                        baseApp.showToast("No hay nada que imprimir.");
+                    }
+                }
+            }
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error al imprimir el ticket.");
+            baseApp.showLog( "Error en la impresión del ticket: " + ex);
+            ex.printStackTrace();
         }
     }
 }

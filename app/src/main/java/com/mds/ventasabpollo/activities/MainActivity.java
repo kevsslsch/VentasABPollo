@@ -589,19 +589,17 @@ public class MainActivity extends AppCompatActivity
                                 while (Datos.next()) {
                                     nList = Datos.getInt("lista");
 
-                                    if (realm.where(Lists.class).equalTo("lista", nList).findAll().size() == 0) {
-                                        realm.beginTransaction();
-                                        lists = new Lists(
-                                                Datos.getInt("lista"),
-                                                Datos.getString("nombre_lista"),
-                                                Datos.getString("nombre_ruta"),
-                                                Datos.getString("comentarios"),
-                                                Datos.getInt("dia"),
-                                                nUser);
+                                    realm.beginTransaction();
+                                    lists = new Lists(
+                                            Datos.getInt("lista"),
+                                            Datos.getString("nombre_lista"),
+                                            Datos.getString("nombre_ruta"),
+                                            Datos.getString("comentarios"),
+                                            Datos.getInt("dia"),
+                                            nUser);
 
-                                        realm.copyToRealm(lists);
-                                        realm.commitTransaction();
-                                    }
+                                    realm.copyToRealm(lists);
+                                    realm.commitTransaction();
                                 }
 
                                 Datos.close();

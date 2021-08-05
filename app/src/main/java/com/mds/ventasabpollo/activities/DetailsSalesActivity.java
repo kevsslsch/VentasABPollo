@@ -310,17 +310,17 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
                     baseApp.showToast("Aún hay importe pendiente a pagar");
                 }else {
 
-                    paySale();
+                    if(paySale()){
+                        if(finishVisit){
+                            if(functionsapp.visitHaveSale(nVisit)){
+                                finishVisit(0);
+                            }else{
+                                showBottomClasificationVisit();
+                            }
 
-                    if(finishVisit){
-                        if(functionsapp.visitHaveSale(nVisit)){
-                            finishVisit(0);
                         }else{
-                            showBottomClasificationVisit();
+                            functionsapp.goOthersActivity();
                         }
-
-                    }else{
-                        functionsapp.goOthersActivity();
                     }
                 }
             }
@@ -813,12 +813,15 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
         btnNo.setOnClickListener(v-> menuBottomSheet.dismiss());
     }*/
 
-    public void paySale(){
+    public boolean paySale(){
+        boolean ok = true;
+
         try{
 
             // Evitar doble click boton
             if (SystemClock.elapsedRealtime() - ultimoClick < TIEMPO_MINIMO){
                 baseApp.showToast("Espera 4 segundos antes de volver a darle clic a este botón");
+                ok = false;
             }else {
                 ultimoClick = SystemClock.elapsedRealtime();
 
@@ -832,8 +835,10 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
                 if (client.size() > 0) {
                     if (spClass.strGetSP("sTypeSale").equals("credit") && functionsapp.getCurrentCustomerBalance(nClient) == 0) {
                         baseApp.showSnackBar("El cliente no tiene crédito en este momento.");
+                        ok = false;
                     } else if (spClass.strGetSP("sTypeSale").equals("credit") && functionsapp.getTotalSale(nVisit, "totalImport") > functionsapp.getCurrentCustomerBalance(nClient)) {
-                        baseApp.showSnackBar("El total de la venta supera al saldo actual del cliente.");
+                        baseApp.showSnackBar("El total de la venta supera al crédito actual del cliente.");
+                        ok = false;
                     } else{
                         RealmResults<VisitsClients> visitsClients = realm.where(VisitsClients.class).equalTo("id", nVisit).findAll();
 
@@ -862,7 +867,7 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
                         if (spClass.strGetSP("sTypeSale").equals("credit")) {
                             visitsPayments.setCobrado(false);
                             visitsPayments.setFecha_cobrado("");
-                            visitsPayments.setMetodo_pago("");
+                            visitsPayments.setMetodo_pago("Crédito");
                             visits.setEs_credito(true);
                         } else if (spClass.strGetSP("sTypeSale").equals("counted")) {
 
@@ -900,7 +905,10 @@ public class DetailsSalesActivity extends AppCompatActivity implements RealmChan
         }catch (Exception ex){
             baseApp.showToast("Ocurrió el error: " + ex);
             ex.printStackTrace();
+            ok = false;
         }
+
+        return ok;
     }
 
     public void getLocation() {

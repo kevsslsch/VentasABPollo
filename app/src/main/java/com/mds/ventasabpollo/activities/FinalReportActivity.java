@@ -136,10 +136,10 @@ public class FinalReportActivity extends AppCompatActivity implements RealmChang
 
             getInfoReport();
             getInventory();
-            getClientsNotVisit();
-            getCreditPayed();
-            getCreditGranted();
-            getSpecialClients();
+            //getClientsNotVisit();
+            //getCreditPayed();
+            //getCreditGranted();
+            //getSpecialClients();
 
             recyclerArticles.setVerticalScrollBarEnabled(false);
             recyclerArticles.setHorizontalScrollBarEnabled(false);
@@ -159,7 +159,7 @@ public class FinalReportActivity extends AppCompatActivity implements RealmChang
         }
 
         imgBtnPrint.setOnClickListener(v->{
-            //functionsApp.printRoute(idRoute);
+            functionsApp.printRoute(idRoute);
         });
 
         fbtnBack.setOnClickListener(v -> backFunction());
@@ -223,7 +223,7 @@ public class FinalReportActivity extends AppCompatActivity implements RealmChang
 
                 txtTotalSales.setText("T. Ventas Contado: $" + baseApp.formattedNumber(functionsApp.getTotalSaleRoute(idRoute)));
                 txtTotalSalesCreditPayed.setText("T. Ventas Crédito Saldado: $" + baseApp.formattedNumber(functionsApp.getTotalSaleRouteCreditPayed(idRoute)));
-                txtTotalCash.setText("T. Efectivo: " + baseApp.formattedNumber(((functionsApp.getTotalRoute(idRoute, "Efectivo MXP") + functionsApp.getTotalSaleRouteCreditPayed(idRoute)))));
+                txtTotalCash.setText("T. Efectivo: $" + baseApp.formattedNumber(((functionsApp.getTotalRoute(idRoute, "Efectivo MXP") + functionsApp.getTotalSaleRouteCreditPayed(idRoute)))));
 
                 txtTotalTransfers.setText("T. Transferencias: $" + baseApp.formattedNumber(functionsApp.getTotalRoute(idRoute, "Transferencia Electrónica")));
                 txtTotalCreditCards.setText("T. Tarjetas: $" + baseApp.formattedNumber(functionsApp.getTotalRoute(idRoute, "Tarjeta de Débito") + functionsApp.getTotalRoute(idRoute, "Tarjeta de Crédito")));

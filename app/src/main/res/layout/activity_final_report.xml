@@ -33,7 +33,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight=".25"
-                android:background="@android:color/transparent" />
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/ic_print_black_24dp" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -301,14 +303,16 @@
                 android:text="Clientes No Visitados"
                 android:textColor="@android:color/black"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerVisits"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fillViewport="true"
-                android:scrollbars="none" />
+                android:scrollbars="none"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/txtTitleCreditPayed"
@@ -320,7 +324,8 @@
                 android:text="Crédito Liquidado"
                 android:textColor="@android:color/black"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCreditPayed"
@@ -339,7 +344,8 @@
                 android:text="Crédito Concedido"
                 android:textColor="@android:color/black"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerCreditGranted"
@@ -358,96 +364,98 @@
                 android:text="Clientes con descuentos"
                 android:textColor="@android:color/black"
                 android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="invisible" />
 
-                <HorizontalScrollView
-                    android:id="@+id/layoutDetailsSales"
+            <HorizontalScrollView
+                android:id="@+id/layoutDetailsSales"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <RelativeLayout
+                    <TableLayout
+                        android:id="@+id/tableHeaders"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:visibility="visible">
 
-                        <TableLayout
-                            android:id="@+id/tableHeaders"
+                        <TableRow
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:visibility="visible">
+                            android:gravity="center_horizontal"
+                            android:padding="10dp">
 
-                            <TableRow
-                                android:layout_width="match_parent"
+                            <TextView
+                                android:layout_width="100dp"
                                 android:layout_height="match_parent"
-                                android:gravity="center_horizontal"
-                                android:padding="10dp">
+                                android:layout_margin="5dp"
+                                android:text="Cliente"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
-                                <TextView
-                                    android:layout_width="100dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_margin="5dp"
-                                    android:text="Cliente"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/txtDetailNameArticle"
+                                android:layout_width="100dp"
+                                android:layout_height="match_parent"
+                                android:layout_margin="5dp"
+                                android:text="Artículo"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
-                                <TextView
-                                    android:id="@+id/txtDetailNameArticle"
-                                    android:layout_width="100dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_margin="5dp"
-                                    android:text="Artículo"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/txtDetailAmount"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:gravity="center"
+                                android:text="Cantidad"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
-                                <TextView
-                                    android:id="@+id/txtDetailAmount"
-                                    android:layout_width="70dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="5dp"
-                                    android:gravity="center"
-                                    android:text="Cantidad"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/txtDetailPrice"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:gravity="center"
+                                android:text="Precio"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
 
-                                <TextView
-                                    android:id="@+id/txtDetailPrice"
-                                    android:layout_width="70dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="5dp"
-                                    android:gravity="center"
-                                    android:text="Precio"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/txtDetailImport"
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="5dp"
+                                android:gravity="center"
+                                android:text="Importe"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </TableRow>
 
-                                <TextView
-                                    android:id="@+id/txtDetailImport"
-                                    android:layout_width="70dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="5dp"
-                                    android:gravity="center"
-                                    android:text="Importe"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold" />
-                            </TableRow>
+                    </TableLayout>
 
-                        </TableLayout>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerSpecialClients"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/tableHeaders"
+                        android:fillViewport="true"
+                        android:scrollbarStyle="outsideInset"
+                        android:scrollbars="horizontal">
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/recyclerSpecialClients"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_below="@+id/tableHeaders"
-                            android:fillViewport="true"
-                            android:scrollbarStyle="outsideInset"
-                            android:scrollbars="horizontal">
-
-                        </androidx.recyclerview.widget.RecyclerView>
-                    </RelativeLayout>
-                </HorizontalScrollView>
+                    </androidx.recyclerview.widget.RecyclerView>
+                </RelativeLayout>
+            </HorizontalScrollView>
 
         </LinearLayout>
 
