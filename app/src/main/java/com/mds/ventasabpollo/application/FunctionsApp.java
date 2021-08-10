@@ -26,6 +26,7 @@ import com.mds.ventasabpollo.activities.AveragesActivity;
 import com.mds.ventasabpollo.activities.ChangeConnectionActivity;
 import com.mds.ventasabpollo.activities.ChangeInventoryActivity;
 import com.mds.ventasabpollo.activities.ChangeUbicationClientActivity;
+import com.mds.ventasabpollo.activities.ChangesPricesActivity;
 import com.mds.ventasabpollo.activities.ConfigurationActivity;
 import com.mds.ventasabpollo.activities.DetailsDepartureActivity;
 import com.mds.ventasabpollo.activities.DetailsSalesActivity;
@@ -301,6 +302,11 @@ public class FunctionsApp extends Application {
         Intent iPrepareDepartureActivity = new Intent(context, PrepareDepartureActivity.class);
         context.startActivity(iPrepareDepartureActivity);
         //((Activity) (context)).finish();
+    }
+
+    public void goChangesPricesActivity() {
+        Intent iChangesPricesActivity = new Intent(context, ChangesPricesActivity.class);
+        context.startActivity(iChangesPricesActivity);
     }
 
     public int clasificationVisit(int client, int route) {
@@ -672,7 +678,7 @@ public class FunctionsApp extends Application {
         }
     }
 
-    public String getDataPrices(int client, int clave_integer, String field){
+    public String getDataPrices(int client, int visit, int clave_integer, String field){
         BaseApp baseApp = new BaseApp(context);
 
         String data = "";
@@ -682,7 +688,11 @@ public class FunctionsApp extends Application {
 
             if(client != 0 && clave_integer != 0 && !field.isEmpty()) {
 
-                RealmResults<Prices> prices = realm.where(Prices.class).equalTo("cliente", client).equalTo("clave_articulo", clave_integer).sort("clave_articulo", Sort.DESCENDING).findAll();
+                RealmResults<Prices> prices = realm.where(Prices.class)
+                        .equalTo("cliente", client)
+                        .equalTo("clave_articulo", clave_integer)
+                        .sort("clave_articulo", Sort.DESCENDING)
+                        .findAll();
                 int countPrices = prices.size();
 
                 if(countPrices > 0){
@@ -701,11 +711,18 @@ public class FunctionsApp extends Application {
                             }else{
                                 data = "0.00";
                             }*/
-                            if(prices.get(0).getPrecio() != 0.0) {
-                                data = String.valueOf(prices.get(0).getPrecio());
+
+                            if(existChangePrice(visit, client, clave_integer)){
+                                double tasaIVA = (prices.get(0).getTiene_iva() == 1 ? prices.get(0).getTasa_IVA() : 0.0);
+                                data = Double.toString(getFinalPrice(client, visit, clave_integer, "precio_contado") / (1 + (tasaIVA + prices.get(0).getTasa_IEPS())));
                             }else{
-                                data = "0.00";
+                                if(prices.get(0).getPrecio() != 0.0) {
+                                    data = String.valueOf(prices.get(0).getPrecio());
+                                }else{
+                                    data = "0.00";
+                                }
                             }
+
                             break;
 
                         case "tasa_iva":
@@ -747,7 +764,7 @@ public class FunctionsApp extends Application {
         }
     }
 
-    public double getFinalPrice(int client, int clave_integer, String field){
+    public double getFinalPrice(int client, int visit, int clave_integer, String field){
         BaseApp baseApp = new BaseApp(context);
 
         double data = 0.0, tasaIVA = 0.0;
@@ -757,42 +774,53 @@ public class FunctionsApp extends Application {
 
             if(client != 0 && clave_integer != 0 && !field.isEmpty()) {
 
-                RealmResults<Prices> prices = realm.where(Prices.class)
-                        .equalTo("cliente", client)
-                        .equalTo("clave_articulo", clave_integer)
-                        .sort("clave_articulo", Sort.DESCENDING)
-                        .findAll();
-                int countPrices = prices.size();
+                if(existChangePrice(visit, client, clave_integer)){
+                    return realm.where(ChangesPrices.class)
+                            .equalTo("visita", visit)
+                            .equalTo("cliente", client)
+                            .equalTo("clave_articulo", clave_integer)
+                            .notEqualTo("autorizacion", 0)
+                            .findFirst()
+                            .getPrecio_pactado();
+                }else{
+                    RealmResults<Prices> prices = realm.where(Prices.class)
+                            .equalTo("cliente", client)
+                            .equalTo("clave_articulo", clave_integer)
+                            .sort("clave_articulo", Sort.DESCENDING)
+                            .findAll();
+                    int countPrices = prices.size();
 
-                if(countPrices > 0){
+                    if(countPrices > 0){
 
-                    switch (field){
-                        case "precio_credito":
-                            if(prices.get(0).getPrecio_credito() != 0.0) {
-                                data = prices.get(0).getPrecio_credito();
-                            }else{
-                                data = 0.0;
-                            }
-                            break;
-                        case "precio_contado":
+                        switch (field){
+                            case "precio_credito":
+                                if(prices.get(0).getPrecio_credito() != 0.0) {
+                                    data = prices.get(0).getPrecio_credito();
+                                }else{
+                                    data = 0.0;
+                                }
+                                break;
+                            case "precio_contado":
                             /*if(prices.get(0).getPrecio_contado() != 0.0) {
                                 data = String.valueOf(prices.get(0).getPrecio_contado());
                             }else{
                                 data = "0.00";
                             }*/
-                            if(prices.get(0).getPrecio() != 0.0) {
-                                data = prices.get(0).getPrecio();
-                            }else{
-                                data = 0.0;
-                            }
-                            break;
+                                if(prices.get(0).getPrecio() != 0.0) {
+                                    data = prices.get(0).getPrecio();
+                                }else{
+                                    data = 0.0;
+                                }
+                                break;
+                        }
+
+                        tasaIVA = (prices.get(0).getTiene_iva() == 1 ? prices.get(0).getTasa_IVA() : 0.0);
+                        data = data * (1 + (tasaIVA + prices.get(0).getTasa_IEPS()));
+
+                    }else{
+                        data = 0.0;
                     }
 
-                    tasaIVA = (prices.get(0).getTiene_iva() == 1 ? prices.get(0).getTasa_IVA() : 0.0);
-                    data = data * (1 + (tasaIVA + prices.get(0).getTasa_IEPS()));
-
-                }else{
-                    data = 0.0;
                 }
 
             }else{
@@ -809,6 +837,8 @@ public class FunctionsApp extends Application {
         BaseApp baseApp = new BaseApp(context);
 
         try{
+            realm = Realm.getDefaultInstance();
+
             return realm.where(ChangesPrices.class)
                     .equalTo("visita", visit)
                     .equalTo("cliente", client)
@@ -817,6 +847,26 @@ public class FunctionsApp extends Application {
                     .size() > 0;
         }catch (Exception ex){
             baseApp.showToast("Ocurrió un error interno.");
+            return false;
+        }
+    }
+
+    public boolean existChangePrice(int visit, int client, int article){
+        BaseApp baseApp = new BaseApp(context);
+
+        try{
+            realm = Realm.getDefaultInstance();
+
+            return realm.where(ChangesPrices.class)
+                    .equalTo("visita", visit)
+                    .equalTo("cliente", client)
+                    .equalTo("clave_articulo", article)
+                    .notEqualTo("autorizacion", 0)
+                    .findAll()
+                    .size() > 0;
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error interno.");
+            ex.printStackTrace();
             return false;
         }
     }

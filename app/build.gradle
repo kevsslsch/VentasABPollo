@@ -10,7 +10,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
-        versionName "1.5.1.0"
+        versionName "1.6.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -41,6 +41,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'com.github.mazenrashed:Printooth:1.2.2'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

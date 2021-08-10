@@ -132,7 +132,7 @@
         android:layout_height="100dp"
         android:layout_below="@id/txtDevelopers"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
+        android:visibility="visible"
         app:srcCompat="@drawable/logo_kevsslsch2" />
 
     <TextView

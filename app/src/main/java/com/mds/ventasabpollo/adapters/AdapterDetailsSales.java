@@ -241,7 +241,7 @@ public class AdapterDetailsSales extends RecyclerView.Adapter<AdapterDetailsSale
             txtDialogNameArticle.setText(DetailsSalesList.get(holder.getAdapterPosition()).getNombre_articulo().trim());
             txtDialogUM.setText("Unidad de Medida: " + DetailsSalesList.get(holder.getAdapterPosition()).getNombre_unidad().trim());
             txtDialogDescription.setText("Descripción: " + DetailsSalesList.get(holder.getAdapterPosition()).getDescripcion_extendida().trim());
-            txtDialogIVA.setText("I.V.A. (" + baseApp.getPercentage(functionsapp.getDataPrices(nClient, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) + ")");
+            txtDialogIVA.setText("I.V.A. (" + baseApp.getPercentage(functionsapp.getDataPrices(nClient, nVisit, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) + ")");
 
             editTxtDialogPrice.setText(baseApp.formattedNumber(DetailsSalesList.get(holder.getAdapterPosition()).getPrecio()));
 
@@ -281,10 +281,10 @@ public class AdapterDetailsSales extends RecyclerView.Adapter<AdapterDetailsSale
             totalImport = price * amount;
 
             txtViewDialogImport.setText(baseApp.formattedNumber(totalImport));
-            txtViewDialogIVA.setText(baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
+            txtViewDialogIVA.setText(baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
 
             double tasaIVA, totalIVA, totalImportWithIVA;
-            tasaIVA = Double.parseDouble(functionsapp.getDataPrices(nClient, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva"));
+            tasaIVA = Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva"));
             totalIVA = tasaIVA * totalImport;
             totalImportWithIVA = totalIVA + totalImport;
 
@@ -326,10 +326,10 @@ public class AdapterDetailsSales extends RecyclerView.Adapter<AdapterDetailsSale
                     totalImport = price * amount;
 
                     txtViewDialogImport.setText(baseApp.formattedNumber(totalImport));
-                    txtViewDialogIVA.setText(baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
+                    txtViewDialogIVA.setText(baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
 
                     double tasaIVA, totalIVA, totalImportWithIVA;
-                    tasaIVA = Double.parseDouble(functionsapp.getDataPrices(nClient, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva"));
+                    tasaIVA = Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva"));
                     totalIVA = tasaIVA * totalImport;
                     totalImportWithIVA = totalIVA + totalImport;
 
@@ -378,10 +378,10 @@ public class AdapterDetailsSales extends RecyclerView.Adapter<AdapterDetailsSale
                     totalImport = price * amount;
 
                     txtViewDialogImport.setText(baseApp.formattedNumber(totalImport));
-                    txtViewDialogIVA.setText(baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
+                    txtViewDialogIVA.setText(baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
 
                     double tasaIVA, totalIVA, totalImportWithIVA;
-                    tasaIVA = Double.parseDouble(functionsapp.getDataPrices(nClient, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva"));
+                    tasaIVA = Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva"));
                     totalIVA = tasaIVA * totalImport;
                     totalImportWithIVA = totalIVA + totalImport;
 
@@ -425,8 +425,8 @@ public class AdapterDetailsSales extends RecyclerView.Adapter<AdapterDetailsSale
                 String lcArticulo;
 
                 lcArticulo = DetailsSalesList.get(holder.getAdapterPosition()).getArticulo();
-                lnTasaIVA = Double.parseDouble((functionsApp.getDataPrices(nClient, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")));
-                lnTasaIEPS = Double.parseDouble((functionsApp.getDataPrices(nClient, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_IEPS")));
+                lnTasaIVA = Double.parseDouble((functionsApp.getDataPrices(nClient, nVisit, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")));
+                lnTasaIEPS = Double.parseDouble((functionsApp.getDataPrices(nClient, nVisit, DetailsSalesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_IEPS")));
 
                 lnIVA = totalImport * lnTasaIVA;
                 lnIEPS = totalImport * lnTasaIEPS;

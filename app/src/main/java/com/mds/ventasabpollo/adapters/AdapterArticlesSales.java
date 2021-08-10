@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -51,29 +52,28 @@ import static android.view.View.VISIBLE;
 public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSales.ArticlesViewHolder>{
        
     private Context context;
-  
-    private List<Articles> articlesList;
-    private View popupInputDialogView;
-    AlertDialog alert;
-    ProgressDialog progress;
-    LinearLayout layoutDialogAlert;
 
     TextView txtDialogPrice, txtDialogNameArticle, txtDialogArticleKey, txtDialogUM, txtDialogDescription, txtViewDialogImport, txtDialogIVA, txtViewDialogIVA, txtDialogTotal, txtViewDialogTotal;
     EditText editTxtDialogPrice, editTxtDialogAmount;
     ImageView imgDialogArticle;
     Button btnDialogSave, btnDialogCancel;
-
+    private List<Articles> articlesList;
+    private View popupInputDialogView;
+    AlertDialog alert;
+    ProgressDialog progress;
+    LinearLayout layoutDialogAlert;
     private Realm realm;
     String valuePrice, valueAmount;
     double price, amount, amountDouble, totalImport;
 
     private long mLastClickTime = 0;
-    int nUser, nVisit, nClient, idRoute, position;
+    int nUser, nVisit, nClient, idRoute, nChange, position;
 
     String valueNewPrice, commentsNewPrice;
     double newPrice;
 
     DetailsSales detailSales;
+    BottomSheetDialog menuBottomSheet;
 
     public AdapterArticlesSales(Context context, List<Articles> articlesList) {
         this.context = context;
@@ -115,7 +115,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
         updateListDetails(position);
 
         holder.txtName_Article.setText(articlesList.get(position).getNombre_articulo().trim());
-        holder.txtViewPrice.setText("$" + baseApp.formattedNumber(functionsapp.getFinalPrice(nClient, articlesList.get(position).getClave_articulo(), "precio_contado")));
+        holder.txtViewPrice.setText("$" + baseApp.formattedNumber(functionsapp.getFinalPrice(nClient, nVisit, articlesList.get(position).getClave_articulo(), "precio_contado")));
         holder.txtViewUnit.setText(articlesList.get(position).getNombre_unidad().trim());
 
         if (detailSales != null) {
@@ -124,10 +124,14 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
             holder.editTxtAmount.setText("0");
         }
 
+        holder.txtViewPrice.setTextColor(Color.BLACK);
+
         if(functionsapp.existChangePricePending(nVisit, nClient, articlesList.get(position).getClave_articulo())){
             holder.txtViewPrice.setTextColor(Color.RED);
-        }else{
-            holder.txtViewPrice.setTextColor(Color.BLACK);
+        }
+
+        if(functionsapp.existChangePrice(nVisit, nClient, articlesList.get(position).getClave_articulo())){
+            holder.txtViewPrice.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
         }
 
         /*holder.layoutArticle.setOnClickListener(view -> {
@@ -175,7 +179,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
                 amountDouble = Double.parseDouble(valueAmount);
 
                 amount = Double.parseDouble(valueAmount);
-                price = Double.parseDouble(functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "precio_contado"));
+                price = Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "precio_contado"));
                 totalImport = price * amount;
 
                 saveDetail(holder);
@@ -188,30 +192,6 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
             holder.editTxtAmount.setEnabled(true);
         }
 
-    }
-
-    @Override
-    public int getItemCount() {
-        return articlesList.size();
-    }
-
-    public class ArticlesViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView imgArticle;
-        TextView txtName_Article, txtViewPrice, txtViewUnit;
-        EditText editTxtAmount;
-        LinearLayout layoutArticle;
-
-        public ArticlesViewHolder(View itemView) {
-            super(itemView);
-
-            imgArticle = itemView.findViewById(R.id.imgArticle);
-            editTxtAmount = itemView.findViewById(R.id.editTxtAmount);
-            txtName_Article = itemView.findViewById(R.id.txtNameArticle);
-            txtViewPrice = itemView.findViewById(R.id.txtViewPrice);
-            txtViewUnit = itemView.findViewById(R.id.txtViewUnit);
-            layoutArticle = itemView.findViewById(R.id.layoutArticle);
-        }
     }
 
     public void updateListDetails(int position){
@@ -262,7 +242,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
             txtDialogArticle.setText("Artículo: " + articlesList.get(position).getArticulo().trim());
             txtDialogNameArticle.setText(articlesList.get(position).getNombre_articulo().trim());
             txtDialogAmountValue.setText(Double.toString(detailSales.getCantidad()));
-            txtDialogPriceValue.setText("$" + baseApp.formattedNumber(functionsapp.getFinalPrice(nClient, articlesList.get(position).getClave_articulo(), "precio_contado")));
+            txtDialogPriceValue.setText("$" + baseApp.formattedNumber(functionsapp.getFinalPrice(nClient, nVisit, articlesList.get(position).getClave_articulo(), "precio_contado")));
 
             btnDialogSave = popupInputDialogView.findViewById(R.id.btnDialogSave);
             btnDialogCancel = popupInputDialogView.findViewById(R.id.btnDialogCancel);
@@ -315,7 +295,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
                     loComando.setInt(2, nClient);
                     loComando.setInt(3, articlesList.get(position).getClave_articulo());
                     loComando.setDouble(4, detailSales.getCantidad());
-                    loComando.setDouble(5, functionsapp.getFinalPrice(nClient, articlesList.get(position).getClave_articulo(), "precio_contado"));
+                    loComando.setDouble(5, functionsapp.getFinalPrice(nClient, nVisit, articlesList.get(position).getClave_articulo(), "precio_contado"));
                     loComando.setDouble(6, newPrice);
                     loComando.setString(7, commentsNewPrice);
 
@@ -328,6 +308,7 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
                         if (nChange != 0) {
                             baseApp.showToast("Solicitud de cambiado enviada con éxito, es necesario que un supervisor lo apruebe.");
                             alert.cancel();
+                            baseApp.closeKeyboard();
 
                             realm.beginTransaction();
                             realm.where(ChangesPrices.class)
@@ -360,6 +341,152 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
                     }
                 } catch (Exception ex) {
                     baseApp.showLog("Error en SP Guarda_Cambio_Precio_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
+                }
+            }
+
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió el error: " + ex);
+        }
+    }
+
+    public void cancelNewPrice(){
+
+        final BaseApp baseApp = new BaseApp(context);
+        final FunctionsApp functionsapp = new FunctionsApp(context);
+        final SPClass spClass = new SPClass(context);
+
+        try {
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.CE_Cambio_Precio_Android ?, ?, ?");
+            if (loComando == null) {
+                baseApp.showLog("Error al Crear SP CE_Cambio_Precio_Android");
+
+            } else {
+                try {
+
+                    loComando.setInt(1, nChange);
+                    loComando.setInt(2, nUser);
+                    loComando.setString(3, "Cancelado");
+
+                    ResultSet Datos = loComando.executeQuery();
+
+                    while (Datos.next()) {
+
+                        if (Datos.getInt("exito") == 1) {
+                            baseApp.showToast("Solicitud de cambiado cancelada con éxito");
+                            menuBottomSheet.cancel();
+
+                            ChangesPrices changesPrices = realm.where(ChangesPrices.class)
+                                    .equalTo("cambio", nChange)
+                                    .equalTo("visita", nVisit)
+                                    .equalTo("cliente", nClient)
+                                    .findFirst();
+
+
+                            int article = changesPrices.getClave_articulo();
+
+                            realm.beginTransaction();
+
+                            changesPrices.deleteFromRealm();
+
+                            DetailsSales detailsSales = realm.where(DetailsSales.class)
+                                    .equalTo("visita", nVisit)
+                                    .equalTo("clave_articulo", article)
+                                    .findFirst();
+                            detailsSales.setPrecio(functionsapp.getFinalPrice(nClient, nVisit, article, "precio_contado"));
+                            detailsSales.setImporte(detailsSales.getCantidad() * functionsapp.getFinalPrice(nClient, nVisit, article, "precio_contado"));
+
+                            realm.commitTransaction();
+
+                            if (context instanceof SalesActivity) {
+                                ((SalesActivity) context).resetAllTemporalFlags();
+                                ((SalesActivity) context).getArticlesTop();
+                                ((SalesActivity) context).refreshTotal();
+                            }
+
+                        }else{
+                            baseApp.showToast("Ocurrió un error al cancelar el cambio de precio, inténtalo de nuevo.");
+                        }
+                    }
+                } catch (Exception ex) {
+                    baseApp.showLog("Error en SP CE_Cambio_Precio_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
+                }
+            }
+
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió el error: " + ex);
+        }
+    }
+
+    public void checkNewPrice(){
+
+        final BaseApp baseApp = new BaseApp(context);
+        final FunctionsApp functionsapp = new FunctionsApp(context);
+        final SPClass spClass = new SPClass(context);
+
+        try {
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Revisa_Cambio_Precio_Autorizado ?");
+            if (loComando == null) {
+                baseApp.showLog("Error al Crear SP Revisa_Cambio_Precio_Autorizado");
+
+            } else {
+                try {
+
+                    loComando.setInt(1, nChange);
+
+                    ResultSet Datos = loComando.executeQuery();
+
+                    while (Datos.next()) {
+
+                        ChangesPrices changesPrices = null;
+
+                        if (Datos.getInt("autorizacion") != 0) {
+                            realm.beginTransaction();
+                            changesPrices = realm.where(ChangesPrices.class)
+                                    .equalTo("cambio", nChange)
+                                    .equalTo("visita", nVisit)
+                                    .equalTo("cliente", nClient)
+                                    .findFirst();
+
+                            changesPrices.setAutorizacion(Datos.getInt("autorizacion"));
+                            realm.commitTransaction();
+
+                            baseApp.showAlert("Notificación", "Solicitud de cambiado aprobada con éxito");
+
+                        }else if(Datos.getInt("cancelado") == 1){
+                            realm.beginTransaction();
+                            realm.where(ChangesPrices.class)
+                                    .equalTo("cambio", nChange)
+                                    .equalTo("visita", nVisit)
+                                    .equalTo("cliente", nClient)
+                                    .findAll()
+                                    .deleteAllFromRealm();
+                            realm.commitTransaction();
+
+                            baseApp.showAlert("Notificación", "La solicitud de cambio fue rechazada.");
+                        }else{
+                            baseApp.showAlert("Notificación", "La solicitud aún no ha sido aprobada o rechazada.");
+                        }
+
+                        realm.beginTransaction();
+                        DetailsSales detailsSales = realm.where(DetailsSales.class)
+                                .equalTo("visita", nVisit)
+                                .equalTo("clave_articulo", changesPrices.getClave_articulo())
+                                .findFirst();
+                        detailsSales.setPrecio(functionsapp.getFinalPrice(nClient, nVisit, changesPrices.getClave_articulo(), "precio_contado"));
+                        detailsSales.setImporte(detailsSales.getCantidad() * functionsapp.getFinalPrice(nClient, nVisit, changesPrices.getClave_articulo(), "precio_contado"));
+                        realm.commitTransaction();
+
+                        menuBottomSheet.cancel();
+
+                        if (context instanceof SalesActivity) {
+                            ((SalesActivity) context).resetAllTemporalFlags();
+                            ((SalesActivity) context).getArticlesTop();
+                            ((SalesActivity)context).refreshTotal();
+                        }
+
+                    }
+                } catch (Exception ex) {
+                    baseApp.showLog("Error en SP Revisa_Cambio_Precio_Autorizado, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
                 }
             }
 
@@ -411,10 +538,10 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
             txtDialogNameArticle.setText(articlesList.get(holder.getAdapterPosition()).getNombre_articulo().trim());
             txtDialogUM.setText("Unidad de Medida: " + articlesList.get(holder.getAdapterPosition()).getNombre_unidad().trim());
             txtDialogDescription.setText("Descripción: " + articlesList.get(holder.getAdapterPosition()).getDescripcion_extendida().trim());
-            txtDialogIVA.setText("I.V.A. (" + baseApp.getPercentage(functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) + ")");
+            txtDialogIVA.setText("I.V.A. (" + baseApp.getPercentage(functionsapp.getDataPrices(nClient, nVisit, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) + ")");
 
             txtDialogPrice.setText("Precio a Contado");
-            editTxtDialogPrice.setText("" + functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "precio_contado"));
+            editTxtDialogPrice.setText("" + functionsapp.getDataPrices(nClient, nVisit, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "precio_contado"));
 
             Bitmap bitmap;
             if (functionsapp.getBase64(articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "articles").isEmpty()) {
@@ -451,8 +578,8 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
             totalImport = price * amount;
             txtViewDialogImport.setText("" + baseApp.formattedNumber(totalImport));
-            txtViewDialogIVA.setText("" + baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
-            txtViewDialogTotal.setText("" + baseApp.formattedNumber((Double.parseDouble(functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport) + totalImport));
+            txtViewDialogIVA.setText("" + baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
+            txtViewDialogTotal.setText("" + baseApp.formattedNumber((Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport) + totalImport));
 
             baseApp.showKeyboardEditText(editTxtDialogAmount);
 
@@ -483,8 +610,8 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
                     totalImport = price * amount;
                     txtViewDialogImport.setText(String.valueOf(totalImport));
-                    txtViewDialogIVA.setText("" + baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
-                    txtViewDialogTotal.setText("" + baseApp.formattedNumber((Double.parseDouble(functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport) + totalImport));
+                    txtViewDialogIVA.setText("" + baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
+                    txtViewDialogTotal.setText("" + baseApp.formattedNumber((Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport) + totalImport));
                 }
             });
 
@@ -534,8 +661,8 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
                     totalImport = price * amount;
                     txtViewDialogImport.setText("" + baseApp.formattedNumber(totalImport));
-                    txtViewDialogIVA.setText("" + baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
-                    txtViewDialogTotal.setText("" + baseApp.formattedNumber((Double.parseDouble(functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport) + totalImport));
+                    txtViewDialogIVA.setText("" + baseApp.formattedNumber(Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport));
+                    txtViewDialogTotal.setText("" + baseApp.formattedNumber((Double.parseDouble(functionsapp.getDataPrices(nClient, nVisit, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")) * totalImport) + totalImport));
 
                     }catch (Exception ex){
                         baseApp.showToast("Ocurrió un error inesperado... " + ex);
@@ -624,13 +751,13 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
                     lcArticulo = articlesList.get(holder.getAdapterPosition()).getArticulo();
 
-                    if(functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tiene_IVA") == "1"){
-                        lnTasaIVA = Double.parseDouble((functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")));
+                    if(functionsapp.getDataPrices(nClient, nVisit,  articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tiene_IVA") == "1"){
+                        lnTasaIVA = Double.parseDouble((functionsapp.getDataPrices(nClient, nVisit, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_iva")));
                     }else{
                         lnTasaIVA = 0;
                     }
 
-                    lnTasaIEPS = Double.parseDouble((functionsapp.getDataPrices(nClient, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_IEPS")));
+                    lnTasaIEPS = Double.parseDouble((functionsapp.getDataPrices(nClient, nVisit, articlesList.get(holder.getAdapterPosition()).getClave_articulo(), "tasa_IEPS")));
 
                     lnIVA = totalImport * lnTasaIVA;
                     lnIEPS = totalImport * lnTasaIEPS;
@@ -686,15 +813,15 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
         SPClass spClass = new SPClass(context);
 
         try{
-            BottomSheetDialog menuBottomSheet;
-            TextView txtViewInfo;
-            Button btnCheckAuthorization, btnCancelChange, btnClose;
+           TextView txtViewInfo, btnCheckAuthorization, btnCancelChange, btnClose;
 
             ChangesPrices changesPrices = realm.where(ChangesPrices.class)
                     .equalTo("visita", nVisit)
                     .equalTo("cliente", nClient)
                     .equalTo("clave_articulo", detailSales.getClave_articulo())
                     .findFirst();
+
+            nChange = changesPrices.getCambio();
 
             Articles article = realm.where(Articles.class)
                     .equalTo("clave_articulo", changesPrices.getClave_articulo())
@@ -712,16 +839,18 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
             txtViewInfo.setText("Artículo " + article.getNombre_articulo() +", Cantidad: " + changesPrices.getCantidad() + ", Precio Original: $" + changesPrices.getPrecio_original() +", Nuevo Precio: $" + changesPrices.getPrecio_pactado());
 
-            btnCheckAuthorization.setOnClickListener(v -> {
+            if(functionsapp.existChangePrice(nVisit, nClient, changesPrices.getClave_articulo())){
+                btnCheckAuthorization.setVisibility(View.GONE);
+            }else{
+                btnCheckAuthorization.setVisibility(VISIBLE);
+            }
 
-            });
-
-            btnCancelChange.setOnClickListener(v->{
-
-            });
+            btnCheckAuthorization.setOnClickListener(v -> backgroundProcess("checkNewPrice"));
+            btnCancelChange.setOnClickListener(v-> backgroundProcess("cancelNewPrice"));
             btnClose.setOnClickListener(v -> menuBottomSheet.dismiss());
         }catch (Exception ex){
-            baseApp.showToast("Ocurriío un error interno.");
+            baseApp.showToast("Ocurrió un error interno.");
+            ex.printStackTrace();
         }
     }
 
@@ -750,6 +879,14 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
                             case "saveNewPrice":
                                 saveNewPrice();
                                 break;
+
+                            case "cancelNewPrice":
+                                cancelNewPrice();
+                                break;
+
+                            case "checkNewPrice":
+                                checkNewPrice();
+                                break;
                             default:
                                 return;
                         }
@@ -775,6 +912,30 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
 
         }, 1000);
+    }
+
+    @Override
+    public int getItemCount() {
+        return articlesList.size();
+    }
+
+    public class ArticlesViewHolder extends RecyclerView.ViewHolder {
+
+        ImageView imgArticle;
+        TextView txtName_Article, txtViewPrice, txtViewUnit;
+        EditText editTxtAmount;
+        LinearLayout layoutArticle;
+
+        public ArticlesViewHolder(View itemView) {
+            super(itemView);
+
+            imgArticle = itemView.findViewById(R.id.imgArticle);
+            editTxtAmount = itemView.findViewById(R.id.editTxtAmount);
+            txtName_Article = itemView.findViewById(R.id.txtNameArticle);
+            txtViewPrice = itemView.findViewById(R.id.txtViewPrice);
+            txtViewUnit = itemView.findViewById(R.id.txtViewUnit);
+            layoutArticle = itemView.findViewById(R.id.layoutArticle);
+        }
     }
 
 }

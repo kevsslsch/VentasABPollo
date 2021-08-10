@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity
         populateSpinnerDays();
         getLists(baseApp.getNumberDay());
 
-        /*hideItemAuthorize();
+        /*hideItemChangePrices();
         verifyAlarms();*/
 
         spinnerDays.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -220,6 +220,7 @@ public class MainActivity extends AppCompatActivity
         spClass.intSetSP("idRoute", 42);
         /**/
 
+        hideItemChangePrices();
     }
 
     private class syncDataTask extends AsyncTask<Void, String, Void> {
@@ -1116,6 +1117,8 @@ public class MainActivity extends AppCompatActivity
             newClient();
         }else if(id == R.id.nav_configuration){
             functionsapp.goConfigurationActivity();
+        }else if(id == R.id.nav_changes_prices){
+            functionsapp.goChangesPricesActivity();
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -1599,6 +1602,20 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void hideItemChangePrices(){
+        try {
+
+            if(!spClass.boolGetSP("isSupervisor")){
+                NavigationView navigationView = findViewById(R.id.nav_view);
+                Menu nav_Menu = navigationView.getMenu();
+                nav_Menu.findItem(R.id.nav_changes_prices).setVisible(false);
+            }
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió el error: " + ex);
+            ex.printStackTrace();
+        }
+    }
+    
     public void backgroundProcess(String process, String typeLoad, String title){
 
         switch (typeLoad){
