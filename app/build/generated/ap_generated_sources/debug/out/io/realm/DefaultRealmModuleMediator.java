@@ -26,10 +26,11 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
 
     private static final Set<Class<? extends RealmModel>> MODEL_CLASSES;
     static {
-        Set<Class<? extends RealmModel>> modelClasses = new HashSet<Class<? extends RealmModel>>(28);
+        Set<Class<? extends RealmModel>> modelClasses = new HashSet<Class<? extends RealmModel>>(29);
         modelClasses.add(com.mds.ventasabpollo.models.Articles.class);
         modelClasses.add(com.mds.ventasabpollo.models.BranchOffices.class);
         modelClasses.add(com.mds.ventasabpollo.models.ChangesInventories.class);
+        modelClasses.add(com.mds.ventasabpollo.models.ChangesPrices.class);
         modelClasses.add(com.mds.ventasabpollo.models.Cities.class);
         modelClasses.add(com.mds.ventasabpollo.models.Clients.class);
         modelClasses.add(com.mds.ventasabpollo.models.ClientsLists.class);
@@ -60,10 +61,11 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
 
     @Override
     public Map<Class<? extends RealmModel>, OsObjectSchemaInfo> getExpectedObjectSchemaInfoMap() {
-        Map<Class<? extends RealmModel>, OsObjectSchemaInfo> infoMap = new HashMap<Class<? extends RealmModel>, OsObjectSchemaInfo>(28);
+        Map<Class<? extends RealmModel>, OsObjectSchemaInfo> infoMap = new HashMap<Class<? extends RealmModel>, OsObjectSchemaInfo>(29);
         infoMap.put(com.mds.ventasabpollo.models.Articles.class, io.realm.com_mds_ventasabpollo_models_ArticlesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.BranchOffices.class, io.realm.com_mds_ventasabpollo_models_BranchOfficesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.ChangesInventories.class, io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.getExpectedObjectSchemaInfo());
+        infoMap.put(com.mds.ventasabpollo.models.ChangesPrices.class, io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.Cities.class, io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.Clients.class, io.realm.com_mds_ventasabpollo_models_ClientsRealmProxy.getExpectedObjectSchemaInfo());
         infoMap.put(com.mds.ventasabpollo.models.ClientsLists.class, io.realm.com_mds_ventasabpollo_models_ClientsListsRealmProxy.getExpectedObjectSchemaInfo());
@@ -104,6 +106,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
             return io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.createColumnInfo(schemaInfo);
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+            return io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.createColumnInfo(schemaInfo);
         }
         if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
             return io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.createColumnInfo(schemaInfo);
@@ -195,6 +200,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
             return "ChangesInventories";
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+            return "ChangesPrices";
         }
         if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
             return "Cities";
@@ -289,6 +297,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             }
             if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
                 return clazz.cast(new io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy());
+            }
+            if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+                return clazz.cast(new io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy());
             }
             if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
                 return clazz.cast(new io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy());
@@ -393,6 +404,10 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
             com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.ChangesInventoriesColumnInfo columnInfo = (com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.ChangesInventoriesColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.ChangesInventories.class);
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.copyOrUpdate(realm, columnInfo, (com.mds.ventasabpollo.models.ChangesInventories) obj, update, cache, flags));
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+            com_mds_ventasabpollo_models_ChangesPricesRealmProxy.ChangesPricesColumnInfo columnInfo = (com_mds_ventasabpollo_models_ChangesPricesRealmProxy.ChangesPricesColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.ChangesPrices.class);
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.copyOrUpdate(realm, columnInfo, (com.mds.ventasabpollo.models.ChangesPrices) obj, update, cache, flags));
         }
         if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
             com_mds_ventasabpollo_models_CitiesRealmProxy.CitiesColumnInfo columnInfo = (com_mds_ventasabpollo_models_CitiesRealmProxy.CitiesColumnInfo) realm.getSchema().getColumnInfo(com.mds.ventasabpollo.models.Cities.class);
@@ -509,6 +524,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             io.realm.com_mds_ventasabpollo_models_BranchOfficesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.BranchOffices) object, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
             io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.ChangesInventories) object, cache);
+        } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+            io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.ChangesPrices) object, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
             io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.Cities) object, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
@@ -582,6 +599,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                 io.realm.com_mds_ventasabpollo_models_BranchOfficesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.BranchOffices) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
                 io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.ChangesInventories) object, cache);
+            } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+                io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.ChangesPrices) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
                 io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.insert(realm, (com.mds.ventasabpollo.models.Cities) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
@@ -642,6 +661,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                     io.realm.com_mds_ventasabpollo_models_BranchOfficesRealmProxy.insert(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
                     io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.insert(realm, iterator, cache);
+                } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+                    io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.insert(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
                     io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.insert(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
@@ -711,6 +732,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
             io.realm.com_mds_ventasabpollo_models_BranchOfficesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.BranchOffices) obj, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
             io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.ChangesInventories) obj, cache);
+        } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+            io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.ChangesPrices) obj, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
             io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.Cities) obj, cache);
         } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
@@ -784,6 +807,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                 io.realm.com_mds_ventasabpollo_models_BranchOfficesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.BranchOffices) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
                 io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.ChangesInventories) object, cache);
+            } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+                io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.ChangesPrices) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
                 io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.insertOrUpdate(realm, (com.mds.ventasabpollo.models.Cities) object, cache);
             } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
@@ -844,6 +869,8 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
                     io.realm.com_mds_ventasabpollo_models_BranchOfficesRealmProxy.insertOrUpdate(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
                     io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.insertOrUpdate(realm, iterator, cache);
+                } else if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+                    io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.insertOrUpdate(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
                     io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.insertOrUpdate(realm, iterator, cache);
                 } else if (clazz.equals(com.mds.ventasabpollo.models.Clients.class)) {
@@ -914,6 +941,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.createOrUpdateUsingJsonObject(realm, json, update));
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.createOrUpdateUsingJsonObject(realm, json, update));
         }
         if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.createOrUpdateUsingJsonObject(realm, json, update));
@@ -1007,6 +1037,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.createUsingJsonStream(realm, reader));
         }
+        if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.createUsingJsonStream(realm, reader));
+        }
         if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.createUsingJsonStream(realm, reader));
         }
@@ -1099,6 +1132,9 @@ class DefaultRealmModuleMediator extends RealmProxyMediator {
         }
         if (clazz.equals(com.mds.ventasabpollo.models.ChangesInventories.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_ChangesInventoriesRealmProxy.createDetachedCopy((com.mds.ventasabpollo.models.ChangesInventories) realmObject, 0, maxDepth, cache));
+        }
+        if (clazz.equals(com.mds.ventasabpollo.models.ChangesPrices.class)) {
+            return clazz.cast(io.realm.com_mds_ventasabpollo_models_ChangesPricesRealmProxy.createDetachedCopy((com.mds.ventasabpollo.models.ChangesPrices) realmObject, 0, maxDepth, cache));
         }
         if (clazz.equals(com.mds.ventasabpollo.models.Cities.class)) {
             return clazz.cast(io.realm.com_mds_ventasabpollo_models_CitiesRealmProxy.createDetachedCopy((com.mds.ventasabpollo.models.Cities) realmObject, 0, maxDepth, cache));

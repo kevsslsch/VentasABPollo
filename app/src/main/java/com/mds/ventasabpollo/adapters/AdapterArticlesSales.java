@@ -8,6 +8,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -22,15 +25,22 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mds.ventasabpollo.R;
 import com.mds.ventasabpollo.activities.SalesActivity;
 import com.mds.ventasabpollo.application.BaseApp;
 import com.mds.ventasabpollo.application.FunctionsApp;
 import com.mds.ventasabpollo.application.SPClass;
 import com.mds.ventasabpollo.models.Articles;
+import com.mds.ventasabpollo.models.ChangesPrices;
 import com.mds.ventasabpollo.models.DetailsSales;
+import com.mds.ventasabpollo.models.PrepareDeparture;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 import io.realm.Realm;
@@ -58,7 +68,12 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
     double price, amount, amountDouble, totalImport;
 
     private long mLastClickTime = 0;
-    int nVisit, nClient, idRoute;
+    int nUser, nVisit, nClient, idRoute, position;
+
+    String valueNewPrice, commentsNewPrice;
+    double newPrice;
+
+    DetailsSales detailSales;
 
     public AdapterArticlesSales(Context context, List<Articles> articlesList) {
         this.context = context;
@@ -78,9 +93,8 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
         final SPClass spClass = new SPClass(context);
 
         realm = Realm.getDefaultInstance();
+        nUser = spClass.intGetSP("user");
         nVisit = spClass.intGetSP("nVisit");
-
-        RealmResults<DetailsSales> listDetails = realm.where(DetailsSales.class).equalTo("visita", nVisit).equalTo("clave_articulo", articlesList.get(position).getClave_articulo()).findAll();
 
         if (spClass.intGetSP("nClient") != 0) {
             nClient = spClass.intGetSP("nClient");
@@ -90,22 +104,30 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
         String url_img = articlesList.get(position).getUbicacion_URL();
 
-        if(url_img != null){
-            if(url_img.isEmpty()){
+        if (url_img != null) {
+            if (url_img.isEmpty()) {
                 Picasso.get().load(R.drawable.no_photo).into(holder.imgArticle);
-            }else{
+            } else {
                 Picasso.get().load(url_img).into(holder.imgArticle);
             }
         }
 
+        updateListDetails(position);
+
         holder.txtName_Article.setText(articlesList.get(position).getNombre_articulo().trim());
-        holder.txtViewPrice.setText(baseApp.formattedNumber(functionsapp.getFinalPrice(nClient, articlesList.get(position).getClave_articulo(), "precio_contado")));
+        holder.txtViewPrice.setText("$" + baseApp.formattedNumber(functionsapp.getFinalPrice(nClient, articlesList.get(position).getClave_articulo(), "precio_contado")));
         holder.txtViewUnit.setText(articlesList.get(position).getNombre_unidad().trim());
 
-        if(listDetails.size() > 0){
-            holder.editTxtAmount.setText(Double.toString(listDetails.get(0).getCantidad()));
-        }else{
+        if (detailSales != null) {
+            holder.editTxtAmount.setText(Double.toString(detailSales.getCantidad()));
+        } else {
             holder.editTxtAmount.setText("0");
+        }
+
+        if(functionsapp.existChangePricePending(nVisit, nClient, articlesList.get(position).getClave_articulo())){
+            holder.txtViewPrice.setTextColor(Color.RED);
+        }else{
+            holder.txtViewPrice.setTextColor(Color.BLACK);
         }
 
         /*holder.layoutArticle.setOnClickListener(view -> {
@@ -118,6 +140,19 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
                     }
                     mLastClickTime = SystemClock.elapsedRealtime();
                 });*/
+
+        holder.txtViewPrice.setOnLongClickListener(view -> {
+            showAlertChangePrice(position);
+            return true;
+        });
+
+        holder.txtViewPrice.setOnClickListener(v->{
+            if(functionsapp.existChangePricePending(nVisit, nClient, articlesList.get(position).getClave_articulo())){
+                showBottomSheetChangePrice();
+            }else{
+                baseApp.showToast("No hay cambios de precios pendientes con este artículo.");
+            }
+        });
 
         holder.editTxtAmount.setSelectAllOnFocus(true);
         holder.editTxtAmount.addTextChangedListener(new TextWatcher() {
@@ -176,6 +211,160 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
             txtViewPrice = itemView.findViewById(R.id.txtViewPrice);
             txtViewUnit = itemView.findViewById(R.id.txtViewUnit);
             layoutArticle = itemView.findViewById(R.id.layoutArticle);
+        }
+    }
+
+    public void updateListDetails(int position){
+        final BaseApp baseApp = new BaseApp(context);
+        final FunctionsApp functionsapp = new FunctionsApp(context);
+        final SPClass spClass = new SPClass(context);
+
+        try{
+            detailSales = realm.where(DetailsSales.class)
+                    .equalTo("visita", nVisit)
+                    .equalTo("clave_articulo", articlesList.get(position).getClave_articulo())
+                    .findFirst();
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error interno");
+        }
+    }
+
+    public void showAlertChangePrice(int position){
+        final BaseApp baseApp = new BaseApp(context);
+        final FunctionsApp functionsapp = new FunctionsApp(context);
+        final SPClass spClass = new SPClass(context);
+
+        try {
+
+            TextView txtDialogArticle, txtDialogNameArticle, txtDialogAmountValue, txtDialogPriceValue;
+            EditText editTxtDialogNewPrice, editTxtDialogComments;
+
+            alert = new AlertDialog.Builder(context).create();
+
+            LayoutInflater layoutInflater = LayoutInflater.from(context);
+
+            popupInputDialogView = layoutInflater.inflate(R.layout.dialog_change_price, null);
+
+            if(detailSales == null){
+                baseApp.showSnackBar("Seleccione una cantidad");
+                return;
+            }
+
+            txtDialogArticle = popupInputDialogView.findViewById(R.id.txtDialogArticle);
+            txtDialogNameArticle = popupInputDialogView.findViewById(R.id.txtDialogNameArticle);
+            txtDialogAmountValue = popupInputDialogView.findViewById(R.id.txtDialogAmountValue);
+            txtDialogPriceValue = popupInputDialogView.findViewById(R.id.txtDialogPriceValue);
+            editTxtDialogNewPrice = popupInputDialogView.findViewById(R.id.editTxtDialogNewPrice);
+            editTxtDialogComments = popupInputDialogView.findViewById(R.id.editTxtDialogComments);
+
+            editTxtDialogNewPrice.setSelectAllOnFocus(true);
+
+            txtDialogArticle.setText("Artículo: " + articlesList.get(position).getArticulo().trim());
+            txtDialogNameArticle.setText(articlesList.get(position).getNombre_articulo().trim());
+            txtDialogAmountValue.setText(Double.toString(detailSales.getCantidad()));
+            txtDialogPriceValue.setText("$" + baseApp.formattedNumber(functionsapp.getFinalPrice(nClient, articlesList.get(position).getClave_articulo(), "precio_contado")));
+
+            btnDialogSave = popupInputDialogView.findViewById(R.id.btnDialogSave);
+            btnDialogCancel = popupInputDialogView.findViewById(R.id.btnDialogCancel);
+
+            editTxtDialogNewPrice.setFocusable(false);
+            baseApp.showKeyboardEditText(editTxtDialogNewPrice);
+
+            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            alert.setView(popupInputDialogView);
+
+            alert.show();
+
+            btnDialogSave.setOnClickListener(view -> {
+                valueNewPrice = editTxtDialogNewPrice.getText().toString();
+
+                if (valueNewPrice.length() == 0 || valueNewPrice.isEmpty()) {
+                    valueNewPrice = "0";
+                }
+
+                this.position = position;
+                newPrice = Double.parseDouble(valueNewPrice);
+                commentsNewPrice = editTxtDialogComments.getText().toString();
+
+                backgroundProcess("saveNewPrice");
+
+            });
+            btnDialogCancel.setOnClickListener(view -> alert.cancel());
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error interno.");
+            baseApp.showLog("Ocurrió un error interno al mostrar la alerta de precios. " + ex);
+            ex.printStackTrace();
+        }
+    }
+
+    public void saveNewPrice(){
+
+        final BaseApp baseApp = new BaseApp(context);
+        final FunctionsApp functionsapp = new FunctionsApp(context);
+        final SPClass spClass = new SPClass(context);
+
+        try {
+            PreparedStatement loComando = baseApp.execute_SP("EXECUTE ABPollo.dbo.Guarda_Cambio_Precio_Android ?, ?, ?, ?, ?, ?, ?");
+            if (loComando == null) {
+                baseApp.showLog("Error al Crear SP Guarda_Cambio_Precio_Android");
+
+            } else {
+                try {
+
+                    loComando.setInt(1, nUser);
+                    loComando.setInt(2, nClient);
+                    loComando.setInt(3, articlesList.get(position).getClave_articulo());
+                    loComando.setDouble(4, detailSales.getCantidad());
+                    loComando.setDouble(5, functionsapp.getFinalPrice(nClient, articlesList.get(position).getClave_articulo(), "precio_contado"));
+                    loComando.setDouble(6, newPrice);
+                    loComando.setString(7, commentsNewPrice);
+
+                    ResultSet Datos = loComando.executeQuery();
+
+                    while (Datos.next()) {
+
+                        int nChange = Datos.getInt("cambio");
+
+                        if (nChange != 0) {
+                            baseApp.showToast("Solicitud de cambiado enviada con éxito, es necesario que un supervisor lo apruebe.");
+                            alert.cancel();
+
+                            realm.beginTransaction();
+                            realm.where(ChangesPrices.class)
+                                    .equalTo("visita", nVisit)
+                                    .equalTo("cliente", nClient)
+                                    .equalTo("clave_articulo", articlesList.get(position).getClave_articulo())
+                                    .findAll()
+                                    .deleteAllFromRealm();
+
+                            ChangesPrices changesPrices = new ChangesPrices(
+                                    nChange,
+                                    nVisit,
+                                    nClient,
+                                    articlesList.get(position).getClave_articulo(),
+                                    detailSales.getCantidad(),
+                                    detailSales.getPrecio(),
+                                    newPrice);
+
+                            realm.copyToRealm(changesPrices);
+                            realm.commitTransaction();
+
+                            if (context instanceof SalesActivity) {
+                                ((SalesActivity) context).resetAllTemporalFlags();
+                                ((SalesActivity) context).getArticlesTop();
+                            }
+
+                        }else{
+                            baseApp.showToast("Ocurrió un error al procesar el cambio de precio, inténtalo de nuevo.");
+                        }
+                    }
+                } catch (Exception ex) {
+                    baseApp.showLog("Error en SP Guarda_Cambio_Precio_Android, reporta el siguiente error al departamento de Sistemas: " + ex + " y se detuvo el proceso");
+                }
+            }
+
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió el error: " + ex);
         }
     }
 
@@ -400,11 +589,15 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
 
             idRoute = spClass.intGetSP("idRoute");
 
-            if(amount == 0){
+            if(amount == 0) {
                 realm.beginTransaction();
-                RealmResults<DetailsSales> results = realm.where(DetailsSales.class).equalTo("articulo", articlesList.get(holder.getAdapterPosition()).getArticulo()).equalTo("visita", nVisit).findAll();
+                RealmResults<DetailsSales> results = realm.where(DetailsSales.class)
+                        .equalTo("articulo", articlesList.get(holder.getAdapterPosition()).getArticulo()).equalTo("visita", nVisit)
+                        .findAll();
                 results.deleteAllFromRealm();
                 realm.commitTransaction();
+
+                updateListDetails(holder.getAdapterPosition());
 
                 if (context instanceof SalesActivity) {
                     ((SalesActivity) context).refreshTotal();
@@ -471,6 +664,8 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
                     realm.commitTransaction();
                     progress.dismiss();
 
+                    updateListDetails(holder.getAdapterPosition());
+
                     //baseApp.showToast("Artículo registrado");
 
                     if (context instanceof SalesActivity) {
@@ -484,4 +679,102 @@ public class AdapterArticlesSales extends RecyclerView.Adapter<AdapterArticlesSa
             ex.printStackTrace();
         }
     }
+
+    public void showBottomSheetChangePrice(){
+        BaseApp baseApp = new BaseApp(context);
+        FunctionsApp functionsapp = new FunctionsApp(context);
+        SPClass spClass = new SPClass(context);
+
+        try{
+            BottomSheetDialog menuBottomSheet;
+            TextView txtViewInfo;
+            Button btnCheckAuthorization, btnCancelChange, btnClose;
+
+            ChangesPrices changesPrices = realm.where(ChangesPrices.class)
+                    .equalTo("visita", nVisit)
+                    .equalTo("cliente", nClient)
+                    .equalTo("clave_articulo", detailSales.getClave_articulo())
+                    .findFirst();
+
+            Articles article = realm.where(Articles.class)
+                    .equalTo("clave_articulo", changesPrices.getClave_articulo())
+                    .findFirst();
+
+            menuBottomSheet = new BottomSheetDialog(context, R.style.BottomSheetDialogTheme);
+            menuBottomSheet.setContentView(R.layout.bottom_sheet_price_change);
+            menuBottomSheet.setCancelable(true);
+            menuBottomSheet.show();
+
+            txtViewInfo = menuBottomSheet.findViewById(R.id.txtViewInfo);
+            btnCheckAuthorization = menuBottomSheet.findViewById(R.id.btnCheckAuthorization);
+            btnCancelChange = menuBottomSheet.findViewById(R.id.btnCancelChange);
+            btnClose = menuBottomSheet.findViewById(R.id.btnClose);
+
+            txtViewInfo.setText("Artículo " + article.getNombre_articulo() +", Cantidad: " + changesPrices.getCantidad() + ", Precio Original: $" + changesPrices.getPrecio_original() +", Nuevo Precio: $" + changesPrices.getPrecio_pactado());
+
+            btnCheckAuthorization.setOnClickListener(v -> {
+
+            });
+
+            btnCancelChange.setOnClickListener(v->{
+
+            });
+            btnClose.setOnClickListener(v -> menuBottomSheet.dismiss());
+        }catch (Exception ex){
+            baseApp.showToast("Ocurriío un error interno.");
+        }
+    }
+
+    public void backgroundProcess(String process){
+        BaseApp baseApp = new BaseApp(context);
+        FunctionsApp functionsapp = new FunctionsApp(context);
+        SPClass spClass = new SPClass(context);
+
+        Handler handler;
+        ProgressDialog dialog;
+
+        dialog = new ProgressDialog(context);
+
+        dialog.setMessage("Espera unos momentos...");
+        dialog.setCancelable(false);
+        dialog.show();
+
+        handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(() -> {
+
+            try {
+                if(baseApp.verifyServerConnection()) {
+                    if(baseApp.isOnline(context)) {
+
+                        switch (process){
+                            case "saveNewPrice":
+                                saveNewPrice();
+                                break;
+                            default:
+                                return;
+                        }
+
+                    } else {
+                        baseApp.showAlertDialog("error", "Error", "Prende tu señal de datos o conéctate a una red WIFI para poder descargar los datos", true);
+                    }
+                }else{
+                    baseApp.showAlertDialog("error", "Error", "No hay conexión al Servidor, reconfigura los datos de conexión e inténtalo de nuevo.", true);
+                }
+
+            } catch (Exception ex) {
+                baseApp.showAlert("Error", "Ocurrió un error, reporta el siguiente error al Dpto de Sistemas: " + ex);
+            }
+
+            try{
+                if(dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+            }catch (Exception ex){
+                baseApp.showLog("Ocurrió un error.");
+            }
+
+
+        }, 1000);
+    }
+
 }

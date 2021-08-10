@@ -585,6 +585,8 @@ public class SalesActivity extends AppCompatActivity {
                             case "refreshDataClient":
                                 functionsApp.refreshDataClient(nClient);
                                 dataControllCredit();
+                                resetAllTemporalFlags();
+                                getArticlesTop();
                                 break;
                             default:
                                 return;

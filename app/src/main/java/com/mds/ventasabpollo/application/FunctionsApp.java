@@ -47,6 +47,7 @@ import com.mds.ventasabpollo.activities.VisitsActivity;
 import com.mds.ventasabpollo.models.Articles;
 import com.mds.ventasabpollo.models.BranchOffices;
 import com.mds.ventasabpollo.models.ChangesInventories;
+import com.mds.ventasabpollo.models.ChangesPrices;
 import com.mds.ventasabpollo.models.Clients;
 import com.mds.ventasabpollo.models.Departures;
 import com.mds.ventasabpollo.models.DetailsDepartures;
@@ -802,6 +803,22 @@ public class FunctionsApp extends Application {
         }
 
        return data;
+    }
+
+    public boolean existChangePricePending(int visit, int client, int article){
+        BaseApp baseApp = new BaseApp(context);
+
+        try{
+            return realm.where(ChangesPrices.class)
+                    .equalTo("visita", visit)
+                    .equalTo("cliente", client)
+                    .equalTo("clave_articulo", article)
+                    .findAll()
+                    .size() > 0;
+        }catch (Exception ex){
+            baseApp.showToast("Ocurrió un error interno.");
+            return false;
+        }
     }
 
     public boolean getIsVisitFinished(int visit){
@@ -1889,6 +1906,9 @@ public class FunctionsApp extends Application {
     public void refreshDataClient(int nClient){
         BaseApp baseApp = new BaseApp(context);
         SPClass spClass = new SPClass(context);
+
+        Prices prices;
+
         int nUser = spClass.intGetSP("user");
 
         realm = Realm.getDefaultInstance();
@@ -1946,6 +1966,38 @@ public class FunctionsApp extends Application {
                             if (countResults == 1) {
                                 ResultSet Datos = loComando.getResultSet();
 
+                                baseApp.showLog("Descargando precios de artículos...");
+
+                                while (Datos.next()) {
+
+                                    realm.beginTransaction();
+                                    deletePrice(Datos.getInt("cliente"), Datos.getInt("clave_articulo"));
+
+                                    prices = new Prices(
+                                            Datos.getInt("cliente"),
+                                            Datos.getInt("clave_articulo"),
+                                            Datos.getDouble("precio"),
+                                            Datos.getInt("tiene_iva"),
+                                            Datos.getDouble("tasa_iva"),
+                                            Datos.getDouble("tasa_IEPS"),
+                                            Datos.getString("tipo_IEPS"),
+                                            Datos.getString("fecha_actualizacion"),
+                                            Datos.getInt("promedio_piezas"),
+                                            nUser);
+
+                                    baseApp.showLog("Precios cargados del cliente " + Datos.getInt("cliente") + ", del artículo " + Datos.getInt("clave_articulo"));
+
+                                    realm.copyToRealm(prices);
+                                    realm.commitTransaction();
+                                }
+
+                                Datos.close();
+                            }
+
+                            /*
+                            if (countResults == 1) {
+                                ResultSet Datos = loComando.getResultSet();
+
                                 baseApp.showLog("Descargando pagos pendientes...");
 
                                 while (Datos.next()) {
@@ -1966,7 +2018,7 @@ public class FunctionsApp extends Application {
                                 }
 
                                 Datos.close();
-                            }
+                            }*/
 
                         } else {
                             if (loComando.getUpdateCount() == -1) {
@@ -1988,6 +2040,20 @@ public class FunctionsApp extends Application {
             }
         }catch (Exception ex){
             baseApp.showToast("Ocurrió el error: " + ex);
+        }
+    }
+
+    public void deletePrice(int client, int article){
+        BaseApp baseApp = new BaseApp(context);
+
+        try{
+            try (Realm realm = Realm.getDefaultInstance()) {
+                RealmResults<Prices> results = realm.where(Prices.class).equalTo("cliente", client).equalTo("clave_articulo", article).findAll();
+                results.deleteAllFromRealm();
+            }
+
+        }catch (Exception ex){
+            baseApp.showLog("Ocurrió un error al intentar eliminar un precio: " + ex);
         }
     }
 

@@ -707,7 +707,7 @@ public class MainActivity extends AppCompatActivity
                                 Datos.close();
                             }
 
-                            if (countResults == 5) {
+                            /*if (countResults == 5) {
                                 ResultSet Datos = loComando.getResultSet();
 
                                 baseApp.showLog("Descargando precios de artículos...");
@@ -715,7 +715,7 @@ public class MainActivity extends AppCompatActivity
                                 while (Datos.next()) {
 
                                     realm.beginTransaction();
-                                    deletePrice(Datos.getInt("cliente"), Datos.getInt("clave_articulo"));
+                                    functionsapp.deletePrice(Datos.getInt("cliente"), Datos.getInt("clave_articulo"));
 
                                     prices = new Prices(
                                             Datos.getInt("cliente"),
@@ -736,7 +736,7 @@ public class MainActivity extends AppCompatActivity
                                 }
 
                                 Datos.close();
-                            }
+                            }*/
 
                             /*if (countResults == 6) {
                                 ResultSet Datos = loComando.getResultSet();
@@ -1044,19 +1044,6 @@ public class MainActivity extends AppCompatActivity
         }catch (Exception ex){
             baseApp.showLog("Ocurrió el error: " + ex + " y se detuvo el proceso");
             messagesSync += "\n\nOcurrió el error: " + ex + " y se detuvo el proceso" + ", al intentar marcas los clientes como enviadas";
-        }
-    }
-
-    public void deletePrice(int client, int article){
-        try{
-
-            try (Realm realm = Realm.getDefaultInstance()) {
-                RealmResults<Prices> results = realm.where(Prices.class).equalTo("cliente", client).equalTo("clave_articulo", article).findAll();
-                results.deleteAllFromRealm();
-            }
-
-        }catch (Exception ex){
-            baseApp.showLog("Ocurrió un error al intentar eliminar un precio: " + ex);
         }
     }
 
